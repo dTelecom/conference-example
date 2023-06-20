@@ -14,6 +14,22 @@
   dependencies:
     regenerator-runtime "^0.13.11"
 
+"@dtelecom/server-sdk-js@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@dtelecom/server-sdk-js/-/server-sdk-js-1.0.1.tgz#6384186a1001b369cfffd6c755b26e920888754c"
+  integrity sha512-UXmPL/YVPyfWs9Gd/9GsG5w49ePBahoXi1iE26MuDfAB8S6VTaVTkJAvLLD0g6x1cHjlRKzvpylq+0aT39m9xg==
+  dependencies:
+    axios "^0.21.0"
+    camelcase-keys "^7.0.0"
+    geoip-lite "^1.4.7"
+    ip-to-int "^0.3.1"
+    jsonwebtoken "^8.5.1"
+    key-encoder "^2.0.3"
+    nearby-sort "^1.1.1"
+    protobufjs "^6.10.2"
+    web3 "^1.10.0"
+    web3-utils "^1.10.0"
+
 "@eslint-community/eslint-utils@^4.2.0":
   version "4.4.0"
   resolved "https://registry.yarnpkg.com/@eslint-community/eslint-utils/-/eslint-utils-4.4.0.tgz#a23514e8fb9af1269d5f7788aa556798d61c6b59"
@@ -4831,21 +4847,6 @@ serve-static@1.15.0:
     escape-html "~1.0.3"
     parseurl "~1.3.3"
     send "0.18.0"
-
-"server-sdk-js@https://github.com/dTelecom/server-sdk-js#dtelecom-db":
-  version "1.1.4"
-  resolved "https://github.com/dTelecom/server-sdk-js#c50f7e3f1bf40dfee277dfe079d25d7cde2b9556"
-  dependencies:
-    axios "^0.21.0"
-    camelcase-keys "^7.0.0"
-    geoip-lite "^1.4.7"
-    ip-to-int "^0.3.1"
-    jsonwebtoken "^8.5.1"
-    key-encoder "^2.0.3"
-    nearby-sort "^1.1.1"
-    protobufjs "^6.10.2"
-    web3 "^1.10.0"
-    web3-utils "^1.10.0"
 
 servify@^0.1.12:
   version "0.1.12"

@@ -1,6 +1,6 @@
 import { createTRPCRouter, publicProcedure } from "../trpc";
 
-import { AccessToken } from "server-sdk-js";
+import { AccessToken } from "@dtelecom/server-sdk-js";
 import { env } from "@/env.mjs";
 import { z } from "zod";
 
