@@ -21,7 +21,7 @@
     "clsx": "^1.2.1",
     "jwt-decode": "^3.1.2",
     "livekit-client": "1.10.0",
-    "@dtelecom/server-sdk-js": "^1.0.4",
+    "@dtelecom/server-sdk-js": "^1.0.5",
     "lucide-react": "^0.113.0",
     "next": "13.1.6",
     "next-themes": "^0.2.1",

@@ -14,10 +14,10 @@
   dependencies:
     regenerator-runtime "^0.13.11"
 
-"@dtelecom/server-sdk-js@^1.0.4":
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/@dtelecom/server-sdk-js/-/server-sdk-js-1.0.4.tgz#cc934987e3b90a9e99920c73f3c891433e3edf44"
-  integrity sha512-dkLU606xRcYTOdtyUJ9woYiG2cr8jsvsxHzRNZVmsMJAftr5ikfBTD0kW9FgLJoiIsrxbr8seN9qb6cOwSFhXQ==
+"@dtelecom/server-sdk-js@^1.0.5":
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/@dtelecom/server-sdk-js/-/server-sdk-js-1.0.5.tgz#5daa415ca1810a499eb1a9bb96597666c3c5dc51"
+  integrity sha512-Ex5gyexgyFhndiKAM0v8QI3i8szYTo0Ys10KHh0t1/j0MRYcy01E/hoh5qSGVja13I0iT5lZ//agmOvCkh3QzQ==
   dependencies:
     axios "^0.21.0"
     camelcase-keys "^7.0.0"
