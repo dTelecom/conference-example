@@ -1,13 +1,10 @@
-export function generateRoomId(): string {
-  return `${randomString(4)}-${randomString(4)}`;
-}
+export function generateUUID(): string {
+  let d = new Date().getTime();
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
 
-function randomString(length: number): string {
-  let result = '';
-  const characters = 'abcdefghijklmnopqrstuvwxyz0123456789';
-  const charactersLength = characters.length;
-  for (let i = 0; i < length; i++) {
-    result += characters.charAt(Math.floor(Math.random() * charactersLength));
-  }
-  return result;
+    const r = (d + Math.random() * 16) % 16 | 0;
+    d = Math.floor(d / 16);
+
+    return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+  });
 }

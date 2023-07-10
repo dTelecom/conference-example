@@ -1,0 +1,14 @@
+.copyButton {
+	@media (max-width: 1023px) {
+		font-size: 0 !important;
+		border-radius: 5px;
+		padding: 8px;
+		gap: 0;
+		height: 32px;
+
+		& > svg {
+			width: 16px;
+			height: 16px;
+		}
+	}
+}

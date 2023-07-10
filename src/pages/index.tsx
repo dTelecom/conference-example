@@ -1,23 +1,72 @@
-import {generateRoomId} from "@/lib/client-utils"
-import {Button} from "@/components/ui"
-import {useRouter} from "next/router"
+import { Button } from "@/components/ui";
+import { useRouter } from "next/router";
+import { NavBar } from "@/components/ui/NavBar";
+import { Footer } from "@/components/ui/Footer/Footer";
+import styles from "./Index.module.scss";
+import { Input } from "@/components/ui/Input/Input";
+import type { FormEvent } from "react";
+import { useState } from "react";
+import { KeyIcon } from "@/assets";
+import axios from "axios";
 
 export default function IndexPage() {
-  const {push} = useRouter()
+  const [roomName, setRoomName] = useState<string>("");
+  const [isLoading, setIsLoading] = useState(false);
+  const { push } = useRouter();
+
+  const onCreate = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (!roomName) return;
+    try {
+      setIsLoading(true);
+      const { data } = await axios.post<{ identity: string, slug: string }>("/api/createRoom", { roomName });
+      await push({
+        pathname: `/join/${data.slug}`,
+        query: {
+          identity: data.identity
+        }
+      });
+    } catch (e) {
+      console.error(e);
+    }
+
+    setIsLoading(false);
+  };
+
 
   return (
-    <section className="items-startpx-4 container mx-auto flex max-w-[680px] flex-1 flex-col pt-6 pb-8 md:py-10">
-      <div className="mx-auto my-auto flex w-full flex-col items-center gap-6">
-        <h1 className="text-5xl font-extrabold leading-tight tracking-tighter sm:text-5xl md:text-5xl lg:text-5xl">
-          Create a meeting
+    <>
+      <NavBar />
+
+      <div className={styles.container}>
+        <h1 className={styles.title}>
+          Create a Web3 Meeting
         </h1>
-        <Button
-          onClick={() => void push(`/room/${generateRoomId()}`)}
-          variant={'default'}
-        >
-          Create room
-        </Button>
+        <p className={styles.text}>
+          Open source video conferencing app built on <a href={"https://video.dtelecom.org"}>dTelecom Cloud</a>
+        </p>
+
+        <form onSubmit={(e) => void onCreate(e)}>
+          <Input
+            placeholder={"Enter a room name"}
+            value={roomName}
+            setValue={setRoomName}
+            startIcon={<KeyIcon />}
+          />
+          <Button
+            type={"submit"}
+            variant={"default"}
+            size={"lg"}
+            className={styles.button}
+            disabled={!roomName || isLoading}
+          >
+            Create a Room
+          </Button>
+        </form>
       </div>
-    </section>
-  )
+
+      <Footer />
+    </>
+  );
 }
