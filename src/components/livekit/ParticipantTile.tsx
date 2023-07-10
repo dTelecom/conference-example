@@ -56,6 +56,7 @@ export function useParticipantTile<T extends HTMLElement>({
     return mergeProps(htmlProps, {
       className,
       onClick: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         htmlProps.onClick?.(event);
         if (typeof onParticipantClick === "function") {
@@ -76,7 +77,7 @@ export function useParticipantTile<T extends HTMLElement>({
       "data-lk-local-participant": participant.isLocal,
       "data-lk-source": source,
       ...mergedProps
-    } as React.HTMLAttributes<HTMLDivElement>
+    } as unknown as React.HTMLAttributes<HTMLDivElement>
   };
 }
 

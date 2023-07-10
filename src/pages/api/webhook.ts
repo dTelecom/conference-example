@@ -16,8 +16,9 @@ export default async function handler(
   if (req.method === "POST" && req.headers.authorization) {
     const jwt = jwt_decode<JwtKey>(req.headers.authorization);
     const node = await getNodeByAddress(jwt.iss);
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     const event = receiver.receive(req.body, node.key, true);
-    console.log('event', event);
+    console.log("event", event);
   }
   res.status(200).send("ok");
 }

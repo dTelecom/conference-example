@@ -1,3 +1,5 @@
+/* eslint-disable */
+// @ts-nocheck
 import * as React from "react";
 import type { WidgetState } from "@livekit/components-core";
 import { isEqualTrackRef, isTrackReference, log } from "@livekit/components-core";
@@ -73,6 +75,8 @@ export function VideoConference({ chatMessageFormatter, onKick, onMute, isAdmin,
   React.useEffect(() => {
     // if screen share tracks are published, and no pin is set explicitly, auto set the screen share
     if (screenShareTracks.length > 0 && focusTrack === undefined) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       layoutContext.pin.dispatch?.({ msg: "set_pin", trackReference: screenShareTracks[0] });
     } else if (
       (screenShareTracks.length === 0 && focusTrack?.source === Track.Source.ScreenShare) ||

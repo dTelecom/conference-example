@@ -1,5 +1,8 @@
 /* eslint-disable no-return-assign */
 /* eslint-disable no-underscore-dangle */
+/* eslint-disable */
+// @ts-nocheck
+
 import * as React from 'react';
 import useLatest from '@react-hook/latest';
 

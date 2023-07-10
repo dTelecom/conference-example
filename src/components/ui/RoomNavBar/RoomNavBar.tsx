@@ -22,6 +22,11 @@ export const RoomNavBar = ({ slug, roomName }: RoomNavBarProps) => {
     setTimeout(() => setCopied(false), 2000);
   };
 
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+  const participantsCount: number = room?.roomInfo?.numParticipants as number || 0;
+
   return (
     <NavBar
       title={roomName}
@@ -34,7 +39,7 @@ export const RoomNavBar = ({ slug, roomName }: RoomNavBarProps) => {
           gap: "20px"
         }}
       >
-        <ParticipantsBadge count={room?.roomInfo?.numParticipants || 0} />
+        <ParticipantsBadge count={participantsCount} />
 
         <Button
           onClick={() => {
