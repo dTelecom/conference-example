@@ -1,0 +1,33 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["jsonProtocol"]
+}
+
+datasource db {
+  provider          = "postgresql"
+  url               = env("POSTGRES_PRISMA_URL") // uses connection pooling
+  directUrl         = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+  shadowDatabaseUrl = env("POSTGRES_URL_NON_POOLING") // used for migrations
+}
+
+model Room {
+  id          Int           @id @default(autoincrement())
+  name        String
+  slug        String        @unique
+  Participant Participant[]
+  adminId     Int?
+  deletedAt   DateTime?
+  deleted     Boolean       @default(false)
+}
+
+model Participant {
+  id       Int     @id @default(autoincrement())
+  name     String?
+  identity String
+  room     Room    @relation(fields: [roomId], references: [id])
+  roomId   Int
+  server   String?
+}

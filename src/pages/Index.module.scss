@@ -1,0 +1,53 @@
+.container {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding: 0 16px 96px;
+
+	@media (max-width: 1023px) {
+		padding-bottom: 56px;
+	}
+
+	.title {
+		text-align: center;
+		font-size: 42px;
+		font-weight: 700;
+		margin-bottom: 8px;
+
+		@media (max-width: 1023px) {
+			font-size: 28px;
+		}
+	}
+
+	.text {
+		font-size: 20px;
+
+		@media (max-width: 1023px) {
+			font-size: 16px;
+			text-align: center;
+		}
+
+		a {
+			color: #59E970;
+		}
+	}
+
+	form {
+		margin-top: 40px;
+		display: flex;
+		flex-direction: column;
+		width: 400px;
+		max-width: 100%;
+		gap: 24px;
+
+		@media (max-width: 1023px) {
+			margin-top: 24px;
+			gap: 16px;
+		}
+
+		.button {
+			font-weight: 700;
+			font-size: 20px;
+		}
+	}
+}

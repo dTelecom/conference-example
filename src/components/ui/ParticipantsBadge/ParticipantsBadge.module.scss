@@ -1,0 +1,26 @@
+.participants {
+	display: flex;
+	gap: 8px;
+	align-items: center;
+
+	& span {
+		@media (max-width: 1023px) {
+			display: none;
+		}
+	}
+
+	.participantsBadge {
+		background: #2E3031;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 8px 12px;
+		gap: 4px;
+		font-size: 14px;
+		font-weight: 700;
+		border-radius: 10px;
+		@media (max-width: 1023px) {
+			padding: 8px 8px;
+		}
+	}
+}

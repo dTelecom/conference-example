@@ -1,122 +1,81 @@
-import type {LocalUserChoices} from "@livekit/components-react"
-import {formatChatMessageLinks, LiveKitRoom, PreJoin, VideoConference} from "@livekit/components-react"
-import {api} from "@/lib/api"
-import React, {useMemo, useState} from "react"
-import type {GetServerSideProps, NextPage} from "next"
-import type {RoomOptions} from "livekit-client"
-import {LogLevel, VideoPresets} from "livekit-client"
-import {useRouter} from "next/router"
-import {DebugMode} from "@/lib/Debug"
+import type { LocalUserChoices } from "@livekit/components-react";
+import { formatChatMessageLinks, LiveKitRoom } from "@livekit/components-react";
+import React, { useEffect, useMemo } from "react";
+import type { GetServerSideProps, NextPage } from "next";
+import type { RoomOptions } from "livekit-client";
+import { LogLevel, VideoPresets } from "livekit-client";
+import { useRouter } from "next/router";
+import { DebugMode } from "@/lib/Debug";
+import { Footer } from "@/components/ui/Footer/Footer";
+import { VideoConference } from "@/components/livekit/VideoConference";
+import axios from "axios";
+import { RoomNavBar } from "@/components/ui/RoomNavBar/RoomNavBar";
 
 interface Props {
   slug: string;
-}
-
-const RoomWrapper: NextPage<Props> = ({slug}) => {
-  const router = useRouter()
-
-  const [preJoinChoices, setPreJoinChoices] = useState<LocalUserChoices | undefined>(undefined)
-  return (
-    <>
-
-      {slug && preJoinChoices ? (
-        <ActiveRoom
-          roomName={slug}
-          userChoices={preJoinChoices}
-          onLeave={() => {
-            void router.push('/')
-          }}
-        ></ActiveRoom>
-      ) : (
-        <div style={{display: 'grid', placeItems: 'center', height: '100%'}}>
-          <PreJoin
-            onError={(err) => console.log('error while setting up prejoin', err)}
-            defaults={{
-              username: '',
-              videoEnabled: true,
-              audioEnabled: true,
-            }}
-            onSubmit={(values) => {
-              console.log('Joining with: ', values)
-              setPreJoinChoices(values)
-            }}
-            onValidate={(values) => {
-              if (!values.username || values.username.length < 3) {
-                return false
-              }
-              return true
-            }}
-          ></PreJoin>
-        </div>
-      )}
-
-    </>
-  )
-}
-
-export default RoomWrapper
-
-
-export const getServerSideProps: GetServerSideProps<Props> = async ({params}) => {
-  return Promise.resolve({
-    props: {
-      slug: params?.slug as string,
-    },
-  })
-}
-
-interface ActiveRoomProps {
-  userChoices: LocalUserChoices;
+  identity: string;
+  token: string;
+  wsUrl: string;
+  preJoinChoices: LocalUserChoices | null;
   roomName: string;
-  region?: string;
-  onLeave?: () => void;
+  isAdmin?: boolean;
 }
 
-function ActiveRoom({roomName, userChoices, onLeave}: ActiveRoomProps) {
-  const [token, setToken] = useState("")
-  const [wsUrl, setWsUrl] = useState("")
+const RoomWrapper: NextPage<Props> = ({ slug, roomName, isAdmin, preJoinChoices, wsUrl, identity, token }) => {
+  const router = useRouter();
 
-  api.token.get.useQuery(
-    {
-      roomName: roomName,
-      identity: userChoices.username,
-    },
-    {
-      onSuccess: (data) => {
-        setToken(data?.token)
-        setWsUrl(data?.url)
-        // sessionStorage.setItem(SESSION_VIEWER_TOKEN_KEY, data?.token)
-      },
-      enabled: true,
-      refetchOnMount: false,
-      refetchOnWindowFocus: false,
-      refetchOnReconnect: false,
-      retry: false,
-    }
-  )
+  useEffect(() => {
+    void router.replace(router.pathname.replace("[slug]", slug), undefined, { shallow: true });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  const router = useRouter()
-  const {hq} = router.query
-
+  const { hq } = router.query;
   const roomOptions = useMemo((): RoomOptions => {
     return {
       videoCaptureDefaults: {
-        deviceId: userChoices.videoDeviceId ?? undefined,
-        resolution: hq === 'true' ? VideoPresets.h2160 : VideoPresets.h720,
+        deviceId: preJoinChoices?.videoDeviceId ?? undefined,
+        resolution: hq === "true" ? VideoPresets.h2160 : VideoPresets.h720
       },
       publishDefaults: {
         videoSimulcastLayers:
-          hq === 'true'
+          hq === "true"
             ? [VideoPresets.h1080, VideoPresets.h720]
-            : [VideoPresets.h540, VideoPresets.h216],
+            : [VideoPresets.h540, VideoPresets.h216]
       },
       audioCaptureDefaults: {
-        deviceId: userChoices.audioDeviceId ?? undefined,
+        deviceId: preJoinChoices?.audioDeviceId ?? undefined
       },
-      adaptiveStream: {pixelDensity: 'screen'},
-      dynacast: false,
+      adaptiveStream: { pixelDensity: "screen" },
+      dynacast: false
+    };
+  }, [preJoinChoices, hq]);
+
+  const onMute = async (participantIdentity: string, trackSid: string) => {
+    await axios.post("/api/admin", {
+      method: "mute",
+      adminIdentity: identity,
+      participantIdentity,
+      trackSid,
+      room: slug
+    });
+  };
+
+  const onKick = async (participantIdentity: string) => {
+    await axios.post("/api/admin", {
+      method: "kick",
+      adminIdentity: identity,
+      participantIdentity,
+      room: slug
+    });
+  };
+
+  const onDisconnected = async () => {
+    if (isAdmin) {
+      await axios.post("/api/deleteRoom", { slug, identity });
     }
-  }, [userChoices, hq])
+
+    void router.push("/");
+  };
 
   return (
     <>
@@ -125,14 +84,45 @@ function ActiveRoom({roomName, userChoices, onLeave}: ActiveRoomProps) {
           token={token}
           serverUrl={wsUrl}
           options={roomOptions}
-          video={userChoices?.videoEnabled}
-          audio={userChoices?.audioEnabled}
-          onDisconnected={onLeave}
+          video={preJoinChoices?.videoEnabled}
+          audio={preJoinChoices?.audioEnabled}
+          onDisconnected={() => void onDisconnected()}
         >
-          <VideoConference chatMessageFormatter={formatChatMessageLinks}/>
-          <DebugMode logLevel={LogLevel.info}/>
+          <RoomNavBar
+            roomName={roomName}
+            slug={slug}
+          />
+
+          <VideoConference
+            chatMessageFormatter={formatChatMessageLinks}
+            onKick={isAdmin ? onKick : undefined}
+            onMute={isAdmin ? onMute : undefined}
+            isAdmin={isAdmin}
+          />
+          <DebugMode logLevel={LogLevel.info} />
         </LiveKitRoom>
       )}
+
+      <Footer />
     </>
-  )
-}
+  );
+};
+
+export default RoomWrapper;
+
+
+export const getServerSideProps: GetServerSideProps<Props> = async ({ params, query }) => {
+  const preJoinChoices: LocalUserChoices | null = query.preJoinChoices ? JSON.parse(query.preJoinChoices as string) as LocalUserChoices : null;
+  return Promise.resolve({
+    props: {
+      slug: params?.slug as string,
+      identity: query.identity as string,
+      token: query.token as string,
+      wsUrl: query.wsUrl as string,
+      preJoinChoices,
+      roomName: query.roomName as string,
+      isAdmin: query.isAdmin === "true"
+    }
+  });
+};
+
