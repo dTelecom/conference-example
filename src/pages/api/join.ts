@@ -72,7 +72,7 @@ export default async function handler(
     canPublishData: true,
     roomAdmin: isAdmin
   });
-  token.webHookURL = "https://7716-185-117-151-114.ngrok-free.app/api/webhook";
+  token.webHookURL = `${process.env.VERCEL_URL!}/api/webhook`;
 
   const ip = requestIp.getClientIp(req) || undefined;
   console.log(req.socket.localAddress, ip);
