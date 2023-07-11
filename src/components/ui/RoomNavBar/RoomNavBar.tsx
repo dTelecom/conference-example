@@ -1,11 +1,12 @@
-import { useRoomContext } from "@livekit/components-react";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { NavBar } from "@/components/ui/NavBar";
 import { ParticipantsBadge } from "@/components/ui/ParticipantsBadge/ParticipantsBadge";
 import { Button } from "@/components/ui";
 import { clsx } from "clsx";
 import { ChainIcon } from "@/assets";
 import styles from "./RoomNavBar.module.scss";
+import { useTracks } from "@livekit/components-react";
+import { RoomEvent, Track } from "livekit-client";
 
 interface RoomNavBarProps {
   slug: string;
@@ -13,7 +14,13 @@ interface RoomNavBarProps {
 }
 
 export const RoomNavBar = ({ slug, roomName }: RoomNavBarProps) => {
-  const room = useRoomContext();
+  const tracks = useTracks(
+    [
+      { source: Track.Source.Camera, withPlaceholder: true },
+      { source: Track.Source.ScreenShare, withPlaceholder: false }
+    ],
+    { updateOnlyOn: [RoomEvent.ActiveSpeakersChanged] }
+  );
   const [copied, setCopied] = useState(false);
   const copy = async () => {
     const url = `${window.location.origin}/join/${slug}`;
@@ -22,10 +29,9 @@ export const RoomNavBar = ({ slug, roomName }: RoomNavBarProps) => {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-  const participantsCount: number = room?.roomInfo?.numParticipants as number || 0;
+  const count = useMemo(() => {
+    return tracks.length;
+  }, [tracks]);
 
   return (
     <NavBar
@@ -39,7 +45,7 @@ export const RoomNavBar = ({ slug, roomName }: RoomNavBarProps) => {
           gap: "20px"
         }}
       >
-        <ParticipantsBadge count={participantsCount} />
+        <ParticipantsBadge count={count} />
 
         <Button
           onClick={() => {
