@@ -74,9 +74,9 @@ export default async function handler(
   });
   token.webHookURL = `https://${process.env.VERCEL_URL!}/api/webhook`;
 
-  const ip = requestIp.getClientIp(req) || undefined;
-  console.log(req.socket.localAddress, ip);
-  const url = await token.getWsUrl(req.socket.localAddress, ip);
+  const clientIp = requestIp.getClientIp(req) || undefined;
+
+  const url = await token.getWsUrl(clientIp);
 
   if (!adminId) {
     await prisma.participant.create({

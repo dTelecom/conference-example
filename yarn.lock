@@ -1051,18 +1051,16 @@
     "@babel/helper-validator-identifier" "^7.22.5"
     to-fast-properties "^2.0.0"
 
-"@dtelecom/server-sdk-js@^1.0.10":
-  version "1.0.10"
-  resolved "https://registry.yarnpkg.com/@dtelecom/server-sdk-js/-/server-sdk-js-1.0.10.tgz#7e91300f5b84837de92bc62823a82001d7f811d2"
-  integrity sha512-OefcMwzWs7oWGEdhgo/Rtie9wob2m1W+rPYkHzjXc/MWSKVHK+ej+q++ZiSz599smaGdddJjSrhEmJRVnlz9EQ==
+"@dtelecom/server-sdk-js@^1.0.11":
+  version "1.0.11"
+  resolved "https://registry.yarnpkg.com/@dtelecom/server-sdk-js/-/server-sdk-js-1.0.11.tgz#1ee0a9e685e2a77911c64897451abec17dee3d39"
+  integrity sha512-HXEF/ib//lRd65u/jdjzm9mg8Sj4cukba0L712OWd+I9uRY2VaGXvv2f3gnQolAyImRanNSDtU9H9fbmmi9OjQ==
   dependencies:
     axios "^0.21.0"
     camelcase-keys "^7.0.0"
-    fast-geoip "^1.1.88"
     ip-to-int "^0.3.1"
     jsonwebtoken "^8.5.1"
     key-encoder "^2.0.3"
-    nearby-sort "^1.1.1"
     protobufjs "^6.10.2"
     web3 "^1.10.0"
     web3-utils "^1.10.0"
@@ -3602,11 +3600,6 @@ fast-deep-equal@^3.1.1, fast-deep-equal@^3.1.3:
   resolved "https://registry.yarnpkg.com/fast-deep-equal/-/fast-deep-equal-3.1.3.tgz#3a7d56b559d6cbc3eb512325244e619a65c6c525"
   integrity sha512-f3qQ9oQy9j2AhBe/H9VC91wLmKBCCU/gDOnKNAYG5hswO7BLKj09Hc5HYNz9cGI++xlpDCIgDaitVs03ATR84Q==
 
-fast-geoip@^1.1.88:
-  version "1.1.88"
-  resolved "https://registry.yarnpkg.com/fast-geoip/-/fast-geoip-1.1.88.tgz#97c114bb904a1ce7ce6f48a70bd7faf2e284d1aa"
-  integrity sha512-rGBGyHTKwNtdXmlgX1IDaf0gskqzQRXR4EWFCuD6V4YSrAzhVZCS53kvKFECQkEylXd0I8rEPV7x4xhhRA4ymw==
-
 fast-glob@^3.2.11, fast-glob@^3.2.12, fast-glob@^3.2.9:
   version "3.2.12"
   resolved "https://registry.yarnpkg.com/fast-glob/-/fast-glob-3.2.12.tgz#7f39ec99c2e6ab030337142da9e0c18f37afae80"
@@ -5012,11 +5005,6 @@ natural-compare@^1.4.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/natural-compare/-/natural-compare-1.4.0.tgz#4abebfeed7541f2c27acfb29bdbbd15c8d5ba4f7"
   integrity sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==
-
-nearby-sort@^1.1.1:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/nearby-sort/-/nearby-sort-1.1.1.tgz#f7cb31238c32ff7f3e0b1e77af059e3a22c79105"
-  integrity sha512-LNQYZ5ZPAspJkhwcoEPT2ymEMD3w29W6wFGX/zIbdiffxJ+/ye60sAFXQPs8XJpAsn4pbMSqIqiXtrffhcr1Aw==
 
 negotiator@0.6.3:
   version "0.6.3"
