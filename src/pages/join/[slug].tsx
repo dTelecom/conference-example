@@ -19,8 +19,8 @@ const JoinRoomPage = ({ slug, identity }: Props) => {
   const router = useRouter();
   const [preJoinChoices, setPreJoinChoices] = useState<Partial<LocalUserChoices>>({
     username: "",
-    videoEnabled: false,
-    audioEnabled: false
+    videoEnabled: true,
+    audioEnabled: true
   });
 
   const [room, setRoom] = useState<Room>();
