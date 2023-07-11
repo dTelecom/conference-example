@@ -31,3 +31,9 @@ model Participant {
   roomId   Int
   server   String?
 }
+
+model Node {
+  iss       String   @unique
+  key       String
+  expiresAt DateTime
+}
