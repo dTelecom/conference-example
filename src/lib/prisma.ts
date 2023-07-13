@@ -5,7 +5,7 @@ declare global {
   var prisma: PrismaClient | undefined;
 }
 
-const prisma = global.prisma || new PrismaClient();
+const prisma = process.env.POSTGRES_URL_NON_POOLING ? global.prisma || new PrismaClient() : undefined;
 
 if (process.env.NODE_ENV === "development") global.prisma = prisma;
 

@@ -19,7 +19,7 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const input = req.body;
-  const admin = await prisma.participant.findFirst({
+  const admin = await prisma?.participant.findFirst({
     where: {
       identity: input.identity
     }
@@ -39,7 +39,7 @@ export default async function handler(
     });
   }
 
-  await prisma.room.update({
+  await prisma?.room.update({
     where: {
       slug: input.slug
     },

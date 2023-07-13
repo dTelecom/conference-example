@@ -23,7 +23,7 @@ export const RoomNavBar = ({ slug, roomName }: RoomNavBarProps) => {
   );
   const [copied, setCopied] = useState(false);
   const copy = async () => {
-    const url = `${window.location.origin}/join/${slug}`;
+    const url = `${window.location.origin}/join/${slug}?roomName=${roomName}`;
     await navigator.clipboard.writeText(url);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);

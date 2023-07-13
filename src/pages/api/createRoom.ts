@@ -20,28 +20,33 @@ export default async function handler(
 ) {
   const input = req.body;
   const identity = generateUUID();
-  const room = await prisma.room.create({
-    data: {
-      name: input.roomName,
-      slug: generateUUID()
-    }
-  });
 
-  const admin = await prisma.participant.create({
-    data: {
-      identity,
-      roomId: room.id
-    }
-  });
+  const slug = generateUUID();
 
-  await prisma.room.update({
-    where: {
-      id: room.id
-    },
-    data: {
-      adminId: admin.id
-    }
-  });
+  if (prisma) {
+    const room = await prisma?.room.create({
+      data: {
+        name: input.roomName,
+        slug,
+      }
+    });
 
-  res.status(200).json({ identity, slug: room.slug });
+    const admin = await prisma?.participant.create({
+      data: {
+        identity,
+        roomId: room?.id
+      }
+    });
+
+    await prisma?.room.update({
+      where: {
+        id: room?.id
+      },
+      data: {
+        adminId: admin.id
+      }
+    });
+  }
+
+  res.status(200).json({ identity, slug });
 }

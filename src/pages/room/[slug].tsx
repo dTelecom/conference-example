@@ -10,10 +10,10 @@ import { Footer } from "@/components/ui/Footer/Footer";
 import { VideoConference } from "@/components/livekit/VideoConference";
 import axios from "axios";
 import { RoomNavBar } from "@/components/ui/RoomNavBar/RoomNavBar";
+import { getIdentity } from "@/lib/client-utils";
 
 interface Props {
   slug: string;
-  identity: string;
   token: string;
   wsUrl: string;
   preJoinChoices: LocalUserChoices | null;
@@ -21,13 +21,20 @@ interface Props {
   isAdmin?: boolean;
 }
 
-const RoomWrapper: NextPage<Props> = ({ slug, roomName, isAdmin, preJoinChoices, wsUrl, identity, token }) => {
+const RoomWrapper: NextPage<Props> = ({ slug, roomName, isAdmin, preJoinChoices, wsUrl, token }) => {
   const router = useRouter();
+  const identity = getIdentity(slug);
 
   useEffect(() => {
     void router.replace(router.pathname.replace("[slug]", slug), undefined, { shallow: true });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    if (!identity) {
+      void router.push("/");
+    }
+  }, [identity, router]);
 
   const { hq } = router.query;
   const roomOptions = useMemo((): RoomOptions => {
@@ -116,7 +123,6 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({ params, qu
   return Promise.resolve({
     props: {
       slug: params?.slug as string,
-      identity: query.identity as string,
       token: query.token as string,
       wsUrl: query.wsUrl as string,
       preJoinChoices,

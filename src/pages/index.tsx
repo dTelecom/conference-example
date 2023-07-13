@@ -8,6 +8,7 @@ import type { FormEvent } from "react";
 import { useState } from "react";
 import { KeyIcon } from "@/assets";
 import axios from "axios";
+import { setIdentity } from "@/lib/client-utils";
 
 export default function IndexPage() {
   const [roomName, setRoomName] = useState<string>("");
@@ -18,13 +19,15 @@ export default function IndexPage() {
     e.preventDefault();
 
     if (!roomName) return;
+
     try {
       setIsLoading(true);
       const { data } = await axios.post<{ identity: string, slug: string }>("/api/createRoom", { roomName });
+      setIdentity(data.slug, data.identity);
       await push({
         pathname: `/join/${data.slug}`,
         query: {
-          identity: data.identity
+          roomName
         }
       });
     } catch (e) {

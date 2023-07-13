@@ -8,14 +8,15 @@ import { Footer } from "@/components/ui/Footer/Footer";
 import { ParticipantsBadge } from "@/components/ui/ParticipantsBadge/ParticipantsBadge";
 import axios from "axios";
 import type { IJoinResponse } from "@/pages/api/join";
-import type { Room } from ".prisma/client";
+import type { IGetRoomResponse } from "@/pages/api/getRoom";
+import { getIdentity, setIdentity } from "@/lib/client-utils";
 
 interface Props {
   slug: string;
-  identity?: string;
+  roomName: string;
 }
 
-const JoinRoomPage = ({ slug, identity }: Props) => {
+const JoinRoomPage = ({ slug, roomName: name }: Props) => {
   const router = useRouter();
   const [preJoinChoices, setPreJoinChoices] = useState<Partial<LocalUserChoices>>({
     username: "",
@@ -23,18 +24,18 @@ const JoinRoomPage = ({ slug, identity }: Props) => {
     audioEnabled: true
   });
 
-  const [room, setRoom] = useState<Room>();
+  const [roomName, setRoomName] = useState<string>();
   const [participantsCount, setParticipantsCount] = useState<number>();
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     async function fetchRoom() {
-      const { data } = await axios.get<{ participantsCount: number, room: Room }>(`/api/getRoom?slug=${slug}`);
-      if (data.room.deleted) {
+      const { data } = await axios.get<IGetRoomResponse>(`/api/getRoom?slug=${slug}`);
+      if (data.roomDeleted) {
         void router.push("/");
       }
-      setParticipantsCount(data.participantsCount || 0);
-      setRoom(data.room);
+      setParticipantsCount(data.participantsCount);
+      setRoomName(data.roomName);
     }
 
     void fetchRoom();
@@ -46,17 +47,18 @@ const JoinRoomPage = ({ slug, identity }: Props) => {
     const { data } = await axios.post<IJoinResponse>(`/api/join`, {
       slug,
       name: values?.username || "",
-      identity: identity || ""
+      identity: getIdentity(slug) || ""
     });
+
+    setIdentity(slug, data.identity);
 
     await router.push({
       pathname: `/room/${data.slug}`,
       query: {
-        identity: data.identity,
         token: data.token,
         wsUrl: data.url,
         preJoinChoices: JSON.stringify(values),
-        roomName: data.roomName,
+        roomName: data.roomName || name,
         isAdmin: data.isAdmin
       }
     });
@@ -64,14 +66,14 @@ const JoinRoomPage = ({ slug, identity }: Props) => {
     setIsLoading(false);
   };
 
-  if (!room) {
+  if (roomName === undefined) {
     return null;
   }
 
   return (
     <>
       <NavBar
-        title={room?.name}
+        title={roomName || name}
         small
       >
         {participantsCount !== undefined && (
@@ -87,7 +89,7 @@ const JoinRoomPage = ({ slug, identity }: Props) => {
             void onJoin(values);
           }}
           onValidate={(values) => {
-            if (!values.username || values.username.length < 3 || !room || isLoading) {
+            if (!values.username || values.username.length < 3 || isLoading) {
               return false;
             }
             return true;
@@ -104,7 +106,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({ params, qu
   return Promise.resolve({
     props: {
       slug: params?.slug as string,
-      identity: query?.identity as string ?? null
+      roomName: query?.roomName as string || ''
     }
   });
 };

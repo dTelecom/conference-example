@@ -2,7 +2,6 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import type { TypeOf } from "zod";
 import { z } from "zod";
 import prisma from "@/lib/prisma";
-import { RoomServiceClient } from "@dtelecom/server-sdk-js";
 
 const schema = z.object({
   slug: z.string()
@@ -12,50 +11,40 @@ interface ApiRequest extends NextApiRequest {
   body: TypeOf<typeof schema>;
 }
 
-export interface IJoinResponse {
-  identity: string;
-  url: string;
-  token: string;
+export interface IGetRoomResponse {
   slug: string;
   roomName: string;
-  isAdmin: boolean;
+  participantsCount?: number;
+  roomDeleted: boolean;
 }
 
 export default async function handler(
   req: ApiRequest,
   res: NextApiResponse
 ) {
-  const input = req.body;
-  const room = await prisma.room.findFirst({
-    where: {
-      slug: input.slug
-    }
-  });
+  const { slug } = req.body;
 
-  if (!room) {
-    throw new Error("Room not found");
-  }
-
+  let room = null;
   let participantsCount = 0;
-  if (room.adminId) {
-    const admin = await prisma.participant.findFirst({
+
+  if (prisma) {
+    room = await prisma?.room.findFirst({
       where: {
-        id: room.adminId
+        slug
       }
     });
 
-    if (admin?.server) {
-      const url = admin.server;
-      const svc = new RoomServiceClient(url, process.env.API_KEY, process.env.API_SECRET);
-      svc.authHeader({
-        room: input.slug
-      });
-
-      const [first] = await svc.listRooms([input.slug]);
-      participantsCount = first?.numParticipants || 0;
+    if (!room) {
+      throw new Error("Room not found");
     }
+
+    participantsCount = room.participantCount;
   }
 
-
-  res.status(200).json({ room, participantsCount });
+  res.status(200).json({
+    slug,
+    roomName: room?.name || "",
+    roomDeleted: room?.deleted,
+    participantsCount
+  });
 }

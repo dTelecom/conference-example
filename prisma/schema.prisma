@@ -14,13 +14,14 @@ datasource db {
 }
 
 model Room {
-  id          Int           @id @default(autoincrement())
-  name        String
-  slug        String        @unique
-  Participant Participant[]
-  adminId     Int?
-  deletedAt   DateTime?
-  deleted     Boolean       @default(false)
+  id               Int           @id @default(autoincrement())
+  name             String
+  slug             String        @unique
+  Participant      Participant[]
+  adminId          Int?
+  deletedAt        DateTime?
+  deleted          Boolean       @default(false)
+  participantCount Int           @default(0)
 }
 
 model Participant {
