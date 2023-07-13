@@ -6,6 +6,15 @@ This demo is a Next.js app. You can deploy to your Vercel account with one click
 
 Refer to the [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more about deploying to a production environment.
 
+## Creating and connecting database
+
+1. Open https://vercel.com/dashboard/stores
+2. Click "Create" at Postgress (Beta)
+3. Select storage type "Postgress" and press "Continue"
+4. Type database name, select location and press "Create"
+5. Press "Connect Project" in "Getting started" section, select your project
+6. Redeploy your project
+
 ## Running locally
 
 Clone the repo and install dependencies:
@@ -23,6 +32,12 @@ Edit `.env.development` file to add your new API key and secret
 ```
 API_KEY=<your api key>
 API_SECRET=<your api secret>
+```
+
+To use webhooks locally add url pointed to deployment without protocol:
+
+```
+VERCEL_URL=<url>
 ```
 
 Then run the development server:

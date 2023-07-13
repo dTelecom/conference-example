@@ -77,7 +77,7 @@ export default async function handler(
     canPublishData: true,
     roomAdmin: isAdmin
   });
-  token.webHookURL = `https://${process.env.VERCEL_URL!}/api/webhook`;
+  token.webHookURL = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}/api/webhook` : undefined;
 
   const clientIp = requestIp.getClientIp(req) || undefined;
 
