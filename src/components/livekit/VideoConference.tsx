@@ -102,8 +102,8 @@ export function VideoConference({ chatMessageFormatter, onKick, onMute, isAdmin,
             <div className="lk-grid-layout-wrapper">
               <GridLayout tracks={tracks}>
                 <ParticipantTile
-                  onKick={!isAdmin ? onKick : undefined}
-                  onMute={!isAdmin ? onMute : undefined}
+                  onKick={onKick}
+                  onMute={onMute}
                 />
               </GridLayout>
             </div>
@@ -112,8 +112,8 @@ export function VideoConference({ chatMessageFormatter, onKick, onMute, isAdmin,
               <FocusLayoutContainer>
                 <CarouselLayout tracks={carouselTracks}>
                   <ParticipantTile
-                    onKick={!isAdmin ? onKick : undefined}
-                    onMute={!isAdmin ? onMute : undefined}
+                    onKick={onKick}
+                    onMute={onMute}
                   />
                 </CarouselLayout>
                 {focusTrack && <FocusLayout track={focusTrack} />}
