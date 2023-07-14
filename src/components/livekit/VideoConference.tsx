@@ -27,8 +27,9 @@ import { ControlBar } from "@/components/livekit/ControlBar";
 export interface VideoConferenceProps extends React.HTMLAttributes<HTMLDivElement> {
   chatMessageFormatter?: MessageFormatter;
   onKick?: (identity: string) => void;
-  onMute?: (identity: string, trackSid: string) => void;
+  onMute?: (identity: string, trackSid: string, type: 'audio' | 'video') => void;
   isAdmin?: boolean;
+  localIdentity?: string;
 }
 
 /**
@@ -47,7 +48,7 @@ export interface VideoConferenceProps extends React.HTMLAttributes<HTMLDivElemen
  * ```
  * @public
  */
-export function VideoConference({ chatMessageFormatter, onKick, onMute, isAdmin, ...props }: VideoConferenceProps) {
+export function VideoConference({ chatMessageFormatter, onKick, onMute, isAdmin, localIdentity, ...props }: VideoConferenceProps) {
   const [widgetState, setWidgetState] = React.useState<WidgetState>({ showChat: false });
 
   const tracks = useTracks(
@@ -104,6 +105,7 @@ export function VideoConference({ chatMessageFormatter, onKick, onMute, isAdmin,
                 <ParticipantTile
                   onKick={onKick}
                   onMute={onMute}
+                  localIdentity={localIdentity}
                 />
               </GridLayout>
             </div>
@@ -114,6 +116,7 @@ export function VideoConference({ chatMessageFormatter, onKick, onMute, isAdmin,
                   <ParticipantTile
                     onKick={onKick}
                     onMute={onMute}
+                    localIdentity={localIdentity}
                   />
                 </CarouselLayout>
                 {focusTrack && <FocusLayout track={focusTrack} />}

@@ -2,6 +2,7 @@ import { RoomServiceClient } from "@dtelecom/server-sdk-js";
 import type { NextApiRequest, NextApiResponse } from "next";
 import type { TypeOf } from "zod";
 import { z } from "zod";
+import prisma from "@/lib/prisma";
 
 const schema = z.object({
   method: z.enum(["kick", "mute"]),

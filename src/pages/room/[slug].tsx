@@ -10,7 +10,7 @@ import { Footer } from "@/components/ui/Footer/Footer";
 import { VideoConference } from "@/components/livekit/VideoConference";
 import axios from "axios";
 import { RoomNavBar } from "@/components/ui/RoomNavBar/RoomNavBar";
-import { getIdentity } from "@/lib/client-utils";
+import { getIdentity, removeIdentity } from "@/lib/client-utils";
 
 interface Props {
   slug: string;
@@ -105,6 +105,7 @@ const RoomWrapper: NextPage<Props> = ({ slug, roomName, isAdmin, preJoinChoices,
             onKick={isAdmin ? onKick : undefined}
             onMute={isAdmin ? onMute : undefined}
             isAdmin={isAdmin}
+            localIdentity={identity}
           />
           <DebugMode logLevel={LogLevel.info} />
         </LiveKitRoom>

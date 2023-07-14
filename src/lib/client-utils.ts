@@ -14,7 +14,7 @@ export const setIdentity = (slug: string, identity: string) => {
 };
 
 export const getIdentity = (slug: string) => {
-  return sessionStorage.getItem(slug)
+  return sessionStorage.getItem(slug) || undefined;
 }
 
 export const removeIdentity = (slug: string) => {
