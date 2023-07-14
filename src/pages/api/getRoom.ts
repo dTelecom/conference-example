@@ -22,7 +22,7 @@ export default async function handler(
   req: ApiRequest,
   res: NextApiResponse
 ) {
-  const { slug } = req.body;
+  const { slug as string } = req.query;
 
   let room = null;
   let participantsCount = 0;
