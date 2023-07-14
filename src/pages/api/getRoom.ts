@@ -22,7 +22,7 @@ export default async function handler(
   req: ApiRequest,
   res: NextApiResponse
 ) {
-  const { slug as string } = req.query;
+  const { slug } = req.query;
 
   let room = null;
   let participantsCount = 0;
@@ -30,7 +30,7 @@ export default async function handler(
   if (prisma) {
     room = await prisma?.room.findFirst({
       where: {
-        slug
+        slug: slug as string
       }
     });
 
