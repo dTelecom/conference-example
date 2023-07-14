@@ -50,8 +50,3 @@ main {
     background-color: #59E970 !important;
     color: #252728 !important;
 }
-
-.lk-control-bar {
-    overflow-x: auto;
-    overflow-y: hidden;
-}
