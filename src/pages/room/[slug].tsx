@@ -10,7 +10,7 @@ import { Footer } from "@/components/ui/Footer/Footer";
 import { VideoConference } from "@/components/livekit/VideoConference";
 import axios from "axios";
 import { RoomNavBar } from "@/components/ui/RoomNavBar/RoomNavBar";
-import { getIdentity, removeIdentity } from "@/lib/client-utils";
+import { getIdentity } from "@/lib/client-utils";
 
 interface Props {
   slug: string;
