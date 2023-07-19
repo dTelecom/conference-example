@@ -112,6 +112,8 @@ export function VideoConference({ chatMessageFormatter, onKick, onMute, isAdmin,
           ) : (
             <div className="lk-focus-layout-wrapper">
               <FocusLayoutContainer>
+                {focusTrack && <FocusLayout track={focusTrack} />}
+
                 <CarouselLayout tracks={carouselTracks}>
                   <ParticipantTile
                     onKick={onKick}
@@ -119,7 +121,6 @@ export function VideoConference({ chatMessageFormatter, onKick, onMute, isAdmin,
                     localIdentity={localIdentity}
                   />
                 </CarouselLayout>
-                {focusTrack && <FocusLayout track={focusTrack} />}
               </FocusLayoutContainer>
             </div>
           )}

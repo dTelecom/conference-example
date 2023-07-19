@@ -4,7 +4,7 @@ import * as React from "react";
 import { cn } from "@/styles/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center rounded-md text-sm transition-colors focus:outline-none  dark:hover:bg-zinc-800 dark:hover:text-zinc-100 disabled:opacity-50 dark:focus:ring-zinc-400 disabled:pointer-events-none dark:focus:ring-offset-zinc-900 data-[state=open]:bg-zinc-100 dark:data-[state=open]:bg-zinc-800",
+  "inline-flex items-center justify-center rounded-md text-sm transition-colors focus:outline-none disabled:opacity-50 disabled:pointer-events-none data-[state=open]:bg-zinc-100 dark:data-[state=open]:bg-zinc-800",
   {
     variants: {
       variant: {

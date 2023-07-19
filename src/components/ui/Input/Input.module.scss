@@ -19,7 +19,7 @@
 		border-right: 2px solid #2E3031;
 		padding-right: 16px;
 
-		@media (max-width: 1023px) {
+		@media (max-width: 600px) {
 			height: 22px;
 			padding-right: 8px;
 			& > svg {
@@ -40,7 +40,7 @@
 		color: #ffffff;
 		flex: 1;
 
-		@media (max-width: 1023px) {
+		@media (max-width: 600px) {
 			font-size: 16px;
 			padding-left: 70px;
 		}

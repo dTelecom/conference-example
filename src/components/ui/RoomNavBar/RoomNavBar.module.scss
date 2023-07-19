@@ -1,5 +1,5 @@
 .copyButton {
-	@media (max-width: 1023px) {
+	@media (max-width: 600px) {
 		background-color: #59E970 !important;
 		color: #252728 !important;
 		font-size: 0 !important;
@@ -15,7 +15,6 @@
 	}
 
 	&.copied {
-		color: #59E970 !important;
-		background: #252728 !important;
+		opacity: 0.8;
 	}
 }

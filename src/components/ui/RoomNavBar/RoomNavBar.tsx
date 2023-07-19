@@ -53,6 +53,7 @@ export const RoomNavBar = ({ slug, roomName }: RoomNavBarProps) => {
           }}
           className={clsx("lk-button", styles.copyButton, copied && styles.copied)}
           size={"sm"}
+          variant={"default"}
         >
           {copied ? <TickIcon/> : <ChainIcon />}{copied ? "Copied" : "Copy invite link"}
         </Button>

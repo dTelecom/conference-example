@@ -7,9 +7,10 @@ import { clsx } from "clsx";
 interface Props extends React.PropsWithChildren {
   title?: string;
   small?: boolean;
+  iconFull?: boolean;
 }
 
-export function NavBar({ title, small, children }: Props) {
+export function NavBar({ title, small, iconFull, children }: Props) {
   return (
     <header className={clsx(styles.container, small && styles.small)}>
       <Link
@@ -19,7 +20,7 @@ export function NavBar({ title, small, children }: Props) {
           justifyContent: !title && !children ? "center" : undefined
         }}
       >
-        {small ? <LogoSmallIcon /> : <LogoIcon />}
+        {small && !iconFull ? <LogoSmallIcon /> : <LogoIcon />}
       </Link>
 
       {title && (

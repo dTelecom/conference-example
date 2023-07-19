@@ -10,7 +10,7 @@
 	width: 100%;
 	justify-content: space-between;
 
-	@media (max-width: 1023px) {
+	@media (max-width: 600px) {
 		height: 56px;
 		padding-top: 8px;
 		padding-bottom: 8px;
@@ -31,7 +31,7 @@
 		display: flex;
 
 		& > svg {
-			@media (max-width: 1023px) {
+			@media (max-width: 600px) {
 				transform: scale(0.8);
 			}
 		}
@@ -43,7 +43,7 @@
 		font-weight: 700;
 		text-align: center;
 
-		@media (max-width: 1023px) {
+		@media (max-width: 600px) {
 			font-size: 18px;
 		}
 	}
