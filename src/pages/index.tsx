@@ -47,7 +47,7 @@ export default function IndexPage() {
           Create a Web3 Meeting
         </h1>
         <p className={styles.text}>
-          Open source video conferencing app built on <a href={"https://video.dtelecom.org"} target={'_blank'}>dTelecom Cloud</a>
+          Open source video conferencing app built on <a href={"https://video.dtelecom.org"} target={'_blank'} rel="noreferrer">dTelecom Cloud</a>
         </p>
 
         <form onSubmit={(e) => void onCreate(e)}>

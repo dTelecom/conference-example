@@ -24,7 +24,7 @@ import SvgParticipantPlaceholder from "@/assets/images/ParticipantPlaceholder";
 import SvgLeaveIcon from "@/components/livekit/icons/LeaveIcon";
 import MicIcon from "@/components/livekit/icons/MicIcon";
 import CamIcon from "@/components/livekit/icons/CamIcon";
-import { ButtonWithToolTip } from "@/components/ButtonWithToolTip/ButtonWithToolTip";
+import ButtonWithToolTip from "@/components/ButtonWithToolTip/ButtonWithToolTip";
 
 /** @public */
 export type ParticipantTileProps = React.HTMLAttributes<HTMLDivElement> & {

@@ -9,7 +9,7 @@ interface ButtonWithToolTip {
   icon: ReactNode;
 }
 
-export const ButtonWithToolTip = ({ onClick, text, icon }: ButtonWithToolTip) => {
+const ButtonWithToolTip = ({ onClick, text, icon }: ButtonWithToolTip) => {
   return <button
     onClick={onClick}
     style={{ position: "initial" }}
@@ -19,3 +19,5 @@ export const ButtonWithToolTip = ({ onClick, text, icon }: ButtonWithToolTip) =>
     {icon}
   </button>;
 };
+
+export default ButtonWithToolTip;
