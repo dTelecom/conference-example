@@ -4,6 +4,7 @@ import DtelecomIcon from "./dTelecom.svg";
 import ParticipantsIcon from "./participants.svg";
 import ChainIcon from "./chain.svg";
 import LogoSmallIcon from "./logoSmall.svg";
+import TickIcon from "./tick.svg";
 
 export {
   LogoIcon,
@@ -11,5 +12,6 @@ export {
   DtelecomIcon,
   ParticipantsIcon,
   ChainIcon,
-  LogoSmallIcon
+  LogoSmallIcon,
+  TickIcon,
 };

@@ -3,7 +3,7 @@ import { NavBar } from "@/components/ui/NavBar";
 import { ParticipantsBadge } from "@/components/ui/ParticipantsBadge/ParticipantsBadge";
 import { Button } from "@/components/ui";
 import { clsx } from "clsx";
-import { ChainIcon } from "@/assets";
+import { ChainIcon, TickIcon } from "@/assets";
 import styles from "./RoomNavBar.module.scss";
 import { useTracks } from "@livekit/components-react";
 import { RoomEvent, Track } from "livekit-client";
@@ -51,10 +51,10 @@ export const RoomNavBar = ({ slug, roomName }: RoomNavBarProps) => {
           onClick={() => {
             void copy();
           }}
-          className={clsx("lk-button", styles.copyButton)}
+          className={clsx("lk-button", styles.copyButton, copied && styles.copied)}
           size={"sm"}
         >
-          <ChainIcon />{copied ? "Copied" : "Copy invite link"}
+          {copied ? <TickIcon/> : <ChainIcon />}{copied ? "Copied" : "Copy invite link"}
         </Button>
       </div>
     </NavBar>

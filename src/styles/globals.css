@@ -33,6 +33,10 @@ main {
     padding-bottom: 45px;
 }
 
+.text-green {
+    color: #59E970;
+}
+
 .bg-green {
     background-color: #59E970;
     color: #252728;
@@ -49,4 +53,8 @@ main {
 .lk-start-audio-button, .lk-join-button {
     background-color: #59E970 !important;
     color: #252728 !important;
+}
+
+.lk-participant-metadata {
+    z-index: 1;
 }
