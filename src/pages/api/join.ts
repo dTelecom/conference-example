@@ -10,7 +10,7 @@ import requestIp from "request-ip";
 
 const schema = z.object({
   slug: z.string(),
-  name: z.string().min(3),
+  name: z.string().min(1),
   identity: z.string().optional(),
   isAdmin: z.boolean().optional()
 });

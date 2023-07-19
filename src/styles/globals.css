@@ -33,9 +33,19 @@ main {
     padding-bottom: 45px;
 }
 
+.text-green {
+    color: #59E970;
+}
+
 .bg-green {
     background-color: #59E970;
     color: #252728;
+}
+
+.bg-green:not(:disabled):hover {
+    background-color: #59E970;
+    color: #252728;
+    opacity: 0.8;
 }
 
 .lk-room-container {
@@ -49,4 +59,111 @@ main {
 .lk-start-audio-button, .lk-join-button {
     background-color: #59E970 !important;
     color: #252728 !important;
+}
+
+.lk-participant-metadata {
+    z-index: 1;
+}
+
+@media (max-width: 600px) {
+    .lk-participant-placeholder svg {
+        transform: scale(0.6);
+    }
+}
+
+@media (min-width: 601px) {
+    .lk-grid-layout {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+}
+
+.lk-chat {
+    z-index: 1;
+    padding: var(--lk-grid-gap);
+    padding-left: 0;
+    padding-right: 0;
+    padding-bottom: 0;
+    background: transparent;
+    border: none;
+    margin-bottom: 0;
+}
+
+@media (max-width: 600px) {
+    .lk-chat {
+        position: absolute;
+        border-radius: 0;
+        padding: 0;
+        top: 0;
+        right: 0;
+        left: 0;
+        bottom: 69px;
+        width: 100%;
+    }
+    .lk-list {
+        border-radius: 0;
+    }
+}
+
+.lk-list {
+    border-radius: 10px 0px 0px 0px;
+    background: #212121;
+}
+
+.lk-chat-form {
+    background: #212121;
+    border: none;
+}
+
+.lk-chat-form .lk-form-control {
+    background: none;
+}
+
+.lk-list.lk-chat-messages {
+    margin-bottom: 0 !important;
+}
+
+.lk-chat-entry {
+    margin: 0 16px;
+}
+
+.lk-chat-entry[data-lk-message-origin=local] .lk-message-body {
+    background: #324F36;
+    color: #FFFFFF;
+    border-radius: 5px;
+    padding: 4px 12px;
+}
+
+.lk-chat-entry[data-lk-message-origin=remote] .lk-message-body {
+    background: #2E3031;
+    border-radius: 5px;
+    padding: 4px 12px;
+}
+
+.lk-chat .lk-participant-name, .lk-chat .lk-timestamp {
+    color: #777575;
+    font-size: 14px;
+}
+
+.lk-button.lk-chat-form-button {
+    background: #ffffff;
+    color: #000;
+}
+
+.lk-button.lk-chat-form-button:hover {
+    background: #ffffff;
+    color: #000;
+    opacity: 0.8;
+}
+
+.lk-focus-layout {
+    grid-template-columns: 5fr 1fr;
+}
+
+.lk-participant-tile::after {
+    border-color: #59E970;
+}
+
+.lk-participant-tile .lk-participant-metadata-item:has(.lk-participant-name) {
+    background-color: rgba(46, 48, 49, 0.7);
 }

@@ -93,19 +93,6 @@ export function ControlBar({ variation, controls, isAdmin, ...props }: ControlBa
 
   return (
     <div className="lk-control-bar" {...props}>
-      {visibleControls.microphone && (
-        <div className="lk-button-group">
-          <TrackToggle
-            source={Track.Source.Microphone}
-            showIcon={showIcon}
-          >
-            {showText && "Microphone"}
-          </TrackToggle>
-          <div className="lk-button-group-menu">
-            <MediaDeviceMenu kind="audioinput" />
-          </div>
-        </div>
-      )}
       {visibleControls.camera && (
         <div className="lk-button-group">
           <TrackToggle
@@ -119,6 +106,21 @@ export function ControlBar({ variation, controls, isAdmin, ...props }: ControlBa
           </div>
         </div>
       )}
+
+      {visibleControls.microphone && (
+        <div className="lk-button-group">
+          <TrackToggle
+            source={Track.Source.Microphone}
+            showIcon={showIcon}
+          >
+            {showText && "Microphone"}
+          </TrackToggle>
+          <div className="lk-button-group-menu">
+            <MediaDeviceMenu kind="audioinput" />
+          </div>
+        </div>
+      )}
+
       {visibleControls.screenShare && !isMobile && (
         <TrackToggle
           source={Track.Source.ScreenShare}
@@ -126,21 +128,24 @@ export function ControlBar({ variation, controls, isAdmin, ...props }: ControlBa
           showIcon={showIcon}
           onChange={onScreenShareChange}
         >
-          {showText && (isScreenShareEnabled ? "Stop screen share" : "Share screen")}
+          {showText && (isScreenShareEnabled ? "Stop screen share" : "Share Screen")}
         </TrackToggle>
       )}
+
       {visibleControls.chat && (
         <ChatToggle>
           {showIcon && <ChatIcon />}
           {showText && "Chat"}
         </ChatToggle>
       )}
+
       {visibleControls.leave && (
         <DisconnectButton>
           {showIcon && <LeaveIcon />}
-          {showText && (isAdmin ? "End room" : "Leave")}
+          {showText && (isAdmin ? "End room" : "End")}
         </DisconnectButton>
       )}
+
       <StartAudio label="Start Audio" />
     </div>
   );

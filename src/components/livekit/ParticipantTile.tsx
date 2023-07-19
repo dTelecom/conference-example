@@ -24,6 +24,7 @@ import SvgParticipantPlaceholder from "@/assets/images/ParticipantPlaceholder";
 import SvgLeaveIcon from "@/components/livekit/icons/LeaveIcon";
 import MicIcon from "@/components/livekit/icons/MicIcon";
 import CamIcon from "@/components/livekit/icons/CamIcon";
+import { ButtonWithToolTip } from "@/components/ButtonWithToolTip/ButtonWithToolTip";
 
 /** @public */
 export type ParticipantTileProps = React.HTMLAttributes<HTMLDivElement> & {
@@ -205,7 +206,6 @@ export const ParticipantTile = ({
                 )}
               </div>
 
-
               <ConnectionQualityIndicator className="lk-participant-metadata-item" />
             </div>
           </>
@@ -222,34 +222,27 @@ export const ParticipantTile = ({
           }}
         >
           {!localUser && onKick && (
-            <button
+            <ButtonWithToolTip
               onClick={() => onKick(trackRef.participant.identity)}
-              style={{ position: "initial" }}
-              className={"lk-participant-metadata-item lk-focus-toggle-button"}
-            >
-              <SvgLeaveIcon />
-            </button>
+              icon={<SvgLeaveIcon />}
+              text={"Kick from Room"}
+            />
           )}
 
-          {/*mutePublishedTrack(room: string, identity: string, trackSid: string, muted: boolean): Promise<TrackInfo>;*/}
           {!localUser && audioTrack && !audioTrack.isMuted && onMute && (
-            <button
+            <ButtonWithToolTip
               onClick={() => onMute(trackRef.participant.identity, audioTrack.trackSid)}
-              style={{ position: "initial" }}
-              className={"lk-participant-metadata-item lk-focus-toggle-button"}
-            >
-              <MicIcon />
-            </button>
+              icon={<MicIcon />}
+              text={"Mute Audio"}
+            />
           )}
 
           {!localUser && videoTrack && !videoTrack.isMuted && onMute && (
-            <button
+            <ButtonWithToolTip
               onClick={() => onMute(trackRef.participant.identity, videoTrack.trackSid)}
-              style={{ position: "initial" }}
-              className={"lk-participant-metadata-item lk-focus-toggle-button"}
-            >
-              <CamIcon />
-            </button>
+              icon={<CamIcon />}
+              text={"Disable Video"}
+            />
           )}
         </div>
         <FocusToggle trackSource={trackRef.source} />

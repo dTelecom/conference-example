@@ -10,6 +10,7 @@ import axios from "axios";
 import type { IJoinResponse } from "@/pages/api/join";
 import type { IGetRoomResponse } from "@/pages/api/getRoom";
 import { getIdentity, setIdentity } from "@/lib/client-utils";
+import { isMobileBrowser } from "@livekit/components-core";
 
 interface Props {
   slug: string;
@@ -18,6 +19,8 @@ interface Props {
 
 const JoinRoomPage = ({ slug, roomName: name }: Props) => {
   const router = useRouter();
+  const isMobile = React.useMemo(() => isMobileBrowser(), []);
+
   const [preJoinChoices, setPreJoinChoices] = useState<Partial<LocalUserChoices>>({
     username: "",
     videoEnabled: true,
@@ -73,10 +76,11 @@ const JoinRoomPage = ({ slug, roomName: name }: Props) => {
   return (
     <>
       <NavBar
-        title={roomName || name}
+        title={isMobile ? "" : roomName || name}
         small
+        iconFull
       >
-        {participantsCount !== undefined && (
+        {!isMobile && participantsCount !== undefined && (
           <ParticipantsBadge count={participantsCount} />
         )}
       </NavBar>
@@ -89,7 +93,7 @@ const JoinRoomPage = ({ slug, roomName: name }: Props) => {
             void onJoin(values);
           }}
           onValidate={(values) => {
-            if (!values.username || values.username.length < 3 || isLoading) {
+            if (!values.username || values.username.length < 1 || isLoading) {
               return false;
             }
             return true;
@@ -106,7 +110,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({ params, qu
   return Promise.resolve({
     props: {
       slug: params?.slug as string,
-      roomName: query?.roomName as string || ''
+      roomName: query?.roomName as string || ""
     }
   });
 };
