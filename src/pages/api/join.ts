@@ -1,5 +1,4 @@
-import type { Room } from "@dtelecom/server-sdk-js";
-import { AccessToken, RoomServiceClient } from "@dtelecom/server-sdk-js";
+import { AccessToken } from "@dtelecom/server-sdk-js";
 import type { NextApiRequest, NextApiResponse } from "next";
 import type { TypeOf } from "zod";
 import { z } from "zod";
@@ -41,7 +40,7 @@ export default async function handler(
   let room = null;
 
   if (prisma) {
-     room = await prisma.room.findFirst({
+    room = await prisma.room.findFirst({
       where: {
         slug: input.slug
       }
