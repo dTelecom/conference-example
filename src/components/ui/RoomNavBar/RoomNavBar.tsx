@@ -11,9 +11,10 @@ import { RoomEvent, Track } from "livekit-client";
 interface RoomNavBarProps {
   slug: string;
   roomName: string;
+  iconFull?: boolean;
 }
 
-export const RoomNavBar = ({ slug, roomName }: RoomNavBarProps) => {
+export const RoomNavBar = ({ slug, roomName, iconFull }: RoomNavBarProps) => {
   const tracks = useTracks(
     [
       { source: Track.Source.Camera, withPlaceholder: true },
@@ -37,6 +38,7 @@ export const RoomNavBar = ({ slug, roomName }: RoomNavBarProps) => {
     <NavBar
       title={roomName}
       small
+      iconFull={iconFull}
     >
       <div
         style={{

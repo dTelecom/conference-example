@@ -11,6 +11,7 @@ import { VideoConference } from "@/components/livekit/VideoConference";
 import axios from "axios";
 import { RoomNavBar } from "@/components/ui/RoomNavBar/RoomNavBar";
 import { getIdentity } from "@/lib/client-utils";
+import { isMobileBrowser } from "@livekit/components-core";
 
 interface Props {
   slug: string;
@@ -24,6 +25,7 @@ interface Props {
 const RoomWrapper: NextPage<Props> = ({ slug, roomName, isAdmin, preJoinChoices, wsUrl, token }) => {
   const router = useRouter();
   const identity = getIdentity(slug);
+  const isMobile = React.useMemo(() => isMobileBrowser(), []);
 
   useEffect(() => {
     void router.replace(router.pathname.replace("[slug]", slug), undefined, { shallow: true });
@@ -98,6 +100,7 @@ const RoomWrapper: NextPage<Props> = ({ slug, roomName, isAdmin, preJoinChoices,
           <RoomNavBar
             roomName={roomName}
             slug={slug}
+            iconFull={!isMobile}
           />
 
           <VideoConference

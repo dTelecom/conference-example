@@ -142,7 +142,7 @@ export function ControlBar({ variation, controls, isAdmin, ...props }: ControlBa
       {visibleControls.leave && (
         <DisconnectButton>
           {showIcon && <LeaveIcon />}
-          {showText && (isAdmin ? "End room" : "End")}
+          {showText && (isAdmin ? "End" : "Leave")}
         </DisconnectButton>
       )}
 
