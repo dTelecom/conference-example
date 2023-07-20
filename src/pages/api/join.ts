@@ -106,24 +106,6 @@ export default async function handler(
     }
   }
 
-  const svc = new RoomServiceClient(url.replace("wss:", "https:"), process.env.API_KEY, process.env.API_SECRET);
-
-  const rooms = await svc.listRooms([input.slug]);
-
-  if (rooms.length === 0) {
-    // create a new room
-    const opts = {
-      name: input.slug,
-      // timeout in seconds
-      emptyTimeout: 10 * 60,
-      maxParticipants: 20
-    };
-
-    await svc.createRoom(opts).then((value: Room) => {
-      console.log("room created", value);
-    });
-  }
-
   res.status(200).json({
     identity,
     url,
