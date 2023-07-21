@@ -98,6 +98,7 @@ const JoinRoomPage = ({ slug, roomName: name }: Props) => {
             }
             return true;
           }}
+          userLabel={'Enter your name'}
         ></PreJoin>
       </div>
 
