@@ -1051,10 +1051,10 @@
     "@babel/helper-validator-identifier" "^7.22.5"
     to-fast-properties "^2.0.0"
 
-"@dtelecom/server-sdk-js@^1.0.11":
-  version "1.0.11"
-  resolved "https://registry.yarnpkg.com/@dtelecom/server-sdk-js/-/server-sdk-js-1.0.11.tgz#1ee0a9e685e2a77911c64897451abec17dee3d39"
-  integrity sha512-HXEF/ib//lRd65u/jdjzm9mg8Sj4cukba0L712OWd+I9uRY2VaGXvv2f3gnQolAyImRanNSDtU9H9fbmmi9OjQ==
+"@dtelecom/server-sdk-js@^1.0.13":
+  version "1.0.13"
+  resolved "https://registry.yarnpkg.com/@dtelecom/server-sdk-js/-/server-sdk-js-1.0.13.tgz#df4ede2b476c8b1880fe71342532ce39ac46668b"
+  integrity sha512-n0tdNVpVmuU9pywZiBg2RYrwl029WYCQ6xm4OOuuqqmnxdYFyfov0WsFXgUNxPqaqqY97VwEhJr6c9REawvaDw==
   dependencies:
     axios "^0.21.0"
     camelcase-keys "^7.0.0"
