@@ -1,5 +1,5 @@
-import type { LocalUserChoices } from "@livekit/components-react";
-import { formatChatMessageLinks, LiveKitRoom } from "@livekit/components-react";
+import type { LocalUserChoices } from "@dtelecom/components-react";
+import { formatChatMessageLinks, LiveKitRoom, useLayoutContext, VideoConference } from "@dtelecom/components-react";
 import React, { useEffect, useMemo } from "react";
 import type { GetServerSideProps, NextPage } from "next";
 import type { RoomOptions } from "livekit-client";
@@ -7,7 +7,6 @@ import { LogLevel, VideoPresets } from "livekit-client";
 import { useRouter } from "next/router";
 import { DebugMode } from "@/lib/Debug";
 import { Footer } from "@/components/ui/Footer/Footer";
-import { VideoConference } from "@/components/livekit/VideoConference";
 import axios from "axios";
 import { RoomNavBar } from "@/components/ui/RoomNavBar/RoomNavBar";
 import { getIdentity } from "@/lib/client-utils";

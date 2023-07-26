@@ -1,10 +1,10 @@
-import * as React from 'react';
-import { useRoomContext } from '@livekit/components-react';
-import type { LogLevel } from 'livekit-client';
-import { setLogLevel } from 'livekit-client';
+import * as React from "react";
+import { useRoomContext } from "@dtelecom/components-react";
+import type { LogLevel } from "livekit-client";
+import { setLogLevel } from "livekit-client";
 
 export const useDebugMode = ({ logLevel }: { logLevel?: LogLevel }) => {
-  setLogLevel(logLevel ?? 'debug');
+  setLogLevel(logLevel ?? "debug");
   const room = useRoomContext();
   React.useEffect(() => {
     // @ts-expect-error custom variable
