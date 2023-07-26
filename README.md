@@ -1,3 +1,7 @@
+## Demo
+
+Try it for free at https://dmeet.org
+
 ## Deploying
 
 This demo is a Next.js app. You can deploy to your Vercel account with one click:
