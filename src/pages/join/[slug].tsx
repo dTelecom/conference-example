@@ -1,5 +1,5 @@
-import type { LocalUserChoices } from "@livekit/components-react";
-import { PreJoin } from "@livekit/components-react";
+import type { LocalUserChoices } from "@dtelecom/components-react";
+import { PreJoin } from "@dtelecom/components-react";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { NavBar } from "@/components/ui/NavBar";

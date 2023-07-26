@@ -5,7 +5,7 @@ import { Button } from "@/components/ui";
 import { clsx } from "clsx";
 import { ChainIcon, TickIcon } from "@/assets";
 import styles from "./RoomNavBar.module.scss";
-import { useTracks } from "@livekit/components-react";
+import { useTracks } from "@dtelecom/components-react";
 import { RoomEvent, Track } from "livekit-client";
 
 interface RoomNavBarProps {
