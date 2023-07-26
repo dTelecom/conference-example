@@ -5,7 +5,7 @@ import { Footer } from "@/components/ui/Footer/Footer";
 import styles from "./Index.module.scss";
 import { Input } from "@/components/ui/Input/Input";
 import type { FormEvent } from "react";
-import { useState } from "react";
+import React, { useState } from "react";
 import { KeyIcon } from "@/assets";
 import axios from "axios";
 import { setIdentity } from "@/lib/client-utils";
