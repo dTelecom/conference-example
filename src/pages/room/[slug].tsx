@@ -1,5 +1,5 @@
 import type { LocalUserChoices } from "@dtelecom/components-react";
-import { formatChatMessageLinks, LiveKitRoom, useLayoutContext, VideoConference } from "@dtelecom/components-react";
+import { formatChatMessageLinks, LiveKitRoom, VideoConference } from "@dtelecom/components-react";
 import React, { useEffect, useMemo } from "react";
 import type { GetServerSideProps, NextPage } from "next";
 import type { RoomOptions } from "livekit-client";
