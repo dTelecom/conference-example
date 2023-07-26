@@ -2,6 +2,8 @@
 
 Try it for free at https://dmeet.org
 
+An open source video conferencing application built on dTelecom components and decentralized servers.
+
 ## Deploying
 
 This demo is a Next.js app. You can deploy to your Vercel account with one click:
