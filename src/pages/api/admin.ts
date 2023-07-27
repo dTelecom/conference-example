@@ -54,8 +54,6 @@ export default async function handler(
     } catch (e) {
       console.log(e);
     }
-
-    res.status(200).send("ok");
   }
 
   res.status(200).send("ok");
