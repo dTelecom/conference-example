@@ -96,6 +96,12 @@ const RoomWrapper: NextPage<Props> = ({ slug, roomName, isAdmin, preJoinChoices,
           audio={preJoinChoices?.audioEnabled}
           onDisconnected={() => void onDisconnected()}
         >
+          <div id="test-server-url" style={{
+            display: 'none'
+          }}>
+            {wsUrl}
+          </div>
+
           <RoomNavBar
             roomName={roomName}
             slug={slug}
