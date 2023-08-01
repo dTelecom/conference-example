@@ -10,7 +10,7 @@ import axios from "axios";
 import type { IJoinResponse } from "@/pages/api/join";
 import type { IGetRoomResponse } from "@/pages/api/getRoom";
 import { getIdentity, setIdentity } from "@/lib/client-utils";
-import { isMobileBrowser } from "@livekit/components-core";
+import { isMobileBrowser } from "@dtelecom/components-core";
 
 interface Props {
   slug: string;

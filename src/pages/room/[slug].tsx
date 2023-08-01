@@ -2,15 +2,15 @@ import type { LocalUserChoices } from "@dtelecom/components-react";
 import { formatChatMessageLinks, LiveKitRoom, VideoConference } from "@dtelecom/components-react";
 import React, { useEffect, useMemo } from "react";
 import type { GetServerSideProps, NextPage } from "next";
-import type { RoomOptions } from "livekit-client";
-import { LogLevel, VideoPresets } from "livekit-client";
+import type { RoomOptions } from "@dtelecom/livekit-client";
+import { LogLevel, VideoPresets } from "@dtelecom/livekit-client";
 import { useRouter } from "next/router";
 import { DebugMode } from "@/lib/Debug";
 import { Footer } from "@/components/ui/Footer/Footer";
 import axios from "axios";
 import { RoomNavBar } from "@/components/ui/RoomNavBar/RoomNavBar";
 import { getIdentity } from "@/lib/client-utils";
-import { isMobileBrowser } from "@livekit/components-core";
+import { isMobileBrowser } from "@dtelecom/components-core";
 
 interface Props {
   slug: string;
