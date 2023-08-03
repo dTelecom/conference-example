@@ -1065,10 +1065,10 @@
   resolved "https://registry.yarnpkg.com/@dtelecom/components-styles/-/components-styles-1.0.6.tgz#1da73933736d21bfc2de8d7c815320e9bf72ac7a"
   integrity sha512-oaogUoJYssykirkbNRIKPyPPvT6JCoygjsn7dErnatybl2MVL2D+w2Ak4PqUAgM/bBpqalp0EoKEA2v9P7OYKg==
 
-"@dtelecom/livekit-client@1.12.5":
-  version "1.12.5"
-  resolved "https://registry.yarnpkg.com/@dtelecom/livekit-client/-/livekit-client-1.12.5.tgz#03b1fadd7746f99c22d4ff99415caf7eecdab20c"
-  integrity sha512-/ggppI63JpFCEqk9G5XasNZNzBfrQzVt7Qinkjq3diBAwrOoNuHpG5WBbkMlDmtLm1+5/6I9JqHWHX+H40+qXg==
+"@dtelecom/livekit-client@^1.12.6":
+  version "1.12.6"
+  resolved "https://registry.yarnpkg.com/@dtelecom/livekit-client/-/livekit-client-1.12.6.tgz#f419b4dd90b58ff27b667bd841cf3033fb162575"
+  integrity sha512-mqI7wWzpSRBUWppxz+/VMqPG3dFPyKnbpBqfPEJmJTkNMBHraG1HoD1Z0nMtzQSuRaYKbaJ5C14VzxvxPQb4hQ==
   dependencies:
     eventemitter3 "^5.0.1"
     loglevel "^1.8.0"
