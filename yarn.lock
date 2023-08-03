@@ -1040,10 +1040,10 @@
     "@babel/helper-validator-identifier" "^7.22.5"
     to-fast-properties "^2.0.0"
 
-"@dtelecom/components-core@0.6.12":
-  version "0.6.12"
-  resolved "https://registry.yarnpkg.com/@dtelecom/components-core/-/components-core-0.6.12.tgz#7ddcc0842af7a7f5534cd5585c2fe1690c07b7ed"
-  integrity sha512-yZXdsV6xKnJAnQOL8HemhhPrfGUyefMhgqW4PaboTPMHVtpEepzw3xxE+HYIRYdW8DVqUtSXyu+vXZjwYqYHnw==
+"@dtelecom/components-core@0.6.15":
+  version "0.6.15"
+  resolved "https://registry.yarnpkg.com/@dtelecom/components-core/-/components-core-0.6.15.tgz#974ae46a8a1b51d499674c8b243a3b78fb45275b"
+  integrity sha512-TaxbFiZs/Wa4tx+8zUeUf3CEGG3C5rVS/cRO27uFdUweGEe6BD+Zun4inFhztq97Jz/AEQglNLBdcLQSIQUNJw==
   dependencies:
     "@floating-ui/dom" "^1.1.0"
     email-regex "^5.0.0"
@@ -1051,19 +1051,19 @@
     loglevel "^1.8.1"
     rxjs "^7.8.0"
 
-"@dtelecom/components-react@1.0.15":
-  version "1.0.15"
-  resolved "https://registry.yarnpkg.com/@dtelecom/components-react/-/components-react-1.0.15.tgz#2fd92e2deb9a283771205a0dca02b26ee7092fea"
-  integrity sha512-o9wr5tAb0Yjgsx3DiTl5oTkau8usvUDYXE45cpCLlVTLEmOU01N1EpXi1U/vLKo73M1d971IegvWzwzoQTXZcA==
+"@dtelecom/components-react@^1.0.17":
+  version "1.0.17"
+  resolved "https://registry.yarnpkg.com/@dtelecom/components-react/-/components-react-1.0.17.tgz#9b3d78da04a2e75f64b1d949cdc36f65a42a4173"
+  integrity sha512-ZLTyroqBrcRKJkvkVGSr78xFBOj+1qw5Jq0zNIsXtmu25Zx1b2J1rpbQAJUl3wJXDRdDoB2kcy62mxZK7Jub9g==
   dependencies:
-    "@dtelecom/components-core" "0.6.12"
+    "@dtelecom/components-core" "0.6.15"
     "@react-hook/latest" "^1.0.3"
     clsx "^1.2.1"
 
-"@dtelecom/components-styles@^1.0.5":
-  version "1.0.5"
-  resolved "https://registry.yarnpkg.com/@dtelecom/components-styles/-/components-styles-1.0.5.tgz#ada147e952934ccad0b5664f5f92c36237ad298c"
-  integrity sha512-cbtkFT50z+15mxR3qL0xFQNB90f6F7JfSpGBpB7Prp6wQanlkgPp2wEHF5aVFtbMryjDxdw8P0mCaMYv8L5OsQ==
+"@dtelecom/components-styles@^1.0.6":
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/@dtelecom/components-styles/-/components-styles-1.0.6.tgz#1da73933736d21bfc2de8d7c815320e9bf72ac7a"
+  integrity sha512-oaogUoJYssykirkbNRIKPyPPvT6JCoygjsn7dErnatybl2MVL2D+w2Ak4PqUAgM/bBpqalp0EoKEA2v9P7OYKg==
 
 "@dtelecom/livekit-client@1.12.5":
   version "1.12.5"
