@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useRoomContext } from "@dtelecom/components-react";
-import type { LogLevel } from "livekit-client";
-import { setLogLevel } from "livekit-client";
+import type { LogLevel } from "@dtelecom/livekit-client";
+import { setLogLevel } from "@dtelecom/livekit-client";
 
 export const useDebugMode = ({ logLevel }: { logLevel?: LogLevel }) => {
   setLogLevel(logLevel ?? "debug");

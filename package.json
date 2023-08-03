@@ -9,8 +9,8 @@
     "start": "next start"
   },
   "dependencies": {
-    "@dtelecom/components-react": "^1.0.10",
-    "@dtelecom/components-styles": "^1.0.5",
+    "@dtelecom/components-react": "^1.0.17",
+    "@dtelecom/components-styles": "^1.0.6",
     "@dtelecom/server-sdk-js": "^1.0.13",
     "@next/font": "^13.1.6",
     "@prisma/client": "^4.14.0",
@@ -20,7 +20,7 @@
     "clsx": "^1.2.1",
     "jsonwebtoken": "^9.0.1",
     "jwt-decode": "^3.1.2",
-    "livekit-client": "^1.12.1",
+    "@dtelecom/livekit-client": "^1.12.6",
     "lucide-react": "^0.113.0",
     "next": "13.1.6",
     "next-themes": "^0.2.1",
