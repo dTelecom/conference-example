@@ -21,10 +21,12 @@ const JoinRoomPage = ({ slug, roomName: name }: Props) => {
   const router = useRouter();
   const isMobile = React.useMemo(() => isMobileBrowser(), []);
 
-  const [preJoinChoices, setPreJoinChoices] = useState<Partial<LocalUserChoices>>({
+  const [preJoinChoices, setPreJoinChoices] = useState<
+    Partial<LocalUserChoices>
+  >({
     username: "",
     videoEnabled: true,
-    audioEnabled: true
+    audioEnabled: process.env.NODE_ENV !== "development",
   });
 
   const [roomName, setRoomName] = useState<string>();
@@ -33,7 +35,9 @@ const JoinRoomPage = ({ slug, roomName: name }: Props) => {
 
   useEffect(() => {
     async function fetchRoom() {
-      const { data } = await axios.get<IGetRoomResponse>(`/api/getRoom?slug=${slug}`);
+      const { data } = await axios.get<IGetRoomResponse>(
+        `/api/getRoom?slug=${slug}`
+      );
       if (data.roomDeleted) {
         void router.push("/");
       }
@@ -50,7 +54,7 @@ const JoinRoomPage = ({ slug, roomName: name }: Props) => {
     const { data } = await axios.post<IJoinResponse>(`/api/join`, {
       slug,
       name: values?.username || "",
-      identity: getIdentity(slug) || ""
+      identity: getIdentity(slug) || "",
     });
 
     setIdentity(slug, data.identity);
@@ -62,8 +66,8 @@ const JoinRoomPage = ({ slug, roomName: name }: Props) => {
         wsUrl: data.url,
         preJoinChoices: JSON.stringify(values),
         roomName: data.roomName || name,
-        isAdmin: data.isAdmin
-      }
+        isAdmin: data.isAdmin,
+      },
     });
 
     setIsLoading(false);
@@ -75,16 +79,18 @@ const JoinRoomPage = ({ slug, roomName: name }: Props) => {
 
   return (
     <>
-      <NavBar
-        title={isMobile ? "" : roomName || name}
-        small
-        iconFull
-      >
+      <NavBar title={isMobile ? "" : roomName || name} small iconFull>
         {!isMobile && participantsCount !== undefined && (
           <ParticipantsBadge count={participantsCount} />
         )}
       </NavBar>
-      <div style={{ display: "flex", flexDirection: "column", justifyContent: "center" }}>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+        }}
+      >
         <PreJoin
           onError={(err) => console.log("error while setting up prejoin", err)}
           defaults={preJoinChoices}
@@ -98,7 +104,7 @@ const JoinRoomPage = ({ slug, roomName: name }: Props) => {
             }
             return true;
           }}
-          userLabel={'Enter your name'}
+          userLabel={"Enter your name"}
         ></PreJoin>
       </div>
 
@@ -107,12 +113,15 @@ const JoinRoomPage = ({ slug, roomName: name }: Props) => {
   );
 };
 
-export const getServerSideProps: GetServerSideProps<Props> = async ({ params, query }) => {
+export const getServerSideProps: GetServerSideProps<Props> = async ({
+  params,
+  query,
+}) => {
   return Promise.resolve({
     props: {
       slug: params?.slug as string,
-      roomName: query?.roomName as string || ""
-    }
+      roomName: (query?.roomName as string) || "",
+    },
   });
 };
 
