@@ -129,7 +129,14 @@ const RoomWrapper: NextPage<Props> = ({
             isAdmin={isAdmin}
             localIdentity={identity}
           />
-          <DebugMode logLevel={LogLevel.info} />
+
+          <DebugMode
+            logLevel={
+              process.env.NODE_ENV === "development"
+                ? LogLevel.debug
+                : LogLevel.info
+            }
+          />
         </LiveKitRoom>
       )}
 
