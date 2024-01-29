@@ -14,6 +14,7 @@ import { Footer } from "@/components/ui/Footer/Footer";
 import axios from "axios";
 import { RoomNavBar } from "@/components/ui/RoomNavBar/RoomNavBar";
 import { getIdentity } from "@/lib/client-utils";
+import type { GridLayoutDefinition } from "@dtelecom/components-core";
 import { isMobileBrowser } from "@dtelecom/components-core";
 
 interface Props {
@@ -63,12 +64,15 @@ const RoomWrapper: NextPage<Props> = ({
         videoSimulcastLayers:
           hq === "true"
             ? [VideoPresets.h1080, VideoPresets.h720]
-            : [VideoPresets.h540, VideoPresets.h216],
+            : [VideoPresets.h360, VideoPresets.h180],
       },
       audioCaptureDefaults: {
         deviceId: preJoinChoices?.audioDeviceId ?? undefined,
       },
-      adaptiveStream: { pixelDensity: "screen" },
+      adaptiveStream: {
+        pauseWhenNotVisible: true,
+        updateDimensions: false,
+      },
       dynacast: false,
     };
   }, [preJoinChoices, hq]);
@@ -128,6 +132,7 @@ const RoomWrapper: NextPage<Props> = ({
             onMute={isAdmin ? onMute : undefined}
             isAdmin={isAdmin}
             localIdentity={identity}
+            gridLayouts={GRID_LAYOUTS}
           />
 
           <DebugMode
@@ -165,3 +170,60 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({
     },
   });
 };
+
+const GRID_LAYOUTS: GridLayoutDefinition[] = [
+  {
+    columns: 1,
+    rows: 1,
+    name: "1x1",
+    minTiles: 1,
+    maxTiles: 1,
+    minWidth: 0,
+    minHeight: 0,
+  },
+  {
+    columns: 1,
+    rows: 2,
+    name: "1x2",
+    minTiles: 2,
+    maxTiles: 2,
+    minWidth: 0,
+    minHeight: 0,
+  },
+  {
+    columns: 2,
+    rows: 1,
+    name: "2x1",
+    minTiles: 2,
+    maxTiles: 2,
+    minWidth: 900,
+    minHeight: 0,
+  },
+  {
+    columns: 2,
+    rows: 2,
+    name: "2x2",
+    minTiles: 3,
+    maxTiles: 4,
+    minWidth: 560,
+    minHeight: 0,
+  },
+  {
+    columns: 3,
+    rows: 2,
+    name: "3x2",
+    minTiles: 5,
+    maxTiles: 6,
+    minWidth: 700,
+    minHeight: 0,
+  },
+  {
+    columns: 4,
+    rows: 3,
+    name: "4x3",
+    minTiles: 6,
+    maxTiles: 12,
+    minWidth: 960,
+    minHeight: 0,
+  },
+];
