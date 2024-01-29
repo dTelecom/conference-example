@@ -1052,10 +1052,10 @@
     loglevel "^1.8.1"
     rxjs "^7.8.0"
 
-"@dtelecom/components-react@^1.0.19":
-  version "1.0.19"
-  resolved "https://registry.yarnpkg.com/@dtelecom/components-react/-/components-react-1.0.19.tgz#b5e5cb79f9ba92af037a270e6d3299b32905f6fa"
-  integrity sha512-D+tUKsepk4USj31zgVqanfCpf2c/IeJgJdRDIYfaAJ0a4id8B936Ivl4P/QJ11sIf5HLfV3lWrmymUyT+AHwRw==
+"@dtelecom/components-react@^1.0.20":
+  version "1.0.20"
+  resolved "https://registry.yarnpkg.com/@dtelecom/components-react/-/components-react-1.0.20.tgz#39237b2114e83a5ce504aa2b58069b7d3b996aa2"
+  integrity sha512-5uq3v5/tuUj01O3c6dg8g5Rg5icdUlhOZbzcssSoihOaY3tyIWacZf4XEy1FI8t5V2X9RQBYrseTlY+8idqISQ==
   dependencies:
     "@dtelecom/components-core" "0.6.15"
     "@react-hook/latest" "^1.0.3"
@@ -1066,10 +1066,10 @@
   resolved "https://registry.npmjs.org/@dtelecom/components-styles/-/components-styles-1.0.7.tgz"
   integrity sha512-aqGMf6wAAaQj+32vhJYm51XOaIyd4NrXXAE2FefesCoN9gI7L0lJ38oqYnz6d36iGNK9uaRqw9EEarYmRgFbuQ==
 
-"@dtelecom/livekit-client@1.12.10":
-  version "1.12.10"
-  resolved "https://registry.yarnpkg.com/@dtelecom/livekit-client/-/livekit-client-1.12.10.tgz#d9799d07469531ecd0466cc96870abff826069d7"
-  integrity sha512-gtY+3eTWm0f2KJquY+TI6akJS8cNwUMl7Ha3AsIRWDsXbk/bVREkgVruJnZSoNZZoQltsSRM0Zxd8KpWoQ7nhw==
+"@dtelecom/livekit-client@^1.12.11":
+  version "1.12.11"
+  resolved "https://registry.yarnpkg.com/@dtelecom/livekit-client/-/livekit-client-1.12.11.tgz#1b01af2959b36206526dc1ad55b617199bdfb2fa"
+  integrity sha512-cbZOIQOnlmnyJHvX3G89nNBT4buklSOzXLdY47Y2aNcZw/gmwYQ1q+k/XtXLh4BKUEV8cR/JPAzITZcFYbDrBA==
   dependencies:
     eventemitter3 "^5.0.1"
     loglevel "^1.8.0"

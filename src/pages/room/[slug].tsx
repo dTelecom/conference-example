@@ -71,7 +71,6 @@ const RoomWrapper: NextPage<Props> = ({
       },
       adaptiveStream: {
         pauseWhenNotVisible: true,
-        updateDimensions: false,
       },
       dynacast: false,
     };
