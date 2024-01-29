@@ -9,7 +9,7 @@
     "start": "next start"
   },
   "dependencies": {
-    "@dtelecom/components-react": "^1.0.19",
+    "@dtelecom/components-react": "^1.0.20",
     "@dtelecom/components-styles": "^1.0.7",
     "@dtelecom/server-sdk-js": "^1.0.13",
     "@next/font": "^13.1.6",
@@ -20,7 +20,7 @@
     "clsx": "^1.2.1",
     "jsonwebtoken": "^9.0.1",
     "jwt-decode": "^3.1.2",
-    "@dtelecom/livekit-client": "1.12.10",
+    "@dtelecom/livekit-client": "^1.12.11",
     "lucide-react": "^0.113.0",
     "next": "13.1.6",
     "next-themes": "^0.2.1",
