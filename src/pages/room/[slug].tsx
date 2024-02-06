@@ -65,12 +65,14 @@ const RoomWrapper: NextPage<Props> = ({
           hq === "true"
             ? [VideoPresets.h1080, VideoPresets.h720]
             : [VideoPresets.h360, VideoPresets.h180],
+        stopMicTrackOnMute: true,
       },
       audioCaptureDefaults: {
         deviceId: preJoinChoices?.audioDeviceId ?? undefined,
       },
       adaptiveStream: {
         pauseWhenNotVisible: true,
+        pauseVideoInBackground: true,
       },
       dynacast: false,
     };
