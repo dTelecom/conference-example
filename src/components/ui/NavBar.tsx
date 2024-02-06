@@ -15,23 +15,18 @@ export function NavBar({ title, small, iconFull, children }: Props) {
     <header className={clsx(styles.container, small && styles.small)}>
       <Link
         href="/"
+        target="_blank"
         className={styles.link}
         style={{
-          justifyContent: !title && !children ? "center" : undefined
+          justifyContent: !title && !children ? "center" : undefined,
         }}
       >
         {small && !iconFull ? <LogoSmallIcon /> : <LogoIcon />}
       </Link>
 
-      {title && (
-        <h2>{title}</h2>
-      )}
+      {title && <h2>{title}</h2>}
 
-      {children && (
-        <div className={styles.children}>
-          {children}
-        </div>
-      )}
+      {children && <div className={styles.children}>{children}</div>}
     </header>
   );
 }
