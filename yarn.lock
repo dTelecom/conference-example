@@ -1043,7 +1043,7 @@
 
 "@dtelecom/components-core@0.6.15":
   version "0.6.15"
-  resolved "https://registry.npmjs.org/@dtelecom/components-core/-/components-core-0.6.15.tgz"
+  resolved "https://registry.yarnpkg.com/@dtelecom/components-core/-/components-core-0.6.15.tgz#974ae46a8a1b51d499674c8b243a3b78fb45275b"
   integrity sha512-TaxbFiZs/Wa4tx+8zUeUf3CEGG3C5rVS/cRO27uFdUweGEe6BD+Zun4inFhztq97Jz/AEQglNLBdcLQSIQUNJw==
   dependencies:
     "@floating-ui/dom" "^1.1.0"
@@ -1052,24 +1052,24 @@
     loglevel "^1.8.1"
     rxjs "^7.8.0"
 
-"@dtelecom/components-react@1.0.22":
-  version "1.0.22"
-  resolved "https://registry.yarnpkg.com/@dtelecom/components-react/-/components-react-1.0.22.tgz#090b203759311f5d62a26de57933baa7e2fe9e74"
-  integrity sha512-oaeD7GTcAflPiaeZnEs2Gws01n72AZ9UkwODU+8SbUBMhSgu7SfH2T5COyJn7wxfnU2rBOB3DjpxQmyIAEk+eQ==
+"@dtelecom/components-react@1.0.23":
+  version "1.0.23"
+  resolved "https://registry.yarnpkg.com/@dtelecom/components-react/-/components-react-1.0.23.tgz#e35fe6ce07487379d7dec3000f31926b905698ac"
+  integrity sha512-Z+SJDLswMm9uv/4rduBQd6i5Cd8FvNNO2jYGGrNAkD1WJpFRnNToNkt5XBvRc70DXPTub1otOnLkngRviTzgdg==
   dependencies:
     "@dtelecom/components-core" "0.6.15"
     "@react-hook/latest" "^1.0.3"
     clsx "^1.2.1"
 
-"@dtelecom/components-styles@^1.0.8":
-  version "1.0.8"
-  resolved "https://registry.yarnpkg.com/@dtelecom/components-styles/-/components-styles-1.0.8.tgz#5fea5205fef50fea7090a845147d9fb638c2e7cd"
-  integrity sha512-j4Q0e0NSyR6qguuMafJbHorhOQAR3sr3YPptR5AD/UHNrdgE9HzNoxJhaP/Z0IeO132yrHg71sJ/Hx7weYxyjg==
+"@dtelecom/components-styles@^1.0.9":
+  version "1.0.9"
+  resolved "https://registry.yarnpkg.com/@dtelecom/components-styles/-/components-styles-1.0.9.tgz#408523092b9a53f0c916dc2797c459963a707f43"
+  integrity sha512-cYmXE2UvSbHF8uhq2cNOJQd8CsMYS2WbZYHnXKM5ML5PYfcVIlOubrBT3LeLsXTFrx1YJ0T3DHPwT5Ye/5EAmg==
 
-"@dtelecom/livekit-client@^1.12.11":
-  version "1.12.11"
-  resolved "https://registry.yarnpkg.com/@dtelecom/livekit-client/-/livekit-client-1.12.11.tgz#1b01af2959b36206526dc1ad55b617199bdfb2fa"
-  integrity sha512-cbZOIQOnlmnyJHvX3G89nNBT4buklSOzXLdY47Y2aNcZw/gmwYQ1q+k/XtXLh4BKUEV8cR/JPAzITZcFYbDrBA==
+"@dtelecom/livekit-client@^1.12.12":
+  version "1.12.12"
+  resolved "https://registry.yarnpkg.com/@dtelecom/livekit-client/-/livekit-client-1.12.12.tgz#c3dbb34e08d39908d3cc59190a2bf66f693d06b5"
+  integrity sha512-+nWRdAn6PmfALnAQELchGkIRkzJpx2eFGjdXpNrrbPnfmuSuC8GgmiyzogFjp2U4rIkpA0SzWvS/k9jwSQrJTA==
   dependencies:
     eventemitter3 "^5.0.1"
     loglevel "^1.8.0"
@@ -1331,24 +1331,24 @@
     "@ethersproject/properties" "^5.7.0"
     "@ethersproject/strings" "^5.7.0"
 
-"@floating-ui/core@^1.5.3":
-  version "1.5.3"
-  resolved "https://registry.npmjs.org/@floating-ui/core/-/core-1.5.3.tgz"
-  integrity sha512-O0WKDOo0yhJuugCx6trZQj5jVJ9yR0ystG2JaNAemYUWce+pmM6WUEFIibnWyEJKdrDxhm75NoSRME35FNaM/Q==
+"@floating-ui/core@^1.6.0":
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/@floating-ui/core/-/core-1.6.0.tgz#fa41b87812a16bf123122bf945946bae3fdf7fc1"
+  integrity sha512-PcF++MykgmTj3CIyOQbKA/hDzOAiqI3mhuoN44WRCopIs1sgoDoU4oty4Jtqaj/y3oDU6fnVSm4QG0a3t5i0+g==
   dependencies:
-    "@floating-ui/utils" "^0.2.0"
+    "@floating-ui/utils" "^0.2.1"
 
 "@floating-ui/dom@^1.1.0":
-  version "1.5.4"
-  resolved "https://registry.npmjs.org/@floating-ui/dom/-/dom-1.5.4.tgz"
-  integrity sha512-jByEsHIY+eEdCjnTVu+E3ephzTOzkQ8hgUfGwos+bg7NlH33Zc5uO+QHz1mrQUOgIKKDD1RtS201P9NvAfq3XQ==
+  version "1.6.1"
+  resolved "https://registry.yarnpkg.com/@floating-ui/dom/-/dom-1.6.1.tgz#d552e8444f77f2d88534372369b3771dc3a2fa5d"
+  integrity sha512-iA8qE43/H5iGozC3W0YSnVSW42Vh522yyM1gj+BqRwVsTNOyr231PsXDaV04yT39PsO0QL2QpbI/M0ZaLUQgRQ==
   dependencies:
-    "@floating-ui/core" "^1.5.3"
-    "@floating-ui/utils" "^0.2.0"
+    "@floating-ui/core" "^1.6.0"
+    "@floating-ui/utils" "^0.2.1"
 
-"@floating-ui/utils@^0.2.0":
+"@floating-ui/utils@^0.2.1":
   version "0.2.1"
-  resolved "https://registry.npmjs.org/@floating-ui/utils/-/utils-0.2.1.tgz"
+  resolved "https://registry.yarnpkg.com/@floating-ui/utils/-/utils-0.2.1.tgz#16308cea045f0fc777b6ff20a9f25474dd8293d2"
   integrity sha512-9TANp6GPoMtYzQdt54kfAyMmz1+osLlXdg2ENroU7zzrtflTLrrC/lgrIfaSe+Wu0b89GKccT7vxXA0MoAIO+Q==
 
 "@humanwhocodes/config-array@^0.11.10":
@@ -1606,7 +1606,7 @@
 
 "@react-hook/latest@^1.0.3":
   version "1.0.3"
-  resolved "https://registry.npmjs.org/@react-hook/latest/-/latest-1.0.3.tgz"
+  resolved "https://registry.yarnpkg.com/@react-hook/latest/-/latest-1.0.3.tgz#c2d1d0b0af8b69ec6e2b3a2412ba0768ac82db80"
   integrity sha512-dy6duzl+JnAZcDbNTfmaP3xHiKtbXYOaz3G51MGVljh548Y8MWzTr+PHLOfvpypEVW9zwvl+VyKjbWKEVbV1Rg==
 
 "@rushstack/eslint-patch@^1.1.3":
@@ -3108,7 +3108,7 @@ elliptic@6.5.4, elliptic@^6.4.0, elliptic@^6.4.1, elliptic@^6.5.4:
 
 email-regex@^5.0.0:
   version "5.0.0"
-  resolved "https://registry.npmjs.org/email-regex/-/email-regex-5.0.0.tgz"
+  resolved "https://registry.yarnpkg.com/email-regex/-/email-regex-5.0.0.tgz#c8b1f4c7f251929b53586a7a3891da09c8dea26d"
   integrity sha512-he76Cm8JFxb6OGQHabLBPdsiStgPmJeAEhctmw0uhonUh1pCBsHpI6/rB62s2GNzjBb0YlhIcF/1l9Lp5AfH0Q==
 
 emoji-regex@^9.2.2:
@@ -3964,7 +3964,7 @@ glob@^7.1.3:
 
 global-tld-list@^0.0.1139:
   version "0.0.1139"
-  resolved "https://registry.npmjs.org/global-tld-list/-/global-tld-list-0.0.1139.tgz"
+  resolved "https://registry.yarnpkg.com/global-tld-list/-/global-tld-list-0.0.1139.tgz#70400a3f3ccac1a19a8184274a1b117bc8a27969"
   integrity sha512-TCWjAwHPzFV6zbQ5jnJvJTctesHGJr9BppxivRuIxTiIFUzaxy1F0674cxjoJecW5s8V32Q5i35dBFqvAy7eGQ==
 
 global@~4.4.0:
@@ -4773,10 +4773,15 @@ lodash@^4.17.21:
   resolved "https://registry.npmjs.org/lodash/-/lodash-4.17.21.tgz"
   integrity sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==
 
-loglevel@^1.8.0, loglevel@^1.8.1:
+loglevel@^1.8.0:
   version "1.8.1"
   resolved "https://registry.npmjs.org/loglevel/-/loglevel-1.8.1.tgz"
   integrity sha512-tCRIJM51SHjAayKwC+QAg8hT8vg6z7GSgLJKGvzuPb1Wc+hLzqtuVLxp6/HzSPOozuK+8ErAhy7U/sVzw8Dgfg==
+
+loglevel@^1.8.1:
+  version "1.9.1"
+  resolved "https://registry.yarnpkg.com/loglevel/-/loglevel-1.9.1.tgz#d63976ac9bcd03c7c873116d41c2a85bafff1be7"
+  integrity sha512-hP3I3kCrDIMuRwAwHltphhDM1r8i55H33GgqjXbrisuJhF4kRhW1dNuxsRklp4bXl8DSdLaNLuiL4A/LWRfxvg==
 
 long@^4.0.0:
   version "4.0.0"
@@ -5907,7 +5912,7 @@ run-parallel@^1.1.9:
 
 rxjs@^7.8.0:
   version "7.8.1"
-  resolved "https://registry.npmjs.org/rxjs/-/rxjs-7.8.1.tgz"
+  resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-7.8.1.tgz#6f6f3d99ea8044291efd92e7c7fcf562c4057543"
   integrity sha512-AA3TVj+0A2iuIoQkWEK/tqFjBq2j+6PO6Y0zJcvzLAFhEFIO3HL0vls9hWLncZbAAbK0mar7oZ4V079I/qPMxg==
   dependencies:
     tslib "^2.1.0"
@@ -6466,7 +6471,7 @@ tslib@^2.0.3, tslib@^2.4.0, tslib@^2.5.0, tslib@^2.6.0:
 
 tslib@^2.1.0:
   version "2.6.2"
-  resolved "https://registry.npmjs.org/tslib/-/tslib-2.6.2.tgz"
+  resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.6.2.tgz#703ac29425e7b37cd6fd456e92404d46d1f3e4ae"
   integrity sha512-AEYxH93jGFPn/a2iVAwW87VuUIkR1FVUKB77NwMF7nBTDkDrrT/Hpt/IrCJ0QXhW27jTBDcf5ZY7w6RiqTMw2Q==
 
 tsutils@^3.21.0:
