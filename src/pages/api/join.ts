@@ -11,7 +11,8 @@ const schema = z.object({
   slug: z.string(),
   name: z.string().min(1),
   identity: z.string().optional(),
-  isAdmin: z.boolean().optional()
+  isAdmin: z.boolean().optional(),
+  wsUrl: z.string().optional(),
 });
 
 interface ApiRequest extends NextApiRequest {
@@ -27,10 +28,7 @@ export interface IJoinResponse {
   isAdmin: boolean;
 }
 
-export default async function handler(
-  req: ApiRequest,
-  res: NextApiResponse
-) {
+export default async function handler(req: ApiRequest, res: NextApiResponse) {
   const input = req.body;
 
   const identity = input.identity || generateUUID();
@@ -42,8 +40,8 @@ export default async function handler(
   if (prisma) {
     room = await prisma.room.findFirst({
       where: {
-        slug: input.slug
-      }
+        slug: input.slug,
+      },
     });
 
     if (!room) {
@@ -53,9 +51,10 @@ export default async function handler(
     if (input.identity) {
       const admin = await prisma?.participant.findFirst({
         where: {
-          identity: input.identity
-        }
+          identity: input.identity,
+        },
       });
+
       if (admin?.id === room.adminId) {
         isAdmin = true;
         adminId = admin.id;
@@ -63,24 +62,29 @@ export default async function handler(
     }
   }
 
-  const token = new AccessToken(
-    env.API_KEY,
-    env.API_SECRET,
-    { identity: identity, name: input.name }
-  );
+  const token = new AccessToken(env.API_KEY, env.API_SECRET, {
+    identity: identity,
+    name: input.name,
+  });
 
   token.addGrant({
     room: input.slug,
     roomJoin: true,
     canPublish: true,
     canPublishData: true,
-    roomAdmin: isAdmin
+    roomAdmin: isAdmin,
   });
-  token.webHookURL = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}/api/webhook` : undefined;
 
-  const clientIp = requestIp.getClientIp(req) || undefined;
+  token.webHookURL = process.env.VERCEL_URL
+    ? `https://${process.env.VERCEL_URL}/api/webhook`
+    : undefined;
 
-  const url = await token.getWsUrl(clientIp);
+  let url = input.wsUrl;
+
+  if (!url) {
+    const clientIp = requestIp.getClientIp(req) || undefined;
+    url = await token.getWsUrl(clientIp);
+  }
 
   if (prisma && room) {
     if (!adminId) {
@@ -89,18 +93,18 @@ export default async function handler(
           identity,
           name: input.name,
           roomId: room.id,
-          server: url
-        }
+          server: url,
+        },
       });
     } else {
       await prisma?.participant.update({
         where: {
-          id: adminId
+          id: adminId,
         },
         data: {
           server: url,
-          name: input.name
-        }
+          name: input.name,
+        },
       });
     }
   }
@@ -111,6 +115,6 @@ export default async function handler(
     token: token.toJwt(),
     slug: input.slug,
     roomName: room?.name || "",
-    isAdmin
+    isAdmin,
   });
 }

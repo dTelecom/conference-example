@@ -11,6 +11,7 @@ import type { IJoinResponse } from "@/pages/api/join";
 import type { IGetRoomResponse } from "@/pages/api/getRoom";
 import { getIdentity, setIdentity } from "@/lib/client-utils";
 import { isMobileBrowser } from "@dtelecom/components-core";
+import type { IGetWsUrl } from "@/pages/api/getWsUrl";
 
 interface Props {
   slug: string;
@@ -31,7 +32,8 @@ const JoinRoomPage = ({ slug, roomName: name }: Props) => {
 
   const [roomName, setRoomName] = useState<string>();
   const [participantsCount, setParticipantsCount] = useState<number>();
-  const [isLoading, setIsLoading] = useState(false);
+  const [wsUrl, setWsUrl] = useState<string>();
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     async function fetchRoom() {
@@ -45,13 +47,24 @@ const JoinRoomPage = ({ slug, roomName: name }: Props) => {
       setRoomName(data.roomName);
     }
 
+    async function fetchWsUrl() {
+      try {
+        const { data } = await axios.get<IGetWsUrl>(`/api/getWsUrl`);
+        setWsUrl(data.wsUrl);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
     void fetchRoom();
+    void fetchWsUrl();
   }, [router, slug]);
 
   const onJoin = async (values: Partial<LocalUserChoices>) => {
     console.log("Joining with: ", values);
     setIsLoading(true);
     const { data } = await axios.post<IJoinResponse>(`/api/join`, {
+      wsUrl,
       slug,
       name: values?.username || "",
       identity: getIdentity(slug) || "",
@@ -105,7 +118,8 @@ const JoinRoomPage = ({ slug, roomName: name }: Props) => {
             return true;
           }}
           userLabel={"Enter your name"}
-        ></PreJoin>
+          isLoading={isLoading}
+        />
       </div>
 
       <Footer />
