@@ -129,6 +129,7 @@ main {
 
 .lk-participant-tile::after {
     border-color: #59E970;
+    z-index: 1;
 }
 
 .lk-participant-tile .lk-participant-metadata-item:has(.lk-participant-name) {
