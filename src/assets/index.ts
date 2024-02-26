@@ -5,6 +5,7 @@ import ParticipantsIcon from "./participants.svg";
 import ChainIcon from "./chain.svg";
 import LogoSmallIcon from "./logoSmall.svg";
 import TickIcon from "./tick.svg";
+import UserIcon from "./user.svg";
 
 export {
   LogoIcon,
@@ -14,4 +15,5 @@ export {
   ChainIcon,
   LogoSmallIcon,
   TickIcon,
+  UserIcon,
 };

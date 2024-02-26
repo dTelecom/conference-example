@@ -6,6 +6,9 @@ import { generateUUID } from "@/lib/client-utils";
 import prisma from "@/lib/prisma";
 import { env } from "@/env.mjs";
 import requestIp from "request-ip";
+import { getServerSession } from "next-auth/next";
+import { authConfig } from "@/pages/api/auth/[...nextauth]";
+import type { User } from "@prisma/client";
 
 const schema = z.object({
   slug: z.string(),
@@ -30,7 +33,7 @@ export interface IJoinResponse {
 
 export default async function handler(req: ApiRequest, res: NextApiResponse) {
   const input = req.body;
-
+  const session = await getServerSession(req, res, authConfig);
   const identity = input.identity || generateUUID();
 
   let isAdmin = false;
@@ -87,6 +90,15 @@ export default async function handler(req: ApiRequest, res: NextApiResponse) {
   }
 
   if (prisma && room) {
+    let user: User | null = null;
+    if (session?.user?.email) {
+      user = await prisma?.user.findFirst({
+        where: {
+          email: session.user.email,
+        },
+      });
+    }
+
     if (!adminId) {
       await prisma?.participant.create({
         data: {
@@ -94,6 +106,7 @@ export default async function handler(req: ApiRequest, res: NextApiResponse) {
           name: input.name,
           roomId: room.id,
           server: url,
+          userId: user?.id,
         },
       });
     } else {
@@ -104,6 +117,7 @@ export default async function handler(req: ApiRequest, res: NextApiResponse) {
         data: {
           server: url,
           name: input.name,
+          userId: user?.id,
         },
       });
     }

@@ -7,9 +7,9 @@ generator client {
 }
 
 datasource db {
-  provider          = "postgresql"
-  url               = env("POSTGRES_PRISMA_URL") // uses connection pooling
-  directUrl         = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+  provider  = "postgresql"
+  url       = env("POSTGRES_PRISMA_URL") // uses connection pooling
+  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
 }
 
 model Room {
@@ -30,10 +30,20 @@ model Participant {
   room     Room    @relation(fields: [roomId], references: [id])
   roomId   Int
   server   String?
+  userId   String?
+  user     User?   @relation(fields: [userId], references: [id])
 }
 
 model Node {
   iss       String   @unique
   key       String
   expiresAt DateTime
+}
+
+model User {
+  id            String        @id @default(uuid())
+  email         String?
+  issuer        String        @unique
+  oauthProvider String?
+  Participant   Participant[]
 }

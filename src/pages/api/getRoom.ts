@@ -4,7 +4,7 @@ import { z } from "zod";
 import prisma from "@/lib/prisma";
 
 const schema = z.object({
-  slug: z.string()
+  slug: z.string(),
 });
 
 interface ApiRequest extends NextApiRequest {
@@ -18,10 +18,7 @@ export interface IGetRoomResponse {
   roomDeleted: boolean;
 }
 
-export default async function handler(
-  req: ApiRequest,
-  res: NextApiResponse
-) {
+export default async function handler(req: ApiRequest, res: NextApiResponse) {
   const { slug } = req.query;
 
   let room = null;
@@ -30,8 +27,8 @@ export default async function handler(
   if (prisma) {
     room = await prisma?.room.findFirst({
       where: {
-        slug: slug as string
-      }
+        slug: slug as string,
+      },
     });
 
     if (!room) {
@@ -45,6 +42,6 @@ export default async function handler(
     slug,
     roomName: room?.name || "",
     roomDeleted: room?.deleted,
-    participantsCount
+    participantsCount,
   });
 }

@@ -9,6 +9,7 @@ import React, { useState } from "react";
 import { KeyIcon } from "@/assets";
 import axios from "axios";
 import { setIdentity } from "@/lib/client-utils";
+import EmailOTP from "@/components/magic/auth/EmailOTP";
 
 export default function IndexPage() {
   const [roomName, setRoomName] = useState<string>("");
@@ -22,13 +23,16 @@ export default function IndexPage() {
 
     try {
       setIsLoading(true);
-      const { data } = await axios.post<{ identity: string, slug: string }>("/api/createRoom", { roomName });
+      const { data } = await axios.post<{ identity: string; slug: string }>(
+        "/api/createRoom",
+        { roomName }
+      );
       setIdentity(data.slug, data.identity);
       await push({
         pathname: `/join/${data.slug}`,
         query: {
-          roomName
-        }
+          roomName,
+        },
       });
     } catch (e) {
       console.error(e);
@@ -37,17 +41,21 @@ export default function IndexPage() {
     setIsLoading(false);
   };
 
-
   return (
     <>
-      <NavBar />
+      <NavBar>{process.env.NEXT_PUBLIC_MAGIC_API_KEY && <EmailOTP />}</NavBar>
 
       <div className={styles.container}>
-        <h1 className={styles.title}>
-          Create a Web3 Meeting
-        </h1>
+        <h1 className={styles.title}>Create a Web3 Meeting</h1>
         <p className={styles.text}>
-          Open source video conferencing app built on <a href={"https://video.dtelecom.org"} target={'_blank'} rel="noreferrer">dTelecom Cloud</a>
+          Open source video conferencing app built on{" "}
+          <a
+            href={"https://video.dtelecom.org"}
+            target={"_blank"}
+            rel="noreferrer"
+          >
+            dTelecom Cloud
+          </a>
         </p>
 
         <form onSubmit={(e) => void onCreate(e)}>

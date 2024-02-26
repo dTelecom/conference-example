@@ -12,6 +12,7 @@ import type { IGetRoomResponse } from "@/pages/api/getRoom";
 import { getIdentity, setIdentity } from "@/lib/client-utils";
 import { isMobileBrowser } from "@dtelecom/components-core";
 import type { IGetWsUrl } from "@/pages/api/getWsUrl";
+import EmailOTP from "@/components/magic/auth/EmailOTP";
 
 interface Props {
   slug: string;
@@ -96,7 +97,9 @@ const JoinRoomPage = ({ slug, roomName: name }: Props) => {
         {!isMobile && participantsCount !== undefined && (
           <ParticipantsBadge count={participantsCount} />
         )}
+        <EmailOTP />
       </NavBar>
+
       <div
         style={{
           display: "flex",
