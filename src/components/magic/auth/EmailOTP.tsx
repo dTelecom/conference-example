@@ -82,7 +82,7 @@ const EmailOTP = () => {
   if (status === "authenticated") {
     return (
       <Button
-        style={{ marginLeft: "8px", padding: "10", height: "auto" }}
+        style={{ marginLeft: "8px", padding: "8px", height: "auto" }}
         size={"sm"}
         onClick={() => void handleShowUI()}
       >
