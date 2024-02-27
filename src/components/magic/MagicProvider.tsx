@@ -43,7 +43,6 @@ const MagicProvider = ({ children }: { children: ReactNode }) => {
         useStorageCache: true,
       });
       magic.user.onUserLoggedOut((isLoggedOut: boolean) => {
-        console.log("log", isLoggedOut);
         if (isLoggedOut) {
           void signOut();
         }

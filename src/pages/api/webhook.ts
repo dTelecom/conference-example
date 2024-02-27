@@ -19,8 +19,8 @@ export default async function handler(
     if (prisma) {
       node = await prisma?.node.findFirst({
         where: {
-          iss: jwt.iss
-        }
+          iss: jwt.iss,
+        },
       });
 
       const now = new Date().getTime();
@@ -31,17 +31,17 @@ export default async function handler(
 
         node = await prisma?.node.upsert({
           where: {
-            iss: jwt.iss
+            iss: jwt.iss,
           },
           update: {
             key: nodeByAddress.key,
-            expiresAt
+            expiresAt,
           },
           create: {
             iss: jwt.iss,
             key: nodeByAddress.key,
-            expiresAt
-          }
+            expiresAt,
+          },
         });
       }
     } else {
@@ -56,45 +56,73 @@ export default async function handler(
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     const event = receiver.receive(req.body, req.headers.authorization);
 
-    console.log("event", event);
-
     switch (event.event) {
       case "participant_joined": {
         if (event.room?.name) {
-          await prisma?.room.update({
+          const room = await prisma?.room.update({
             where: {
-              slug: event.room.name
+              slug: event.room.name,
             },
             data: {
-              participantCount: { increment: 1 }
-            }
+              participantCount: { increment: 1 },
+            },
           });
+
+          if (
+            room &&
+            event.participant?.joinedAt &&
+            event.participant?.identity
+          ) {
+            await prisma?.participant.updateMany({
+              where: {
+                identity: event.participant.identity,
+                roomId: room.id,
+              },
+              data: {
+                joinedAt: new Date(event.participant?.joinedAt * 1000),
+              },
+            });
+          }
         }
+
         break;
       }
       case "participant_left": {
         if (event.room?.name) {
-          await prisma?.room.update({
+          const room = await prisma?.room.update({
             where: {
-              slug: event.room.name
+              slug: event.room.name,
             },
             data: {
-              participantCount: { decrement: 1 }
-            }
+              participantCount: { decrement: 1 },
+            },
           });
+
+          if (room && event.createdAt && event.participant?.identity) {
+            await prisma?.participant.updateMany({
+              where: {
+                identity: event.participant.identity,
+                roomId: room.id,
+              },
+              data: {
+                leftAt: new Date(event.createdAt * 1000),
+              },
+            });
+          }
         }
+
         break;
       }
       case "room_finished": {
         if (event.room?.name) {
           await prisma?.room.update({
             where: {
-              slug: event.room.name
+              slug: event.room.name,
             },
             data: {
               deletedAt: new Date(),
-              deleted: true
-            }
+              deleted: true,
+            },
           });
         }
         break;

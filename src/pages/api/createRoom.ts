@@ -26,6 +26,7 @@ export default async function handler(req: ApiRequest, res: NextApiResponse) {
       data: {
         name: input.roomName,
         slug,
+        createdAt: new Date(),
       },
     });
 

@@ -77,7 +77,12 @@ export default async function handler(req: ApiRequest, res: NextApiResponse) {
     canPublishData: true,
     roomAdmin: isAdmin,
   });
-
+  console.log(
+    "webhook",
+    process.env.VERCEL_URL
+      ? `https://${process.env.VERCEL_URL}/api/webhook`
+      : undefined
+  );
   token.webHookURL = process.env.VERCEL_URL
     ? `https://${process.env.VERCEL_URL}/api/webhook`
     : undefined;

@@ -27,20 +27,26 @@ export const authConfig: AuthOptions = {
         const metadata = await magic.users.getMetadataByToken(
           credentials?.didToken || ""
         );
+
         let id = "";
-        if (prisma && metadata.issuer) {
+        if (prisma && metadata.issuer && credentials?.didToken) {
+          const data = {
+            email: metadata.email,
+            oauthProvider: metadata.oauthProvider,
+            wallet: magic.token
+              .getPublicAddress(credentials.didToken)
+              .toLowerCase(),
+          };
           const user: User = await prisma.user.upsert({
             where: {
               issuer: metadata.issuer,
             },
             update: {
-              email: metadata.email,
-              oauthProvider: metadata.oauthProvider,
+              ...data,
             },
             create: {
               issuer: metadata.issuer,
-              email: metadata.email,
-              oauthProvider: metadata.oauthProvider,
+              ...data,
             },
           });
           id = user?.id;

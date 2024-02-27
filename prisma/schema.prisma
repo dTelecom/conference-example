@@ -18,20 +18,24 @@ model Room {
   slug             String        @unique
   Participant      Participant[]
   adminId          Int?
+  createdAt        DateTime?
+  startedAt        DateTime?
   deletedAt        DateTime?
   deleted          Boolean       @default(false)
   participantCount Int           @default(0)
 }
 
 model Participant {
-  id       Int     @id @default(autoincrement())
+  id       Int       @id @default(autoincrement())
   name     String?
   identity String
-  room     Room    @relation(fields: [roomId], references: [id])
+  room     Room      @relation(fields: [roomId], references: [id])
   roomId   Int
   server   String?
   userId   String?
-  user     User?   @relation(fields: [userId], references: [id])
+  user     User?     @relation(fields: [userId], references: [id])
+  joinedAt DateTime?
+  leftAt   DateTime?
 }
 
 model Node {
@@ -46,4 +50,5 @@ model User {
   issuer        String        @unique
   oauthProvider String?
   Participant   Participant[]
+  wallet        String?
 }

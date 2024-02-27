@@ -103,49 +103,53 @@ const EmailOTP = () => {
     );
   }
 
-  return (
-    <div
-      onClick={(event) => {
-        if (event.target === event.currentTarget) {
-          setShowForm(false);
-        }
-      }}
-      className={styles.modalWrapper}
-    >
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          void handleLogin();
+  if (status === "unauthenticated" && showForm) {
+    return (
+      <div
+        onClick={(event) => {
+          if (event.target === event.currentTarget) {
+            setShowForm(false);
+          }
         }}
-        className={styles.modalContainer}
+        className={styles.modalWrapper}
       >
-        <span className={styles.formHeader}>Email OTP Login</span>
-
-        <Input
-          setValue={setEmail}
-          onChange={(e) => {
-            if (emailError) setEmailError(false);
-            setEmail(e.target.value);
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            void handleLogin();
           }}
-          placeholder={"Email"}
-          value={email}
-        />
-
-        {emailError && (
-          <span className={styles.formError}>Enter a valid email</span>
-        )}
-
-        {error && <span className={styles.formError}>{error}</span>}
-
-        <Button
-          disabled={isLoginInProgress || email.length == 0}
-          type={"submit"}
+          className={styles.modalContainer}
         >
-          {isLoginInProgress ? <Loader /> : "Log in / Sign up"}
-        </Button>
-      </form>
-    </div>
-  );
+          <span className={styles.formHeader}>Email OTP Login</span>
+
+          <Input
+            setValue={setEmail}
+            onChange={(e) => {
+              if (emailError) setEmailError(false);
+              setEmail(e.target.value);
+            }}
+            placeholder={"Email"}
+            value={email}
+          />
+
+          {emailError && (
+            <span className={styles.formError}>Enter a valid email</span>
+          )}
+
+          {error && <span className={styles.formError}>{error}</span>}
+
+          <Button
+            disabled={isLoginInProgress || email.length == 0}
+            type={"submit"}
+          >
+            {isLoginInProgress ? <Loader /> : "Log in / Sign up"}
+          </Button>
+        </form>
+      </div>
+    );
+  }
+
+  return null;
 };
 
 export default EmailOTP;
