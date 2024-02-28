@@ -1,4 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
+import prisma from "@/lib/prisma";
 
 const PARTICIPATION_TIME_LIMIT_SECONDS = 300;
 

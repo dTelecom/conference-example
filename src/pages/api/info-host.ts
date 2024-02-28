@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import type { Participant } from "@prisma/client";
+import prisma from "@/lib/prisma";
 
 const PARTICIPANTS_MINIMAL_COUNT = 5;
 const PARTICIPATION_TIME_LIMIT_SECONDS = 600;
