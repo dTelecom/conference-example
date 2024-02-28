@@ -9,7 +9,8 @@ import React, { useState } from "react";
 import { KeyIcon } from "@/assets";
 import axios from "axios";
 import { setIdentity } from "@/lib/client-utils";
-import EmailOTP from "@/components/magic/auth/EmailOTP";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
+import { hasWallets } from "@/pages/_app";
 
 export default function IndexPage() {
   const [roomName, setRoomName] = useState<string>("");
@@ -43,7 +44,11 @@ export default function IndexPage() {
 
   return (
     <>
-      <NavBar>{process.env.NEXT_PUBLIC_MAGIC_API_KEY && <EmailOTP />}</NavBar>
+      <NavBar>
+        {hasWallets && (
+          <ConnectButton accountStatus={"address"} showBalance={false} />
+        )}
+      </NavBar>
 
       <div className={styles.container}>
         <h1 className={styles.title}>Create a Web3 Meeting</h1>

@@ -4,7 +4,7 @@ import { z } from "zod";
 import prisma from "@/lib/prisma";
 import { generateUUID } from "@/lib/client-utils";
 import { getServerSession } from "next-auth/next";
-import { authConfig } from "@/pages/api/auth/[...nextauth]";
+import { authOptions } from "@/pages/api/auth/[...nextauth]";
 import type { User } from "@prisma/client";
 
 const schema = z.object({
@@ -18,7 +18,7 @@ interface ApiRequest extends NextApiRequest {
 export default async function handler(req: ApiRequest, res: NextApiResponse) {
   const input = req.body;
   const identity = generateUUID();
-  const session = await getServerSession(req, res, authConfig);
+  const session = await getServerSession(req, res, authOptions);
   const slug = generateUUID();
 
   if (prisma) {
@@ -31,10 +31,10 @@ export default async function handler(req: ApiRequest, res: NextApiResponse) {
     });
 
     let user: User | null = null;
-    if (session?.user?.email) {
-      user = await prisma?.user.findFirst({
+    if (session?.address) {
+      user = await prisma.user.findFirst({
         where: {
-          email: session.user.email,
+          wallet: session.address,
         },
       });
     }

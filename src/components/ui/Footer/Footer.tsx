@@ -1,5 +1,6 @@
 import styles from "./Footer.module.scss";
-import { DtelecomIcon } from "@/assets";
+import { DiscordIcon, DtelecomIcon, TwitterIcon } from "@/assets";
+import React from "react";
 
 export const Footer = () => {
   const onClick = () => {
@@ -7,11 +8,19 @@ export const Footer = () => {
   };
 
   return (
-    <div
-      onClick={onClick}
-      className={styles.container}
-    >
-      Powered by<DtelecomIcon />
+    <div className={styles.container}>
+      <div onClick={onClick}>
+        Powered by
+        <DtelecomIcon />
+      </div>
+      <div className={styles.social}>
+        <a target={"_blank"} href={"https://twitter.com/DTEL_org"}>
+          <TwitterIcon />
+        </a>
+        <a target={"_blank"} href={"https://discord.gg/VSSG2zQsJr"}>
+          <DiscordIcon />
+        </a>
+      </div>
     </div>
   );
 };

@@ -21,6 +21,10 @@ main {
     font-family: Inter, serif;
 }
 
+#__next> [data-rk]{
+    height: 100%;
+}
+
 main {
     position: relative;
     display: flex;

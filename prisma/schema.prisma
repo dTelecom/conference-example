@@ -45,10 +45,7 @@ model Node {
 }
 
 model User {
-  id            String        @id @default(uuid())
-  email         String?
-  issuer        String        @unique
-  oauthProvider String?
-  Participant   Participant[]
-  wallet        String?
+  id          String        @id @default(uuid())
+  Participant Participant[]
+  wallet      String        @unique
 }

@@ -6,6 +6,8 @@ import ChainIcon from "./chain.svg";
 import LogoSmallIcon from "./logoSmall.svg";
 import TickIcon from "./tick.svg";
 import UserIcon from "./user.svg";
+import TwitterIcon from "./twitter.svg";
+import DiscordIcon from "./discord.svg";
 
 export {
   LogoIcon,
@@ -16,4 +18,6 @@ export {
   LogoSmallIcon,
   TickIcon,
   UserIcon,
+  DiscordIcon,
+  TwitterIcon,
 };
