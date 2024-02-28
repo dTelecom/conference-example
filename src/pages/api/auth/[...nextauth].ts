@@ -14,7 +14,7 @@ export const authOptions: AuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
     session({ session, token }: { session: Session; token: { sub?: string } }) {
-      return { ...session, address: token.sub };
+      return { ...session, address: token.sub?.toLowerCase() };
     },
   },
 };
