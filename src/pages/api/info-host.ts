@@ -23,7 +23,9 @@ export default async function handler(
   });
 
   if (!user) {
-    throw new Error("user not found");
+    return res.status(200).json({
+      is_ok,
+    });
   }
 
   const lastDay = Date.now() - 24 * 60 * 60 * 1000;

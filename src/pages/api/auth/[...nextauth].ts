@@ -46,6 +46,7 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
           const result: { success: boolean } = await siwe.verify({
             signature: credentials?.signature || "",
             domain: nextAuthUrl.host,
+            // https://github.com/nextauthjs/next-auth/issues/7166#issuecomment-1508439710
             nonce: await getCsrfToken({ req: { headers: req.headers } }),
           });
 
