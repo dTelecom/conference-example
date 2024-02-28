@@ -61,10 +61,10 @@ export const rainbowMagicConnector = ({ chains }: { chains: Chain[] }) => ({
       chains,
       options: {
         apiKey: process.env.NEXT_PUBLIC_MAGIC_API_KEY as string,
-        oauthOptions: {
-          providers: ["facebook", "google", "twitter"],
-          // callbackUrl: "https://your-callback-url.com" //optional
-        },
+        // oauthOptions: {
+        // providers: ["facebook", "google", "twitter"],
+        // callbackUrl: "https://your-callback-url.com" //optional
+        // },
         accentColor: "#59E970",
         isDarkMode: true,
       },
