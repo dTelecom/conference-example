@@ -67,8 +67,8 @@ export default async function handler(
     let passedCount = 0;
     room.Participant.filter((p) => p.id !== room.adminId).forEach(
       (p: Participant) => {
-        const joined = p.joinedAt as Date | null;
-        const left = p.leftAt as Date | null;
+        const joined = p.joinedAt;
+        const left = p.leftAt;
         if (
           joined &&
           left &&

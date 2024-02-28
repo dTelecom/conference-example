@@ -47,8 +47,8 @@ export default async function handler(
   });
 
   for (const participant of participants) {
-    const joined = participant.joinedAt as Date | null;
-    const left = participant.leftAt as Date | null;
+    const joined = participant.joinedAt;
+    const left = participant.leftAt;
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access,@typescript-eslint/no-unsafe-assignment
     const roomAdminId = participant.room.adminId;
     if (

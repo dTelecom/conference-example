@@ -78,8 +78,8 @@ const RoomWrapper: NextPage<Props> = ({
     };
   }, [preJoinChoices, hq]);
 
-  const onMute = async (participantIdentity: string, trackSid: string) => {
-    await axios.post("/api/admin", {
+  const onMute = (participantIdentity: string, trackSid: string) => {
+    void axios.post("/api/admin", {
       method: "mute",
       adminIdentity: identity,
       participantIdentity,
@@ -88,8 +88,8 @@ const RoomWrapper: NextPage<Props> = ({
     });
   };
 
-  const onKick = async (participantIdentity: string) => {
-    await axios.post("/api/admin", {
+  const onKick = (participantIdentity: string) => {
+    void axios.post("/api/admin", {
       method: "kick",
       adminIdentity: identity,
       participantIdentity,
