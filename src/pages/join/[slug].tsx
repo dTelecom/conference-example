@@ -14,6 +14,7 @@ import { isMobileBrowser } from "@dtelecom/components-core";
 import type { IGetWsUrl } from "@/pages/api/getWsUrl";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { hasWallets } from "@/pages/_app";
+import { ConnectButtonText } from "@/components/ui/ConnectButtonText";
 
 interface Props {
   slug: string;
@@ -103,7 +104,8 @@ const JoinRoomPage = ({ slug, roomName: name }: Props) => {
           <ConnectButton
             accountStatus={"address"}
             showBalance={false}
-            label={"Connect"}
+            // @ts-expect-error @ts-ignore
+            label={<ConnectButtonText />}
           />
         )}
       </NavBar>

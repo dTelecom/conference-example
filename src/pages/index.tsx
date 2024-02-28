@@ -11,6 +11,7 @@ import axios from "axios";
 import { setIdentity } from "@/lib/client-utils";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { hasWallets } from "@/pages/_app";
+import { ConnectButtonText } from "@/components/ui/ConnectButtonText";
 
 export default function IndexPage() {
   const [roomName, setRoomName] = useState<string>("");
@@ -46,7 +47,12 @@ export default function IndexPage() {
     <>
       <NavBar>
         {hasWallets && (
-          <ConnectButton accountStatus={"address"} showBalance={false} />
+          <ConnectButton
+            accountStatus={"address"}
+            showBalance={false}
+            // @ts-expect-error @ts-ignore
+            label={<ConnectButtonText />}
+          />
         )}
       </NavBar>
 
