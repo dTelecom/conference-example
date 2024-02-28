@@ -15,7 +15,10 @@ import {
 } from "next-auth/react";
 import type { Session } from "next-auth";
 import type { AppProps } from "next/app";
-import { UniversalWalletConnector } from "@magiclabs/wagmi-connector";
+import {
+  MagicAuthConnector,
+  // UniversalWalletConnector,
+} from "@magiclabs/wagmi-connector";
 import {
   connectorsForWallets,
   darkTheme,
@@ -54,10 +57,16 @@ export const rainbowMagicConnector = ({ chains }: { chains: Chain[] }) => ({
   iconUrl: "https://svgshare.com/i/pXA.svg",
   iconBackground: "#fff",
   createConnector: () => {
-    const connector = new UniversalWalletConnector({
+    const connector = new MagicAuthConnector({
       chains,
       options: {
         apiKey: process.env.NEXT_PUBLIC_MAGIC_API_KEY as string,
+        oauthOptions: {
+          providers: ["facebook", "google", "twitter"],
+          // callbackUrl: "https://your-callback-url.com" //optional
+        },
+        accentColor: "#59E970",
+        isDarkMode: true,
       },
     });
     return {
