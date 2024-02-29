@@ -7,9 +7,9 @@ generator client {
 }
 
 datasource db {
-  provider          = "postgresql"
-  url               = env("POSTGRES_PRISMA_URL") // uses connection pooling
-  directUrl         = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+  provider  = "postgresql"
+  url       = env("POSTGRES_PRISMA_URL") // uses connection pooling
+  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
 }
 
 model Room {
@@ -18,22 +18,34 @@ model Room {
   slug             String        @unique
   Participant      Participant[]
   adminId          Int?
+  createdAt        DateTime?
+  startedAt        DateTime?
   deletedAt        DateTime?
   deleted          Boolean       @default(false)
   participantCount Int           @default(0)
 }
 
 model Participant {
-  id       Int     @id @default(autoincrement())
+  id       Int       @id @default(autoincrement())
   name     String?
   identity String
-  room     Room    @relation(fields: [roomId], references: [id])
+  room     Room      @relation(fields: [roomId], references: [id])
   roomId   Int
   server   String?
+  userId   String?
+  user     User?     @relation(fields: [userId], references: [id])
+  joinedAt DateTime?
+  leftAt   DateTime?
 }
 
 model Node {
   iss       String   @unique
   key       String
   expiresAt DateTime
+}
+
+model User {
+  id          String        @id @default(uuid())
+  Participant Participant[]
+  wallet      String        @unique
 }

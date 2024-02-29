@@ -12,6 +12,9 @@ import type { IGetRoomResponse } from "@/pages/api/getRoom";
 import { getIdentity, setIdentity } from "@/lib/client-utils";
 import { isMobileBrowser } from "@dtelecom/components-core";
 import type { IGetWsUrl } from "@/pages/api/getWsUrl";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
+import { hasWallets } from "@/pages/_app";
+import { ConnectButtonText } from "@/components/ui/ConnectButtonText";
 
 interface Props {
   slug: string;
@@ -96,7 +99,17 @@ const JoinRoomPage = ({ slug, roomName: name }: Props) => {
         {!isMobile && participantsCount !== undefined && (
           <ParticipantsBadge count={participantsCount} />
         )}
+        <div style={{ marginLeft: "8px" }} />
+        {hasWallets && (
+          <ConnectButton
+            accountStatus={"address"}
+            showBalance={false}
+            // @ts-expect-error @ts-ignore
+            label={<ConnectButtonText />}
+          />
+        )}
       </NavBar>
+
       <div
         style={{
           display: "flex",

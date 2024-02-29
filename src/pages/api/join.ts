@@ -6,6 +6,9 @@ import { generateUUID } from "@/lib/client-utils";
 import prisma from "@/lib/prisma";
 import { env } from "@/env.mjs";
 import requestIp from "request-ip";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/pages/api/auth/[...nextauth]";
+import type { User } from "@prisma/client";
 
 const schema = z.object({
   slug: z.string(),
@@ -30,7 +33,7 @@ export interface IJoinResponse {
 
 export default async function handler(req: ApiRequest, res: NextApiResponse) {
   const input = req.body;
-
+  const session = await getServerSession(req, res, authOptions);
   const identity = input.identity || generateUUID();
 
   let isAdmin = false;
@@ -74,7 +77,12 @@ export default async function handler(req: ApiRequest, res: NextApiResponse) {
     canPublishData: true,
     roomAdmin: isAdmin,
   });
-
+  console.log(
+    "webhook",
+    process.env.VERCEL_URL
+      ? `https://${process.env.VERCEL_URL}/api/webhook`
+      : undefined
+  );
   token.webHookURL = process.env.VERCEL_URL
     ? `https://${process.env.VERCEL_URL}/api/webhook`
     : undefined;
@@ -87,6 +95,15 @@ export default async function handler(req: ApiRequest, res: NextApiResponse) {
   }
 
   if (prisma && room) {
+    let user: User | null = null;
+    if (session?.address) {
+      user = await prisma.user.findFirst({
+        where: {
+          wallet: session.address,
+        },
+      });
+    }
+
     if (!adminId) {
       await prisma?.participant.create({
         data: {
@@ -94,6 +111,7 @@ export default async function handler(req: ApiRequest, res: NextApiResponse) {
           name: input.name,
           roomId: room.id,
           server: url,
+          userId: user?.id,
         },
       });
     } else {
@@ -104,6 +122,7 @@ export default async function handler(req: ApiRequest, res: NextApiResponse) {
         data: {
           server: url,
           name: input.name,
+          userId: user?.id,
         },
       });
     }
