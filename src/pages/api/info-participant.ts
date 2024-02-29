@@ -16,7 +16,7 @@ export default async function handler(
   const address = req.query.address as string;
   const user = await prisma.user.findFirst({
     where: {
-      wallet: address,
+      wallet: address.toLowerCase(),
     },
   });
 
