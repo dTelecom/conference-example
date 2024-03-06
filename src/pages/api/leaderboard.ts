@@ -43,17 +43,25 @@ export default async function handler(
 
   const result: LeaderboardRecordInternal[] = [];
 
-  leaderboard.forEach((row, index) => {
-    const isCurrentUser = row.userId === user?.id;
-    if (index < 10 || isCurrentUser) {
-      result.push({
-        points: row._sum.points || 0,
-        isCurrentUser: isCurrentUser,
-        position: index + 1,
-        userId: row.userId,
-      });
-    }
-  });
+  leaderboard
+    .sort((a, b) => {
+      if (a._sum.points === b._sum.points) {
+        return a.userId < b.userId ? 1 : -1;
+      }
+
+      return b._sum.points! - a._sum.points!;
+    })
+    .forEach((row, index) => {
+      const isCurrentUser = row.userId === user?.id;
+      if (index < 10 || isCurrentUser) {
+        result.push({
+          points: row._sum.points || 0,
+          isCurrentUser: isCurrentUser,
+          position: index + 1,
+          userId: row.userId,
+        });
+      }
+    });
 
   const users = await prisma.user.findMany({
     where: {
@@ -61,14 +69,6 @@ export default async function handler(
         in: result.map((row) => row.userId),
       },
     },
-  });
-
-  // preserve order
-  result.sort((a, b) => {
-    if (a.points === b.points) {
-      return a.userId > b.userId ? 1 : -1;
-    }
-    return b.points - a.points;
   });
 
   const clientResult: LeaderboardRecord[] = result.map((r) => ({
