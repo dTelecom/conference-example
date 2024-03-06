@@ -1,0 +1,252 @@
+.leaderBoardButton {
+	height: 36px;
+	width: 36px;
+	border-radius: 10px;
+	border: 1px solid #2E3031;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.leaderboardModalWrapper {
+	position: fixed;
+	inset: 0;
+	background-color: rgba(0, 0, 0, 0.5);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	z-index: 99;
+
+	.leaderboardModalContainer {
+		max-width: 514px;
+		width: 90%;
+		background-color: #212121;
+		position: relative;
+		padding: 32px 48px;
+		border-radius: 10px;
+
+		@media (max-width: 600px) {
+			padding: 24px;
+		}
+
+		.closeButton {
+			position: absolute;
+			right: 8px;
+			top: 8px;
+			background-color: #2E3031;
+			border-radius: 10px;
+			height: 36px;
+			width: 36px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+
+		.header {
+			display: flex;
+			gap: 8px;
+			align-items: center;
+			margin-bottom: 12px;
+
+			.title {
+				font-size: 24px;
+				font-weight: 700;
+				line-height: 29px;
+				letter-spacing: 0em;
+			}
+
+			.infoButton {
+				background: #59E970;
+				border-radius: 5px;
+				height: 20px;
+				width: 20px;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+			}
+		}
+
+		.badge {
+			background-color: #2E3031;
+			width: fit-content;
+			padding: 4px 16px;
+			font-size: 16px;
+			font-weight: 500;
+			line-height: 22px;
+			letter-spacing: 0em;
+			text-align: left;
+			border-radius: 5px;
+
+			span:first-of-type {
+				color: #59E970;
+			}
+
+		}
+
+		.table {
+			margin-top: 12px;
+
+			.tableHeader, .row {
+				display: flex;
+				gap: 8px;
+
+				span:nth-child(2) {
+					flex: 1;
+				}
+
+				span:nth-child(3) {
+					min-width: 96px;
+				}
+			}
+
+			.row, .tableHeader {
+				span {
+					border: 1px solid #2E3031;
+					border-radius: 5px;
+					min-width: 32px;
+					padding: 8px 0;
+					font-size: 16px;
+					line-height: 16px;
+					letter-spacing: 0em;
+				}
+
+				span:nth-child(1) {
+					text-align: center;
+				}
+
+				span:nth-child(2), span:nth-child(3) {
+					padding: 8px 16px;
+				}
+			}
+
+			.row {
+				margin-bottom: 8px;
+
+				span:nth-child(3) {
+					font-weight: bold;
+				}
+			}
+
+			.tableHeader {
+				span:nth-child(3) {
+					padding-right: 0;
+					padding-left: 16px;
+				}
+
+				span {
+					color: #777575;
+					border: none;
+				}
+			}
+
+			.activeRow {
+				span {
+					border-color: #59E970;
+				}
+			}
+		}
+
+		p {
+			font-size: 14px;
+			font-weight: 500;
+			line-height: 20px;
+			letter-spacing: 0em;
+			text-align: left;
+		}
+
+		.block {
+			margin: 24px 0;
+			border-radius: 5px;
+			border: 1px solid #2E3031;
+			width: 100%;
+
+			.blockHeader {
+				background-color: #2E3031;
+				padding: 8px 24px;
+				font-size: 16px;
+				font-weight: 700;
+				line-height: 19px;
+				letter-spacing: 0em;
+				text-align: left;
+
+			}
+
+			.blockBody {
+				padding: 18px 24px;
+				display: flex;
+				flex-direction: column;
+				gap: 20px;
+
+				.blockRow {
+					display: flex;
+
+					@media (max-width: 600px) {
+						flex-direction: column;
+					}
+
+					.blockBadge {
+						font-size: 14px;
+						font-weight: 700;
+						line-height: 20px;
+						letter-spacing: 0em;
+						width: fit-content;
+						background-color: #59E970;
+						padding: 4px 8px;
+						color: black;
+						border-radius: 5px;
+						display: flex;
+						align-items: center;
+						justify-content: center;
+						height: fit-content;
+						margin-right: 16px;
+
+						@media (max-width: 600px) {
+							margin-bottom: 8px;
+						}
+					}
+
+					.rewardBlockWrapper {
+						display: flex;
+					}
+
+					.rewardBlock {
+						display: flex;
+						flex-direction: column;
+						font-size: 14px;
+						line-height: 14px;
+
+						& > div:first-of-type > span {
+							color: #59E970;
+							font-size: 14px;
+							font-weight: 600;
+							line-height: 14px;
+							letter-spacing: 0em;
+						}
+
+						& > span:last-of-type {
+							margin-top: 2px;
+							color: #777575;
+							font-size: 12px;
+							font-weight: 400;
+							line-height: 12px;
+							letter-spacing: 0em;
+							text-align: left;
+
+						}
+					}
+
+					.plusIcon {
+						margin: 3px 8px;
+						height: 16px;
+						width: 16px;
+						display: flex;
+						background-color: #2E3031;
+						justify-content: center;
+						align-items: center;
+						border-radius: 5px;
+					}
+				}
+			}
+		}
+	}
+}

@@ -3,6 +3,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import jwt_decode from "jwt-decode";
 import { getNodeByAddress } from "@dtelecom/server-sdk-js/dist/contract/contract";
 import prisma from "@/lib/prisma";
+import type { Participant, Room } from "@prisma/client";
 
 interface JwtKey {
   iss: string;
@@ -73,13 +74,14 @@ export default async function handler(
             event.participant?.joinedAt &&
             event.participant?.identity
           ) {
+            const joinedAt = new Date(event.participant?.joinedAt * 1000);
             await prisma?.participant.updateMany({
               where: {
                 identity: event.participant.identity,
                 roomId: room.id,
               },
               data: {
-                joinedAt: new Date(event.participant?.joinedAt * 1000),
+                joinedAt,
               },
             });
           }
@@ -99,14 +101,22 @@ export default async function handler(
           });
 
           if (room && event.createdAt && event.participant?.identity) {
+            const leftAt = new Date(event.createdAt * 1000);
+
             await prisma?.participant.updateMany({
               where: {
                 identity: event.participant.identity,
                 roomId: room.id,
               },
               data: {
-                leftAt: new Date(event.createdAt * 1000),
+                leftAt,
               },
+            });
+
+            void addRewardPoints({
+              participantIdentity: event.participant.identity,
+              leftAt,
+              roomId: room.id,
             });
           }
         }
@@ -132,3 +142,81 @@ export default async function handler(
 
   res.status(200).send("ok");
 }
+
+const addRewardPoints = async ({
+  participantIdentity,
+  leftAt,
+  roomId,
+}: {
+  participantIdentity: Participant["identity"];
+  leftAt: Date;
+  roomId: Room["id"];
+}) => {
+  if (!prisma) {
+    return;
+  }
+
+  const participant = await prisma?.participant.findFirst({
+    where: {
+      identity: participantIdentity,
+      roomId,
+    },
+    select: {
+      id: true,
+      joinedAt: true,
+      userId: true,
+      room: true,
+    },
+  });
+
+  if (participant && participant.joinedAt) {
+    const isAdmin = participant.room.adminId === participant.id;
+    const timeInRoomMin = Math.floor(
+      (leftAt.getTime() - participant.joinedAt.getTime()) / 1000 / 60
+    );
+
+    if (timeInRoomMin <= 0) {
+      return;
+    }
+
+    let points = timeInRoomMin;
+    if (isAdmin) {
+      points = timeInRoomMin * 2;
+    }
+
+    const data = [];
+
+    // add points to participant if authorized
+    if (participant.userId) {
+      data.push({
+        userId: participant.userId,
+        points,
+      });
+    }
+
+    // add points to admin
+    if (!isAdmin && participant.room.adminId) {
+      const adminParticipant = await prisma?.participant.findFirst({
+        where: {
+          id: participant.room.adminId,
+        },
+        select: {
+          userId: true,
+        },
+      });
+
+      if (adminParticipant?.userId) {
+        data.push({
+          userId: adminParticipant.userId,
+          points,
+        });
+      }
+    }
+
+    if (data.length > 0) {
+      await prisma.rewards.createMany({
+        data,
+      });
+    }
+  }
+};

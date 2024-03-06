@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui";
 import { useRouter } from "next/router";
-import { NavBar } from "@/components/ui/NavBar";
+import { NavBar } from "@/components/ui/NavBar/NavBar";
 import { Footer } from "@/components/ui/Footer/Footer";
 import styles from "./Index.module.scss";
 import { Input } from "@/components/ui/Input/Input";
@@ -9,15 +9,16 @@ import React, { useState } from "react";
 import { KeyIcon } from "@/assets";
 import axios from "axios";
 import { setIdentity } from "@/lib/client-utils";
-import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { hasWallets } from "@/pages/_app";
-import { ConnectButtonText } from "@/components/ui/ConnectButtonText";
+import { CustomConnectButton } from "@/components/ui/CustomConnectButton/CustomConnectButton";
+import { Leaderboard } from "@/components/ui/Leaderboard/Leaderboard";
+import { useSession } from "next-auth/react";
 
 export default function IndexPage() {
   const [roomName, setRoomName] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
   const { push } = useRouter();
-
+  const { status } = useSession();
   const onCreate = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -47,19 +48,28 @@ export default function IndexPage() {
     <>
       <NavBar>
         {hasWallets && (
-          <ConnectButton
-            accountStatus={"address"}
-            showBalance={false}
-            // @ts-expect-error @ts-ignore
-            label={<ConnectButtonText />}
-          />
+          <>
+            {status === "authenticated" && (
+              <Leaderboard
+                buttonStyle={{
+                  marginRight: "8px",
+                }}
+              />
+            )}
+
+            <CustomConnectButton />
+          </>
         )}
       </NavBar>
 
       <div className={styles.container}>
-        <h1 className={styles.title}>Create a Web3 Meeting</h1>
+        <h1 className={styles.title}>
+          Create a Web3 Meeting
+          <br /> and Get Points
+        </h1>
         <p className={styles.text}>
-          Open source video conferencing app built on{" "}
+          A free, open source web-based video{"\n"}conferencing app built
+          on&nbsp;
           <a
             href={"https://video.dtelecom.org"}
             target={"_blank"}

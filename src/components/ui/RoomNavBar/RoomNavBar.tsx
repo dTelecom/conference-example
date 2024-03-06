@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react";
-import { NavBar } from "@/components/ui/NavBar";
+import { NavBar } from "@/components/ui/NavBar/NavBar";
 import { ParticipantsBadge } from "@/components/ui/ParticipantsBadge/ParticipantsBadge";
 import { Button } from "@/components/ui";
 import { clsx } from "clsx";
