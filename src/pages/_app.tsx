@@ -185,6 +185,7 @@ const AppWrapper = ({ children }: PropsWithChildren) => {
     } else if (!isConnected && status === "authenticated") {
       void signOut();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isConnected, status]);
 
   return (

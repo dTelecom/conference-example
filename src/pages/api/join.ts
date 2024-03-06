@@ -8,7 +8,7 @@ import { env } from "@/env.mjs";
 import requestIp from "request-ip";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/pages/api/auth/[...nextauth]";
-import type { User } from "@prisma/client";
+import type { Participant, User } from "@prisma/client";
 
 const schema = z.object({
   slug: z.string(),
@@ -34,11 +34,13 @@ export interface IJoinResponse {
 export default async function handler(req: ApiRequest, res: NextApiResponse) {
   const input = req.body;
   const session = await getServerSession(req, res, authOptions);
-  const identity = input.identity || generateUUID();
+  let identity = input.identity || generateUUID();
 
   let isAdmin = false;
   let adminId = null;
   let room = null;
+  let currentUser: User | null = null;
+  let adminParticipant: Partial<Participant> | null = null;
 
   if (prisma) {
     room = await prisma.room.findFirst({
@@ -51,16 +53,49 @@ export default async function handler(req: ApiRequest, res: NextApiResponse) {
       throw new Error("Room not found");
     }
 
-    if (input.identity) {
-      const admin = await prisma?.participant.findFirst({
+    if (session?.address) {
+      currentUser = await prisma.user.findFirst({
         where: {
-          identity: input.identity,
+          wallet: session.address,
+        },
+      });
+    }
+
+    // check if authorized user had participant record
+    if (currentUser) {
+      const currentParticipant = await prisma.participant.findFirst({
+        where: {
+          roomId: room.id,
+          userId: currentUser.id,
         },
       });
 
-      if (admin?.id === room.adminId) {
+      if (currentParticipant?.identity) {
+        identity = currentParticipant.identity;
+      }
+    }
+
+    if (room.adminId) {
+      adminParticipant = await prisma?.participant.findFirst({
+        where: {
+          id: room.adminId,
+        },
+        select: {
+          id: true,
+          user: true,
+          identity: true,
+        },
+      });
+
+      if (
+        adminParticipant?.userId &&
+        identity === adminParticipant?.identity &&
+        !currentUser
+      ) {
+        throw new Error("unauthorized");
+      } else if (input.identity === adminParticipant?.identity) {
         isAdmin = true;
-        adminId = admin.id;
+        adminId = adminParticipant?.id;
       }
     }
   }
@@ -77,12 +112,7 @@ export default async function handler(req: ApiRequest, res: NextApiResponse) {
     canPublishData: true,
     roomAdmin: isAdmin,
   });
-  console.log(
-    "webhook",
-    process.env.VERCEL_URL
-      ? `https://${process.env.VERCEL_URL}/api/webhook`
-      : undefined
-  );
+
   token.webHookURL = process.env.VERCEL_URL
     ? `https://${process.env.VERCEL_URL}/api/webhook`
     : undefined;
@@ -95,15 +125,6 @@ export default async function handler(req: ApiRequest, res: NextApiResponse) {
   }
 
   if (prisma && room) {
-    let user: User | null = null;
-    if (session?.address) {
-      user = await prisma.user.findFirst({
-        where: {
-          wallet: session.address,
-        },
-      });
-    }
-
     if (!adminId) {
       await prisma?.participant.create({
         data: {
@@ -111,7 +132,7 @@ export default async function handler(req: ApiRequest, res: NextApiResponse) {
           name: input.name,
           roomId: room.id,
           server: url,
-          userId: user?.id,
+          userId: currentUser?.id,
         },
       });
     } else {
@@ -122,7 +143,7 @@ export default async function handler(req: ApiRequest, res: NextApiResponse) {
         data: {
           server: url,
           name: input.name,
-          userId: user?.id,
+          userId: currentUser?.id,
         },
       });
     }

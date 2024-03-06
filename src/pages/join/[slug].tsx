@@ -2,7 +2,7 @@ import type { LocalUserChoices } from "@dtelecom/components-react";
 import { PreJoin } from "@dtelecom/components-react";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import { NavBar } from "@/components/ui/NavBar";
+import { NavBar } from "@/components/ui/NavBar/NavBar";
 import type { GetServerSideProps } from "next";
 import { Footer } from "@/components/ui/Footer/Footer";
 import { ParticipantsBadge } from "@/components/ui/ParticipantsBadge/ParticipantsBadge";
@@ -12,9 +12,8 @@ import type { IGetRoomResponse } from "@/pages/api/getRoom";
 import { getIdentity, setIdentity } from "@/lib/client-utils";
 import { isMobileBrowser } from "@dtelecom/components-core";
 import type { IGetWsUrl } from "@/pages/api/getWsUrl";
-import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { hasWallets } from "@/pages/_app";
-import { ConnectButtonText } from "@/components/ui/ConnectButtonText";
+import { CustomConnectButton } from "@/components/ui/CustomConnectButton/CustomConnectButton";
 
 interface Props {
   slug: string;
@@ -100,14 +99,7 @@ const JoinRoomPage = ({ slug, roomName: name }: Props) => {
           <ParticipantsBadge count={participantsCount} />
         )}
         <div style={{ marginLeft: "8px" }} />
-        {hasWallets && (
-          <ConnectButton
-            accountStatus={"address"}
-            showBalance={false}
-            // @ts-expect-error @ts-ignore
-            label={<ConnectButtonText />}
-          />
-        )}
+        {hasWallets && <CustomConnectButton />}
       </NavBar>
 
       <div
