@@ -62,10 +62,8 @@ export const CustomConnectButton = () => {
               }
 
               return (
-                <div className={styles.walletButton}>
-                  <button onClick={openAccountModal} type="button">
-                    {account.displayName}
-                  </button>
+                <div onClick={openAccountModal} className={styles.walletButton}>
+                  <button type="button">{account.displayName}</button>
                   <div className={styles.divider} />
                   <ChevronDown />
                 </div>
