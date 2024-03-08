@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import prisma from "@/lib/prisma";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/pages/api/auth/[...nextauth]";
-import type { User } from "@prisma/client";
+import type { ReferralCode } from "@prisma/client";
 import { util } from "protobufjs";
 import newError = util.newError;
 
@@ -16,11 +16,18 @@ export default async function handler(
 
   const session = await getServerSession(req, res, authOptions);
 
-  let user: User | null = null;
+  let user: {
+    id: string;
+    ReferralCode: ReferralCode[];
+  } | null = null;
   if (session?.address) {
     user = await prisma.user.findFirst({
       where: {
         wallet: session.address,
+      },
+      select: {
+        ReferralCode: true,
+        id: true,
       },
     });
   }
@@ -80,8 +87,16 @@ export default async function handler(
   if (clientResult[10]?.isCurrentUser) {
     clientResult.splice(9, 1);
   }
-
-  return res.status(200).json(clientResult);
+  const referralCode =
+    user.ReferralCode && user.ReferralCode.length > 0
+      ? user.ReferralCode.sort((a, b) => {
+          return a.createdAt.getTime() - b.createdAt.getTime();
+        })[user.ReferralCode.length - 1]
+      : null;
+  return res.status(200).json({
+    result: clientResult,
+    referralCode: referralCode?.referralCode,
+  });
 }
 
 const formatWallet = (wallet?: string) => {

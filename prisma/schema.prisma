@@ -19,7 +19,6 @@ model Room {
   Participant      Participant[]
   adminId          Int?
   createdAt        DateTime?
-  startedAt        DateTime?
   deletedAt        DateTime?
   deleted          Boolean       @default(false)
   participantCount Int           @default(0)
@@ -45,17 +44,30 @@ model Node {
 }
 
 model User {
-  id          String        @id @default(uuid())
-  Participant Participant[]
-  wallet      String        @unique
-  Rewards     Rewards[]
+  id             String         @id @default(uuid())
+  Participant    Participant[]
+  wallet         String         @unique
+  Rewards        Rewards[]
+  ReferralCode   ReferralCode[]
+  referralUserId String?
 }
 
 model Rewards {
-  id        Int      @id @default(autoincrement())
-  userId    String
-  user      User     @relation(fields: [userId], references: [id])
-  points    Int
-  createdAt DateTime @default(now()) @db.Timestamptz(6)
-  updatedAt DateTime @updatedAt @db.Timestamptz(6)
+  id                Int      @id @default(autoincrement())
+  userId            String
+  user              User     @relation(fields: [userId], references: [id])
+  points            Int
+  createdAt         DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt         DateTime @updatedAt @db.Timestamptz(6)
+  rewardType        String?
+  fromParticipantId Int?
+}
+
+model ReferralCode {
+  id           String   @id @default(uuid())
+  referralCode String   @unique
+  userId       String
+  user         User     @relation(fields: [userId], references: [id])
+  createdAt    DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt    DateTime @updatedAt @db.Timestamptz(6)
 }

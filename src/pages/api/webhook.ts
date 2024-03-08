@@ -3,7 +3,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import jwt_decode from "jwt-decode";
 import { getNodeByAddress } from "@dtelecom/server-sdk-js/dist/contract/contract";
 import prisma from "@/lib/prisma";
-import type { Participant, Room } from "@prisma/client";
+import type { Participant, Rewards, Room, User } from "@prisma/client";
 
 interface JwtKey {
   iss: string;
@@ -143,6 +143,10 @@ export default async function handler(
   res.status(200).send("ok");
 }
 
+export const BASE_REWARDS_PER_MINUTE = 10;
+export const ADMIN_POINTS_MULTIPLIER = 2;
+export const REFERRAL_REWARD_PERCENTAGE = 10;
+
 const addRewardPoints = async ({
   participantIdentity,
   leftAt,
@@ -179,9 +183,10 @@ const addRewardPoints = async ({
       return;
     }
 
-    let points = timeInRoomMin;
+    let points = timeInRoomMin * BASE_REWARDS_PER_MINUTE;
     if (isAdmin) {
-      points = timeInRoomMin * 2;
+      points =
+        timeInRoomMin * BASE_REWARDS_PER_MINUTE * ADMIN_POINTS_MULTIPLIER;
     }
 
     const data = [];
@@ -191,7 +196,10 @@ const addRewardPoints = async ({
       data.push({
         userId: participant.userId,
         points,
+        rewardType: isAdmin ? "for_room_creation" : "for_participation",
+        fromParticipantId: participant.id,
       });
+      void addPointsToReferral(participant.userId, points, participant.id);
     }
 
     // add points to admin
@@ -202,6 +210,7 @@ const addRewardPoints = async ({
         },
         select: {
           userId: true,
+          id: true,
         },
       });
 
@@ -209,7 +218,14 @@ const addRewardPoints = async ({
         data.push({
           userId: adminParticipant.userId,
           points,
+          rewardType: "from_participant_to_admin",
+          fromParticipantId: participant.id,
         });
+        void addPointsToReferral(
+          adminParticipant.userId,
+          points,
+          adminParticipant.id
+        );
       }
     }
 
@@ -218,5 +234,29 @@ const addRewardPoints = async ({
         data,
       });
     }
+  }
+};
+
+const addPointsToReferral = async (
+  fromUserId: User["id"],
+  fromPoints: Rewards["points"],
+  fromParticipantId: Participant["id"]
+) => {
+  if (!prisma) return;
+  const user = await prisma.user.findFirst({
+    where: {
+      id: fromUserId,
+    },
+  });
+
+  if (user?.referralUserId) {
+    await prisma.rewards.create({
+      data: {
+        userId: user?.referralUserId,
+        points: Math.floor((fromPoints * REFERRAL_REWARD_PERCENTAGE) / 100),
+        rewardType: "from_referral",
+        fromParticipantId,
+      },
+    });
   }
 };

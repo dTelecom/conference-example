@@ -8776,6 +8776,11 @@ redis-parser@^3.0.0:
   dependencies:
     redis-errors "^1.0.0"
 
+referral-codes@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/referral-codes/-/referral-codes-3.0.0.tgz#bb943dc0ae7c507ec96060db69bc30aa69aa3aa8"
+  integrity sha512-XuMWA8VvRztL6fChJCik+aDq0u7GOYwb8wWK3UeM0TeBqDbXqzM3jO1N9AZxOGnh6iEGpJXfNZAJt1sdVCi0/A==
+
 reflect.getprototypeof@^1.0.4:
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/reflect.getprototypeof/-/reflect.getprototypeof-1.0.5.tgz#e0bd28b597518f16edaf9c0e292c631eb13e0674"
