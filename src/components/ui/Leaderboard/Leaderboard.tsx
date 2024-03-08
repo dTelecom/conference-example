@@ -1,10 +1,24 @@
 import type { CSSProperties } from "react";
-import { useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import styles from "./Leaderboard.module.scss";
-import { CloseIcon, InfoIcon, LeaderboardIcon, PlusIcon } from "@/assets";
+import {
+  ChainIcon,
+  CloseIcon,
+  InfoIcon,
+  LeaderboardIcon,
+  PlusIcon,
+  TickIcon,
+} from "@/assets";
 import axios from "axios";
 import { clsx } from "clsx";
 import type { LeaderboardRecord } from "@/pages/api/leaderboard";
+import { INVITE_CODE_QUERY_KEY } from "@/lib/hooks/useInviteCode";
+import { CopyIcon } from "lucide-react";
+import {
+  ADMIN_POINTS_MULTIPLIER,
+  BASE_REWARDS_PER_MINUTE,
+  REFERRAL_REWARD_PERCENTAGE,
+} from "@/pages/api/webhook";
 
 interface Leaderboard {
   buttonStyle?: CSSProperties;
@@ -14,12 +28,27 @@ export const Leaderboard = ({ buttonStyle }: Leaderboard) => {
   const [open, setOpen] = useState(false);
   const [leaderboard, setLeaderboard] = useState<LeaderboardRecord[]>([]);
   const [instructionOpen, setInstructionOpen] = useState(false);
+  const [referralLink, setReferralLink] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
 
   const getPoints = async () => {
     try {
-      const { data } = await axios.get<LeaderboardRecord[]>("/api/leaderboard");
+      const { data } = await axios.get<{
+        result: LeaderboardRecord[];
+        referralCode: string | null;
+      }>("/api/leaderboard");
 
-      setLeaderboard(data);
+      if (data.referralCode) {
+        setReferralLink(
+          window.location.origin +
+            "?" +
+            INVITE_CODE_QUERY_KEY +
+            "=" +
+            data.referralCode
+        );
+      }
+
+      setLeaderboard(data.result);
     } catch (e) {
       setOpen(false);
     }
@@ -32,6 +61,14 @@ export const Leaderboard = ({ buttonStyle }: Leaderboard) => {
   const onOpen = () => {
     setOpen(true);
     void getPoints();
+  };
+
+  const copy = async () => {
+    if (!referralLink) return;
+    const url = encodeURI(referralLink);
+    await navigator.clipboard.writeText(url);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   };
 
   return (
@@ -76,6 +113,22 @@ export const Leaderboard = ({ buttonStyle }: Leaderboard) => {
               <span>Your Points:</span>&nbsp;
               <span>{currentUserPoints || 0}</span>
             </div>
+
+            {referralLink && (
+              <div
+                onClick={() => {
+                  void copy();
+                }}
+              >
+                <div className={styles.linkTitle}>
+                  <ChainIcon /> Referral Link
+                </div>
+                <div className={styles.linkCopy}>
+                  {referralLink}
+                  <button>{copied ? <TickIcon /> : <CopyIcon />}</button>
+                </div>
+              </div>
+            )}
 
             {leaderboard.length > 0 && (
               <div className={styles.table}>
@@ -143,7 +196,11 @@ export const Leaderboard = ({ buttonStyle }: Leaderboard) => {
                   <div className={styles.rewardBlockWrapper}>
                     <div className={styles.rewardBlock}>
                       <div>
-                        <span>2 points</span>/min.
+                        <span>
+                          {BASE_REWARDS_PER_MINUTE * ADMIN_POINTS_MULTIPLIER}{" "}
+                          points
+                        </span>
+                        /min.
                       </div>
                       <span>as a host</span>
                     </div>
@@ -152,7 +209,7 @@ export const Leaderboard = ({ buttonStyle }: Leaderboard) => {
                     </div>
                     <div className={styles.rewardBlock}>
                       <div>
-                        <span>1 point</span>/min.
+                        <span>{BASE_REWARDS_PER_MINUTE} point</span>/min.
                       </div>
                       <span>for each invited participant</span>
                     </div>
@@ -163,9 +220,19 @@ export const Leaderboard = ({ buttonStyle }: Leaderboard) => {
                   <span className={styles.blockBadge}>Participant</span>
                   <div className={styles.rewardBlock}>
                     <div>
-                      <span>1 point</span>/min.
+                      <span>{BASE_REWARDS_PER_MINUTE} point</span>/min.
                     </div>
                     <span>as a participant</span>
+                  </div>
+                </div>
+
+                <div className={styles.blockRow}>
+                  <span className={styles.blockBadge}>Referral</span>
+                  <div className={styles.rewardBlock}>
+                    <div>
+                      <span>{REFERRAL_REWARD_PERCENTAGE}%</span> of the points
+                    </div>
+                    <span>earned by the invited participant</span>
                   </div>
                 </div>
               </div>

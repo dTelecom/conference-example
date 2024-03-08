@@ -40,6 +40,7 @@ import { mainnet } from "viem/chains";
 import type { Chain } from "@wagmi/core";
 import { SiweMessage } from "siwe";
 import { infuraProvider } from "wagmi/providers/infura";
+import useInviteCode, { getInviteCode } from "@/lib/hooks/useInviteCode";
 
 const { chains, publicClient, webSocketPublicClient } = configureChains(
   [mainnet],
@@ -150,6 +151,7 @@ const AppWrapper = ({ children }: PropsWithChildren) => {
   const { address, isConnected } = useAccount();
   const { status } = useSession();
   const { disconnect } = useDisconnect();
+  useInviteCode();
 
   const handleLogin = async () => {
     try {
@@ -168,12 +170,16 @@ const AppWrapper = ({ children }: PropsWithChildren) => {
       }).catch(() => {
         void disconnect();
       });
-      void signIn("credentials", {
-        message: JSON.stringify(message),
-        redirect: false,
-        signature,
-        callbackUrl,
-      });
+      void signIn(
+        "credentials",
+        {
+          message: JSON.stringify(message),
+          redirect: false,
+          signature,
+          callbackUrl,
+        },
+        { inviteCode: getInviteCode() || "" }
+      );
     } catch (error) {
       window.alert(error);
     }

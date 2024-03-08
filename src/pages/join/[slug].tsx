@@ -14,6 +14,7 @@ import { isMobileBrowser } from "@dtelecom/components-core";
 import type { IGetWsUrl } from "@/pages/api/getWsUrl";
 import { hasWallets } from "@/pages/_app";
 import { CustomConnectButton } from "@/components/ui/CustomConnectButton/CustomConnectButton";
+import { setInviteCode } from "@/lib/hooks/useInviteCode";
 
 interface Props {
   slug: string;
@@ -47,6 +48,10 @@ const JoinRoomPage = ({ slug, roomName: name }: Props) => {
       }
       setParticipantsCount(data.participantsCount);
       setRoomName(data.roomName);
+
+      if (data.referralCode) {
+        setInviteCode(data.referralCode);
+      }
     }
 
     async function fetchWsUrl() {

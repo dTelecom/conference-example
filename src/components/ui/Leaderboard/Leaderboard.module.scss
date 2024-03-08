@@ -76,15 +76,51 @@
 			letter-spacing: 0em;
 			text-align: left;
 			border-radius: 5px;
+			margin-bottom: 16px;
 
 			span:first-of-type {
 				color: #59E970;
 			}
+		}
 
+		.linkTitle {
+			font-size: 16px;
+			font-weight: 700;
+			line-height: 22px;
+			letter-spacing: 0em;
+			text-align: left;
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			margin-bottom: 8px;
+
+			svg {
+				color: #59E970;
+			}
+		}
+
+		.linkCopy {
+			background-color: #2E3031;
+			border-radius: 5px;
+			height: 40px;
+			font-size: 16px;
+			font-weight: 500;
+			line-height: 16px;
+			letter-spacing: 0em;
+			text-align: left;
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			padding: 0 16px;
+			margin-bottom: 16px;
+
+			svg {
+				margin-left: auto;
+				color: #59E970;
+			}
 		}
 
 		.table {
-			margin-top: 12px;
 
 			.tableHeader, .row {
 				display: flex;
