@@ -36,14 +36,14 @@ import {
 } from "wagmi";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { publicProvider } from "wagmi/providers/public";
-import { mainnet } from "viem/chains";
+import { polygon } from "viem/chains";
 import type { Chain } from "@wagmi/core";
 import { SiweMessage } from "siwe";
 import { infuraProvider } from "wagmi/providers/infura";
 import useInviteCode, { getInviteCode } from "@/lib/hooks/useInviteCode";
 
 const { chains, publicClient, webSocketPublicClient } = configureChains(
-  [mainnet],
+  [polygon],
   [
     infuraProvider({
       apiKey: process.env.NEXT_PUBLIC_WEB3_PROVIDER_FRONTEND_KEY as string,
