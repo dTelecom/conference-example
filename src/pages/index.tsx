@@ -68,8 +68,8 @@ export default function IndexPage() {
           <br /> and Get Points
         </h1>
         <p className={styles.text}>
-          A free, open source web-based video{"\n"}conferencing app built
-          on&nbsp;
+          A free, open-source web application for video{"\n"} conferencing with
+          built-in AI voice translation,{"\n"} built on&nbsp;
           <a
             href={"https://video.dtelecom.org"}
             target={"_blank"}

@@ -2,6 +2,7 @@ import type { LocalUserChoices } from "@dtelecom/components-react";
 import {
   formatChatMessageLinks,
   LiveKitRoom,
+  useChat,
   VideoConference,
 } from "@dtelecom/components-react";
 import React, { useEffect, useMemo, useState } from "react";
@@ -16,6 +17,7 @@ import { RoomNavBar } from "@/components/ui/RoomNavBar/RoomNavBar";
 import { getIdentity } from "@/lib/client-utils";
 import type { GridLayoutDefinition } from "@dtelecom/components-core";
 import { isMobileBrowser } from "@dtelecom/components-core";
+import { VoiceRecognition } from "@/lib/VoiceRecognition";
 
 interface Props {
   slug: string;
@@ -36,7 +38,6 @@ const RoomWrapper: NextPage<Props> = ({
 }) => {
   const router = useRouter();
   const [identity, setIdentity] = useState<string>();
-  const isMobile = React.useMemo(() => isMobileBrowser(), []);
 
   useEffect(() => {
     setIdentity(getIdentity(slug));
@@ -78,25 +79,6 @@ const RoomWrapper: NextPage<Props> = ({
     };
   }, [preJoinChoices, hq]);
 
-  const onMute = (participantIdentity: string, trackSid: string) => {
-    void axios.post("/api/admin", {
-      method: "mute",
-      adminIdentity: identity,
-      participantIdentity,
-      trackSid,
-      room: slug,
-    });
-  };
-
-  const onKick = (participantIdentity: string) => {
-    void axios.post("/api/admin", {
-      method: "kick",
-      adminIdentity: identity,
-      participantIdentity,
-      room: slug,
-    });
-  };
-
   const onDisconnected = async () => {
     if (isAdmin) {
       await axios.post("/api/deleteRoom", { slug, identity });
@@ -125,28 +107,88 @@ const RoomWrapper: NextPage<Props> = ({
             {wsUrl}
           </div>
 
-          <RoomNavBar roomName={roomName} slug={slug} iconFull={!isMobile} />
-
-          <VideoConference
-            chatMessageFormatter={formatChatMessageLinks}
-            onKick={isAdmin ? onKick : undefined}
-            onMute={isAdmin ? onMute : undefined}
+          <WrappedLiveKitRoom
+            roomName={roomName}
+            slug={slug}
             isAdmin={isAdmin}
-            localIdentity={identity}
-            gridLayouts={GRID_LAYOUTS}
-          />
-
-          <DebugMode
-            logLevel={
-              process.env.NODE_ENV === "development"
-                ? LogLevel.debug
-                : LogLevel.info
-            }
+            identity={identity}
+            preJoinChoices={preJoinChoices}
+            token={token}
           />
         </LiveKitRoom>
       )}
 
       <Footer />
+    </>
+  );
+};
+
+interface IWrappedLiveKitRoomProps {
+  identity?: string;
+  isAdmin?: boolean;
+  slug: string;
+  roomName: string;
+  preJoinChoices: LocalUserChoices | null;
+  token: string;
+}
+
+const WrappedLiveKitRoom = ({
+  identity,
+  isAdmin,
+  slug,
+  roomName,
+  preJoinChoices,
+  token,
+}: IWrappedLiveKitRoomProps) => {
+  const isMobile = React.useMemo(() => isMobileBrowser(), []);
+  const chatContext = useChat();
+  const onMute = (participantIdentity: string, trackSid: string) => {
+    void axios.post("/api/admin", {
+      method: "mute",
+      adminIdentity: identity,
+      participantIdentity,
+      trackSid,
+      room: slug,
+    });
+  };
+
+  const onKick = (participantIdentity: string) => {
+    void axios.post("/api/admin", {
+      method: "kick",
+      adminIdentity: identity,
+      participantIdentity,
+      room: slug,
+    });
+  };
+  return (
+    <>
+      <RoomNavBar roomName={roomName} slug={slug} iconFull={!isMobile} />
+
+      <VideoConference
+        chatMessageFormatter={formatChatMessageLinks}
+        onKick={isAdmin ? onKick : undefined}
+        onMute={isAdmin ? onMute : undefined}
+        isAdmin={isAdmin}
+        localIdentity={identity}
+        gridLayouts={GRID_LAYOUTS}
+        chatContext={chatContext}
+      />
+
+      <DebugMode
+        logLevel={
+          process.env.NODE_ENV === "development"
+            ? LogLevel.debug
+            : LogLevel.info
+        }
+      />
+
+      {preJoinChoices?.language && token && (
+        <VoiceRecognition
+          token={token}
+          language={preJoinChoices.language}
+          sendMessage={chatContext.send}
+        />
+      )}
     </>
   );
 };

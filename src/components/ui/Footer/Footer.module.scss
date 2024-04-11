@@ -7,7 +7,7 @@
 	left: 0;
 	right: 0;
 	border-top: 1px solid #2E3031;
-	padding: 12px;
+	padding: 10px;
 	font-size: 14px;
 	font-style: normal;
 	font-weight: 500;
@@ -32,10 +32,25 @@
 		padding-left: 16px;
 		margin-left: 16px;
 		border-left: 1px solid #212121;
+		color: #777575;
+
+		&:hover {
+			color: #fff;
+		}
+
+		& > a:last-of-type {
+			margin-left: 8px
+		}
 
 		@media (max-width: 600px) {
 			margin-left: auto;
 			border: none;
+			& > a:last-of-type {
+				margin-left: 0
+			}
+			& > a:first-of-type {
+				margin-right: 8px
+			}
 		}
 	}
 }
