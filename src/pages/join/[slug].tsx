@@ -109,9 +109,9 @@ const JoinRoomPage = ({ slug, roomName: name }: Props) => {
 
       <div
         style={{
+          overflow: "auto",
           display: "flex",
           flexDirection: "column",
-          justifyContent: "center",
         }}
       >
         <PreJoin

@@ -63,6 +63,8 @@ main {
 .lk-start-audio-button, .lk-join-button {
     background-color: #59E970 !important;
     color: #252728 !important;
+    font-weight: 700 !important;
+    font-size: 20px !important;
 }
 
 .lk-participant-metadata {
@@ -82,6 +84,16 @@ main {
 
 .lk-list, .lk-chat-wrapper {
     background: #212121;
+}
+
+.lk-chat-wrapper {
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+
+}
+
+.lk-participant-placeholder {
+    background-color: #212121 !important;
 }
 
 .lk-chat-form {
