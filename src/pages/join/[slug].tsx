@@ -15,6 +15,7 @@ import type { IGetWsUrl } from "@/pages/api/getWsUrl";
 import { hasWallets } from "@/pages/_app";
 import { CustomConnectButton } from "@/components/ui/CustomConnectButton/CustomConnectButton";
 import { setInviteCode } from "@/lib/hooks/useInviteCode";
+import styles from "./Join.module.scss";
 
 interface Props {
   slug: string;
@@ -107,13 +108,7 @@ const JoinRoomPage = ({ slug, roomName: name }: Props) => {
         {hasWallets && <CustomConnectButton />}
       </NavBar>
 
-      <div
-        style={{
-          overflow: "auto",
-          display: "flex",
-          flexDirection: "column",
-        }}
-      >
+      <div className={styles.container}>
         <PreJoin
           onError={(err) => console.log("error while setting up prejoin", err)}
           defaults={preJoinChoices}
