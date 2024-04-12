@@ -118,7 +118,7 @@ const MyApp = ({
   return (
     <>
       <Head>
-        <title>Web3 Meeting | dTelecom Cloud</title>
+        <title>dMeet | Web3 Meeting App</title>
       </Head>
 
       <WagmiConfig config={config}>
