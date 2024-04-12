@@ -29,7 +29,7 @@
     "jwt-decode": "^3.1.2",
     "lucide-react": "^0.113.0",
     "magic-sdk": "^21.5.0",
-    "next": "13.4.7",
+    "next": "^13.5.6",
     "next-auth": "^4.24.6",
     "next-themes": "^0.2.1",
     "react": "18.2.0",

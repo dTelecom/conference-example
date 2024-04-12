@@ -3,12 +3,13 @@ import {
   formatChatMessageLinks,
   LiveKitRoom,
   useChat,
+  useRoomContext,
   VideoConference,
 } from "@dtelecom/components-react";
 import React, { useEffect, useMemo, useState } from "react";
 import type { GetServerSideProps, NextPage } from "next";
 import type { RoomOptions } from "@dtelecom/livekit-client";
-import { LogLevel, VideoPresets } from "@dtelecom/livekit-client";
+import { LogLevel, RoomEvent, VideoPresets } from "@dtelecom/livekit-client";
 import { useRouter } from "next/router";
 import { DebugMode } from "@/lib/Debug";
 import { Footer } from "@/components/ui/Footer/Footer";
@@ -18,6 +19,7 @@ import { getIdentity } from "@/lib/client-utils";
 import type { GridLayoutDefinition } from "@dtelecom/components-core";
 import { isMobileBrowser } from "@dtelecom/components-core";
 import { VoiceRecognition } from "@/lib/VoiceRecognition";
+import { debounce } from "ts-debounce";
 
 interface Props {
   slug: string;
@@ -132,6 +134,10 @@ interface IWrappedLiveKitRoomProps {
   token: string;
 }
 
+const debouncedPlay = debounce(() => {
+  void new Audio("/sounds/user-joined.mp3").play();
+}, 1000);
+
 const WrappedLiveKitRoom = ({
   identity,
   isAdmin,
@@ -142,6 +148,20 @@ const WrappedLiveKitRoom = ({
 }: IWrappedLiveKitRoomProps) => {
   const isMobile = React.useMemo(() => isMobileBrowser(), []);
   const chatContext = useChat();
+  const room = useRoomContext();
+
+  useEffect(() => {
+    const play = () => {
+      void debouncedPlay();
+    };
+
+    room.on(RoomEvent.ParticipantConnected, play);
+
+    return () => {
+      room.off(RoomEvent.ParticipantConnected, play);
+    };
+  }, [room]);
+
   const onMute = (participantIdentity: string, trackSid: string) => {
     void axios.post("/api/admin", {
       method: "mute",
