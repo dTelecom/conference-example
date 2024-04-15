@@ -150,7 +150,6 @@ const WrappedLiveKitRoom = ({
   const chatContext = useChat();
   const room = useRoomContext();
 
-  console.log(chatContext);
   useEffect(() => {
     const play = () => {
       void debouncedPlay();
