@@ -2,22 +2,91 @@ import type { IUseChat } from "@dtelecom/components-react";
 import { useLocalParticipant } from "@dtelecom/components-react";
 import * as React from "react";
 import { useCallback, useEffect } from "react";
+import type { ReceivedChatTranscription } from "@dtelecom/components-core";
+import { DataTopic } from "@dtelecom/components-core";
+import axios from "axios";
 
 interface VoiceRecognitionProps {
-  language: string;
+  language?: string;
   token: string;
-  sendMessage: IUseChat["send"];
+  chatContext: IUseChat;
 }
 
 export const VoiceRecognition = ({
   language,
   token,
-  sendMessage,
+  chatContext: { sendTranscription, transcriptions, addLocalMessage },
 }: VoiceRecognitionProps) => {
   const { microphoneTrack, isMicrophoneEnabled } = useLocalParticipant();
   const [isRecording, setIsRecording] = React.useState(false);
   const websocket = React.useRef<WebSocket | null>(null);
   const recorder = React.useRef<MediaRecorder | null>(null);
+  const currentIndex = React.useRef<number>(0);
+
+  const addToChatOrTranslate = useCallback(() => {
+    for (let i = currentIndex.current; i < transcriptions.length; i++) {
+      currentIndex.current = currentIndex.current + 1;
+
+      const item = transcriptions[i];
+      if (!item) return;
+
+      if (language && item.language !== language) {
+        void translate(item.transcription, item.language, language)
+          .then((translated) => {
+            if (translated) {
+              sendItem(
+                {
+                  ...item,
+                  transcription: translated,
+                },
+                true
+              );
+            }
+          })
+          .catch((e) => {
+            console.error("error translating", e);
+            sendItem(item);
+          });
+      } else {
+        sendItem(item);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [transcriptions.length]);
+
+  const translate = useCallback(
+    async (text: string, source: string, target: string) => {
+      const response = await axios.post<{ translated: string }>(
+        "https://voice.dmeet.org/translate",
+        {
+          text,
+          source,
+          target,
+        }
+      );
+
+      return response.data.translated;
+    },
+    []
+  );
+
+  const sendItem = (item: ReceivedChatTranscription, translated?: boolean) => {
+    if (addLocalMessage && item?.from) {
+      addLocalMessage(
+        item.transcription,
+        item.from,
+        DataTopic.CHAT,
+        item.timestamp,
+        "transcription",
+        item.language,
+        translated ? language : undefined
+      );
+    }
+  };
+  useEffect(() => {
+    addToChatOrTranslate();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [transcriptions.length]);
 
   const getRecorder = useCallback((mediaStream: MediaStream) => {
     try {
@@ -54,6 +123,8 @@ export const VoiceRecognition = ({
 
   const startRecording = useCallback(
     async (mediaStream: MediaStream) => {
+      if (language === undefined) return;
+
       setIsRecording(true);
       recorder.current = getRecorder(mediaStream);
       websocket.current = new WebSocket(
@@ -62,17 +133,19 @@ export const VoiceRecognition = ({
 
       await createRecorder();
       websocket.current.onmessage = (event) => {
-        if (sendMessage) {
+        if (sendTranscription) {
           try {
             const data = JSON.parse(event.data as string) as {
               translated: string;
+              transcription: string;
+              language: string;
             };
-            void sendMessage(data.translated);
+            void sendTranscription(data.transcription, language);
           } catch (e) {}
         }
       };
     },
-    [getRecorder, language, createRecorder, sendMessage, token]
+    [getRecorder, language, createRecorder, sendTranscription, token]
   );
 
   const stopRecording = useCallback(() => {

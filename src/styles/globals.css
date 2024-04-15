@@ -52,14 +52,6 @@ main {
     opacity: 0.8;
 }
 
-.lk-room-container {
-    position: initial !important;
-}
-
-.lk-chat {
-    bottom: calc(var(--lk-control-bar-height) + 45px)
-}
-
 .lk-start-audio-button, .lk-join-button {
     background-color: #59E970 !important;
     color: #252728 !important;
@@ -71,10 +63,6 @@ main {
     .lk-start-audio-button, .lk-join-button {
         font-size: 16px !important;
     }
-}
-
-.lk-participant-metadata {
-    z-index: 1;
 }
 
 .lk-chat {
@@ -114,10 +102,6 @@ main {
     margin-bottom: 0 !important;
 }
 
-.lk-chat-entry {
-    margin: 0 16px;
-}
-
 .lk-chat-entry[data-lk-message-origin=local] .lk-message-body {
     background: #324F36;
     color: #FFFFFF;
@@ -129,11 +113,6 @@ main {
     background: #2E3031;
     border-radius: 5px;
     padding: 4px 12px;
-}
-
-.lk-chat .lk-participant-name, .lk-chat .lk-timestamp {
-    color: #777575;
-    font-size: 14px;
 }
 
 .lk-button.lk-chat-form-button {
