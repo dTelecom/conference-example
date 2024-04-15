@@ -180,6 +180,7 @@ const WrappedLiveKitRoom = ({
       room: slug,
     });
   };
+
   return (
     <>
       <RoomNavBar roomName={roomName} slug={slug} iconFull={!isMobile} />
@@ -202,11 +203,11 @@ const WrappedLiveKitRoom = ({
         }
       />
 
-      {preJoinChoices?.language && token && (
+      {token && (
         <VoiceRecognition
           token={token}
-          language={preJoinChoices.language}
-          sendMessage={chatContext.send}
+          language={preJoinChoices?.language}
+          chatContext={chatContext}
         />
       )}
     </>

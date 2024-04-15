@@ -10,8 +10,8 @@
     "clean-dev": "rm -rf .next && rm -rf node_modules/@dtelecom && yarn install  --check-files&& prisma generate && next dev"
   },
   "dependencies": {
-    "@dtelecom/components-react": "^1.0.26",
-    "@dtelecom/components-styles": "^1.0.12",
+    "@dtelecom/components-react": "^1.0.27",
+    "@dtelecom/components-styles": "^1.0.13",
     "@dtelecom/livekit-client": "^1.12.12",
     "@dtelecom/server-sdk-js": "^1.0.13",
     "@magic-ext/oauth": "^15.0.0",
