@@ -1291,10 +1291,10 @@
     loglevel "^1.8.1"
     rxjs "^7.8.0"
 
-"@dtelecom/components-react@^1.0.29":
-  version "1.0.29"
-  resolved "https://registry.yarnpkg.com/@dtelecom/components-react/-/components-react-1.0.29.tgz#ace41ff4fceb1a6b7022fe9fcaf8931031c4db25"
-  integrity sha512-JwgaCAM785BFWFak6eyM/MZe3ct8CIVkrPLCEpR4zDJ1gOEV91rZ0Wcj7eFDaJKLzNKxMornHDvCMAKgCdpWnQ==
+"@dtelecom/components-react@^1.0.30":
+  version "1.0.30"
+  resolved "https://registry.yarnpkg.com/@dtelecom/components-react/-/components-react-1.0.30.tgz#3c676f357441142a9e3fcd2c52423f489b12fbbb"
+  integrity sha512-3qcMCQwI562xsX6DQKcY0lxq+QHioGJ9EAIrS3ioDxbs+5i5rqJMwhGf5JtPnv113KTUVr6Fc/6YK5AztP1bgA==
   dependencies:
     "@dtelecom/components-core" "0.6.17"
     "@react-hook/latest" "^1.0.3"
