@@ -5,6 +5,7 @@ import { useCallback, useEffect } from "react";
 import type { ReceivedChatTranscription } from "@dtelecom/components-core";
 import { DataTopic } from "@dtelecom/components-core";
 import axios from "axios";
+import { languageOptions } from "@/lib/languageOptions";
 
 interface VoiceRecognitionProps {
   language?: string;
@@ -124,11 +125,13 @@ export const VoiceRecognition = ({
   const startRecording = useCallback(
     async (mediaStream: MediaStream) => {
       if (language === undefined) return;
-
+      const wsLang =
+        languageOptions.find((l) => l.code === language)
+          ?.voiceRecognitionOverride || language;
       setIsRecording(true);
       recorder.current = getRecorder(mediaStream);
       websocket.current = new WebSocket(
-        `wss://voice.dmeet.org/ws?lang=${language}&token=${token}`
+        `wss://voice.dmeet.org/ws?lang=${wsLang}&token=${token}`
       );
 
       await createRecorder();

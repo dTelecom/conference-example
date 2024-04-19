@@ -20,6 +20,7 @@ import type { GridLayoutDefinition } from "@dtelecom/components-core";
 import { isMobileBrowser } from "@dtelecom/components-core";
 import { VoiceRecognition } from "@/lib/VoiceRecognition";
 import { debounce } from "ts-debounce";
+import { languageOptions } from "@/lib/languageOptions";
 
 interface Props {
   slug: string;
@@ -193,6 +194,7 @@ const WrappedLiveKitRoom = ({
         localIdentity={identity}
         gridLayouts={GRID_LAYOUTS}
         chatContext={chatContext}
+        languageOptions={languageOptions}
       />
 
       <DebugMode
