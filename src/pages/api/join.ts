@@ -113,8 +113,8 @@ export default async function handler(req: ApiRequest, res: NextApiResponse) {
     roomAdmin: isAdmin,
   });
 
-  token.webHookURL = process.env.VERCEL_URL
-    ? `https://${process.env.VERCEL_URL}/api/webhook`
+  token.webHookURL = process.env.VERCEL_PROJECT_PRODUCTION_URL
+    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}/api/webhook`
     : undefined;
 
   let url = input.wsUrl;
