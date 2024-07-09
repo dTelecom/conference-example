@@ -4,6 +4,7 @@ import jwt_decode from "jwt-decode";
 import { getNodeByAddress } from "@dtelecom/server-sdk-js/dist/contract/contract";
 import prisma from "@/lib/prisma";
 import type { Participant, Rewards, Room, User } from "@prisma/client";
+import { createPeaqRecord } from "@/lib/peaq";
 
 interface JwtKey {
   iss: string;
@@ -67,7 +68,18 @@ export default async function handler(
             data: {
               participantCount: { increment: 1 },
             },
+            include: {
+              Participant: true,
+            },
           });
+
+          if (room?.Participant.length === 1) {
+            try {
+              void createPeaqRecord(room);
+            } catch (e) {
+              console.log("createPeaqRecord error", e);
+            }
+          }
 
           if (
             room &&
