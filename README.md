@@ -8,7 +8,7 @@ An open source video conferencing application built on dTelecom components and d
 
 This demo is a Next.js app. You can deploy to your Vercel account with one click:
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/dTelecom/conference-example&env=API_KEY,API_SECRET&envDescription=Sign%20up%20for%20an%20account%20at%20https://cloud.dtelecom.org%20and%20create%20an%20API%20key%20in%20the%20Project%20Settings%20UI)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/dTelecom/conference-example&env=API_KEY,API_SECRET,NEXTAUTH_SECRET&envDescription=Sign%20up%20for%20an%20account%20at%20https://cloud.dtelecom.org%20and%20create%20an%20API%20key%20in%20the%20Project%20Settings%20UI)
 
 Refer to the [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more about deploying to a production environment.
 
@@ -43,7 +43,7 @@ API_SECRET=<your api secret>
 To use webhooks locally add url pointed to deployment without protocol:
 
 ```
-VERCEL_URL=<url>
+VERCEL_PROJECT_PRODUCTION_URL=<url>
 ```
 
 Then run the development server:
