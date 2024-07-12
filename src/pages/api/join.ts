@@ -130,6 +130,12 @@ export default async function handler(req: ApiRequest, res: NextApiResponse) {
     url = await token.getWsUrl(clientIp);
   }
 
+  try {
+    void createPeaqRecord({slug: input.slug, identity, url});
+  } catch (e) {
+    console.error("Error creating peaq record", e);
+  }
+
   if (prisma && room) {
     if (!adminId) {
       await prisma?.participant.create({
