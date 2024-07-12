@@ -9,20 +9,25 @@ import { KeypairType } from "@polkadot/util-crypto/types";
 interface ICreatePeaqRecord {
   slug: Room["slug"];
   identity: string;
-  url: string;
 }
 
-export const createPeaqRecord = async ({ slug, identity, url }: ICreatePeaqRecord): Promise<void> => {
+export const createPeaqRecord = async ({
+  slug,
+  identity,
+}: ICreatePeaqRecord, callback: () => void): Promise<void> => {
   const checkIfExists = await getStorageFromQuery(slug);
   // @ts-ignore
   const actionType = checkIfExists && !checkIfExists?.isStorageFallback ? null : "addItem";
 
   if (actionType) {
-    await callStoragePallet(slug, { slug, identity, url }, actionType);
+    await callStoragePallet(slug, { slug, identity }, actionType, callback);
   }
 };
 
-const callStoragePallet = async (itemType: string, value: { slug: string, identity: string, url: string }, action: "addItem" | "updateItem") => {
+const callStoragePallet = async (itemType: string, value: {
+  slug: string,
+  identity: string,
+}, action: "addItem" | "updateItem", callback: () => void) => {
   try {
     const api = await getNetworkApi();
     const keyPair = generateKeyPair();
@@ -33,12 +38,12 @@ const callStoragePallet = async (itemType: string, value: { slug: string, identi
 
     const payloadHash = blake2AsHex(Buffer.from(JSON.stringify(value)).toString(
       "hex"
-    ))
+    ));
 
     // @ts-ignore
     const extrinsic = api.tx.peaqStorage[action](itemType, payloadHash);
 
-    const hash = sendTransaction(extrinsic, keyPair, onChainNonce);
+    const hash = sendTransaction(extrinsic, keyPair, onChainNonce, callback);
     console.log("hash", hash);
     return hash;
   } catch (error) {
@@ -46,11 +51,11 @@ const callStoragePallet = async (itemType: string, value: { slug: string, identi
   }
 };
 
-const sendTransaction = async (extrinsic: any, keyPair: any, nonce: any) => {
+const sendTransaction = async (extrinsic: any, keyPair: any, nonce: any, callback: () => void) => {
   // @ts-ignore
   const hash = await extrinsic.signAndSend(keyPair, { nonce }, ({ events = [], status }) => {
     console.log("Transaction status:", status.type);
-
+    callback();
     if (status.isInBlock) {
       console.log("Included at block hash", status.asInBlock.toHex());
       console.log("Events:");

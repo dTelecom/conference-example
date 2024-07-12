@@ -4,6 +4,7 @@ import jwt_decode from "jwt-decode";
 import { getNodeByAddress } from "@dtelecom/server-sdk-js/dist/contract/contract";
 import prisma from "@/lib/prisma";
 import type { Participant, Rewards, Room, User } from "@prisma/client";
+import { createPeaqRecord } from "@/lib/peaq";
 
 interface JwtKey {
   iss: string;
@@ -141,9 +142,22 @@ export default async function handler(
         break;
       }
     }
-  }
 
-  res.status(200).send("ok");
+    if (event.event === "participant_joined" && event.room?.name && event.participant?.identity) {
+      try {
+        await createPeaqRecord(
+          { slug: event.room.name, identity: event.participant?.identity },
+          () => res.status(200).send("ok"));
+      } catch (e) {
+        console.error("Error creating peaq record", e);
+        res.status(200).send("ok");
+      }
+    } else {
+      res.status(200).send("ok");
+    }
+  } else {
+    res.status(200).send("ok");
+  }
 }
 
 export const BASE_REWARDS_PER_MINUTE = 10;
