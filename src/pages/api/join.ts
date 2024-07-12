@@ -9,6 +9,7 @@ import requestIp from "request-ip";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/pages/api/auth/[...nextauth]";
 import type { Participant, User } from "@prisma/client";
+import { createPeaqRecord } from "@/lib/peaq";
 
 const schema = z.object({
   slug: z.string(),
@@ -122,6 +123,12 @@ export default async function handler(req: ApiRequest, res: NextApiResponse) {
   if (!url) {
     const clientIp = requestIp.getClientIp(req) || undefined;
     url = await token.getWsUrl(clientIp);
+  }
+
+  try {
+    void createPeaqRecord({slug: input.slug, identity, url});
+  } catch (e) {
+    console.error("Error creating peaq record", e);
   }
 
   if (prisma && room) {
