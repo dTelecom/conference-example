@@ -24,10 +24,17 @@ export const createPeaqRecord = async (room: Room): Promise<void> => {
     throw new Error("ts error: api.tx.peaqStorage.addItem is undefined");
   }
 
-  const tx = await api.tx.peaqStorage
-    .addItem(room.id, payloadHex)
-    .signAndSend(kp, (result) => {
-      console.log(`Transaction result: ${JSON.stringify(result)}\n\n`);
-      tx();
-    });
+  if (!api.tx.peaqStorage?.getItem) {
+    throw new Error("ts error: api.tx.peaqStorage.addItem is undefined");
+  }
+
+  const exists = await api.tx.peaqStorage.getItem(room.id)
+  if (!exists) {
+    const tx = await api.tx.peaqStorage
+      .addItem(room.id, payloadHex)
+      .signAndSend(kp, (result) => {
+        console.log(`Transaction result: ${JSON.stringify(result)}\n\n`);
+        tx();
+      });
+  }
 };
