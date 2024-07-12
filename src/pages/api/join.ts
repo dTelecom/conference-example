@@ -99,11 +99,6 @@ export default async function handler(req: ApiRequest, res: NextApiResponse) {
         adminId = adminParticipant?.id;
       }
     }
-    try {
-      void createPeaqRecord(room);
-    } catch (e) {
-      console.log("createPeaqRecord error", e);
-    }
   }
 
   const token = new AccessToken(env.API_KEY, env.API_SECRET, {
