@@ -9,14 +9,13 @@ import requestIp from "request-ip";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/pages/api/auth/[...nextauth]";
 import type { Participant, User } from "@prisma/client";
-import { createPeaqRecord } from "@/lib/peaq";
 
 const schema = z.object({
   slug: z.string(),
   name: z.string().min(1),
   identity: z.string().optional(),
   isAdmin: z.boolean().optional(),
-  wsUrl: z.string().optional(),
+  wsUrl: z.string().optional()
 });
 
 interface ApiRequest extends NextApiRequest {
@@ -46,8 +45,8 @@ export default async function handler(req: ApiRequest, res: NextApiResponse) {
   if (prisma) {
     room = await prisma.room.findFirst({
       where: {
-        slug: input.slug,
-      },
+        slug: input.slug
+      }
     });
 
     if (!room) {
@@ -57,8 +56,8 @@ export default async function handler(req: ApiRequest, res: NextApiResponse) {
     if (session?.address) {
       currentUser = await prisma.user.findFirst({
         where: {
-          wallet: session.address,
-        },
+          wallet: session.address
+        }
       });
     }
 
@@ -67,8 +66,8 @@ export default async function handler(req: ApiRequest, res: NextApiResponse) {
       const currentParticipant = await prisma.participant.findFirst({
         where: {
           roomId: room.id,
-          userId: currentUser.id,
-        },
+          userId: currentUser.id
+        }
       });
 
       if (currentParticipant?.identity) {
@@ -79,13 +78,13 @@ export default async function handler(req: ApiRequest, res: NextApiResponse) {
     if (room.adminId) {
       adminParticipant = await prisma?.participant.findFirst({
         where: {
-          id: room.adminId,
+          id: room.adminId
         },
         select: {
           id: true,
           user: true,
-          identity: true,
-        },
+          identity: true
+        }
       });
 
       if (
@@ -103,7 +102,7 @@ export default async function handler(req: ApiRequest, res: NextApiResponse) {
 
   const token = new AccessToken(env.API_KEY, env.API_SECRET, {
     identity: identity,
-    name: input.name,
+    name: input.name
   });
 
   token.addGrant({
@@ -111,7 +110,7 @@ export default async function handler(req: ApiRequest, res: NextApiResponse) {
     roomJoin: true,
     canPublish: true,
     canPublishData: true,
-    roomAdmin: isAdmin,
+    roomAdmin: isAdmin
   });
 
   token.webHookURL = process.env.VERCEL_PROJECT_PRODUCTION_URL
@@ -133,19 +132,19 @@ export default async function handler(req: ApiRequest, res: NextApiResponse) {
           name: input.name,
           roomId: room.id,
           server: url,
-          userId: currentUser?.id,
-        },
+          userId: currentUser?.id
+        }
       });
     } else {
       await prisma?.participant.update({
         where: {
-          id: adminId,
+          id: adminId
         },
         data: {
           server: url,
           name: input.name,
-          userId: currentUser?.id,
-        },
+          userId: currentUser?.id
+        }
       });
     }
   }
@@ -156,6 +155,6 @@ export default async function handler(req: ApiRequest, res: NextApiResponse) {
     token: token.toJwt(),
     slug: input.slug,
     roomName: room?.name || "",
-    isAdmin,
+    isAdmin
   });
 }
