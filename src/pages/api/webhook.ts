@@ -4,7 +4,7 @@ import jwt_decode from "jwt-decode";
 import { getNodeByAddress } from "@dtelecom/server-sdk-js/dist/contract/contract";
 import prisma from "@/lib/prisma";
 import type { Participant, Rewards, Room, User } from "@prisma/client";
-import { createPeaqRecord } from "@/lib/peaq";
+import { createPeaqRecord } from "@/lib/peaq/createPeaqRecord";
 
 interface JwtKey {
   iss: string;

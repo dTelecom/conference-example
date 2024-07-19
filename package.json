@@ -7,7 +7,8 @@
     "dev": "prisma generate && next dev",
     "lint": "next lint",
     "start": "next start",
-    "clean-dev": "rm -rf .next && rm -rf node_modules/@dtelecom && yarn install  --check-files&& prisma generate && next dev"
+    "clean-dev": "rm -rf .next && rm -rf node_modules/@dtelecom && yarn install  --check-files&& prisma generate && next dev",
+    "test": "vitest run --passWithNoTests --silent=false"
   },
   "dependencies": {
     "@dtelecom/components-react": "^1.0.30",
@@ -50,6 +51,7 @@
   },
   "devDependencies": {
     "@svgr/webpack": "^8.0.1",
+    "@testing-library/jest-dom": "^6.4.6",
     "@types/jsonwebtoken": "^9.0.6",
     "@types/node": "^20.14.10",
     "@types/prettier": "^3.0.0",
@@ -58,6 +60,7 @@
     "@types/request-ip": "^0.0.41",
     "@typescript-eslint/eslint-plugin": "^7.16.0",
     "@typescript-eslint/parser": "^7.16.0",
+    "@vitejs/plugin-react": "^4.3.1",
     "autoprefixer": "^10.4.7",
     "eslint": "^9.6.0",
     "eslint-config-next": "14.2.4",
@@ -66,7 +69,9 @@
     "prettier-plugin-tailwindcss": "^0.6.5",
     "prisma": "^5.16.2",
     "tailwindcss": "^3.4.4",
-    "typescript": "^5.5.3"
+    "typescript": "^5.5.3",
+    "vite-tsconfig-paths": "^4.3.2",
+    "vitest": "^2.0.3"
   },
   "ct3aMetadata": {
     "initVersion": "7.5.1"
