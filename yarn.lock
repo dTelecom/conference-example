@@ -1323,10 +1323,10 @@
     ts-debounce "^4.0.0"
     webrtc-adapter "^8.1.1"
 
-"@dtelecom/server-sdk-js@^1.0.13":
-  version "1.0.13"
-  resolved "https://registry.yarnpkg.com/@dtelecom/server-sdk-js/-/server-sdk-js-1.0.13.tgz#df4ede2b476c8b1880fe71342532ce39ac46668b"
-  integrity sha512-n0tdNVpVmuU9pywZiBg2RYrwl029WYCQ6xm4OOuuqqmnxdYFyfov0WsFXgUNxPqaqqY97VwEhJr6c9REawvaDw==
+"@dtelecom/server-sdk-js@^1.0.14":
+  version "1.0.14"
+  resolved "https://registry.yarnpkg.com/@dtelecom/server-sdk-js/-/server-sdk-js-1.0.14.tgz#572f2f436b22bd00dafd48fd39f9fed4bd418199"
+  integrity sha512-w6iP/1tdQ3xZ5ShqHDiBpnZfWI+BMCJ8hUFCns6HVtq1jdVrP1HGibGHp+PZMO4GhB2gowqJZqDbzwCNZUfUxg==
   dependencies:
     axios "^0.21.0"
     camelcase-keys "^7.0.0"
