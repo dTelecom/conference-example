@@ -1,7 +1,7 @@
 import { WebhookReceiver } from "@dtelecom/server-sdk-js";
 import type { NextApiRequest, NextApiResponse } from "next";
 import jwt_decode from "jwt-decode";
-import { getNodeByAddress } from "@dtelecom/server-sdk-js/dist/contract/contract";
+import { getNodeByAddress } from "@dtelecom/server-sdk-js/contract/contract";
 import prisma from "@/lib/prisma";
 import type { Participant, Rewards, Room, User } from "@prisma/client";
 import { createPeaqRecord } from "@/lib/peaq";
