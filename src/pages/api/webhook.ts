@@ -27,7 +27,11 @@ export default async function handler(
 
       const now = new Date().getTime();
       if (!node || node.expiresAt.getTime() < now) {
-        const nodeByAddress = await getNodeByAddress(jwt.iss);
+        const nodeByAddress = await getNodeByAddress(jwt.iss, {
+          contractAddress: process.env.SOLANA_CONTRACT_ADDRESS!,
+          networkHost: process.env.SOLANA_NETWORK_HOST_HTTP!,
+          registryAuthority: process.env.SOLANA_REGISTRY_AUTHORITY!,
+        });
 
         const expiresAt = new Date(now + 86400000);
 
@@ -47,7 +51,11 @@ export default async function handler(
         });
       }
     } else {
-      node = await getNodeByAddress(jwt.iss);
+      node = await getNodeByAddress(jwt.iss, {
+        contractAddress: process.env.SOLANA_CONTRACT_ADDRESS!,
+        networkHost: process.env.SOLANA_NETWORK_HOST_HTTP!,
+        registryAuthority: process.env.SOLANA_REGISTRY_AUTHORITY!,
+      });
     }
 
     if (!node) {
