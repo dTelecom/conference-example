@@ -18,7 +18,7 @@ import {
   ADMIN_POINTS_MULTIPLIER,
   BASE_REWARDS_PER_MINUTE,
   REFERRAL_REWARD_PERCENTAGE,
-} from "@/pages/api/webhook";
+} from "@/lib/constants";
 
 interface Leaderboard {
   buttonStyle?: CSSProperties;

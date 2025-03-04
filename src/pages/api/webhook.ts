@@ -5,6 +5,11 @@ import { getNodeByAddress } from "@dtelecom/server-sdk-js/contract/contract";
 import prisma from "@/lib/prisma";
 import type { Participant, Rewards, Room, User } from "@prisma/client";
 import { createPeaqRecord } from "@/lib/peaq";
+import {
+  ADMIN_POINTS_MULTIPLIER,
+  BASE_REWARDS_PER_MINUTE,
+  REFERRAL_REWARD_PERCENTAGE,
+} from "@/lib/constants";
 
 interface JwtKey {
   iss: string;
@@ -167,10 +172,6 @@ export default async function handler(
     res.status(200).send("ok");
   }
 }
-
-export const BASE_REWARDS_PER_MINUTE = 10;
-export const ADMIN_POINTS_MULTIPLIER = 2;
-export const REFERRAL_REWARD_PERCENTAGE = 10;
 
 const addRewardPoints = async ({
   participantIdentity,
