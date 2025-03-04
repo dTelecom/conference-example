@@ -1,8 +1,13 @@
-import { ConnectButton } from "@rainbow-me/rainbowkit";
+import dynamic from 'next/dynamic';
 import { ConnectButtonText } from "@/components/ui/ConnectButtonText";
 import { Button } from "@/components/ui";
 import { ChevronDown } from "@/assets";
 import styles from "./CustomConnectButton.module.scss";
+
+const ConnectButton = dynamic(
+  () => import('@rainbow-me/rainbowkit').then((mod) => mod.ConnectButton),
+  { ssr: false }
+) as any;
 
 export const CustomConnectButton = () => {
   return (
@@ -15,6 +20,14 @@ export const CustomConnectButton = () => {
         openConnectModal,
         authenticationStatus,
         mounted,
+      }: {
+        account: { displayName: string };
+        chain: { unsupported: boolean };
+        openAccountModal: () => void;
+        openChainModal: () => void;
+        openConnectModal: () => void;
+        authenticationStatus: string;
+        mounted: boolean;
       }) => {
         // Note: If your app doesn't use authentication, you
         // can remove all 'authenticationStatus' checks

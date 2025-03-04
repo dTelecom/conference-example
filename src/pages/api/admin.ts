@@ -1,4 +1,4 @@
-import { RoomServiceClient } from "@dtelecom/server-sdk-js";
+const { RoomServiceClient } = require("@dtelecom/server-sdk-js");
 import type { NextApiRequest, NextApiResponse } from "next";
 import type { TypeOf } from "zod";
 import { z } from "zod";

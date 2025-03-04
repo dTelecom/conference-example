@@ -1,4 +1,4 @@
-import { AccessToken } from "@dtelecom/server-sdk-js";
+const { AccessToken } = require("@dtelecom/server-sdk-js");
 import type { NextApiRequest, NextApiResponse } from "next";
 import type { TypeOf } from "zod";
 import { z } from "zod";
@@ -9,7 +9,6 @@ import requestIp from "request-ip";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/pages/api/auth/[...nextauth]";
 import type { Participant, User } from "@prisma/client";
-import { createPeaqRecord } from "@/lib/peaq";
 
 const schema = z.object({
   slug: z.string(),

@@ -1,4 +1,4 @@
-import { AccessToken } from "@dtelecom/server-sdk-js";
+const { AccessToken } = require("@dtelecom/server-sdk-js");
 import type { NextApiRequest, NextApiResponse } from "next";
 import requestIp from "request-ip";
 

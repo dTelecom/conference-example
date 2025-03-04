@@ -5,7 +5,7 @@ import "@/styles/globals.css";
 import { ThemeProvider } from "next-themes";
 import Head from "next/head";
 import type { PropsWithChildren } from "react";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   getCsrfToken,
   SessionProvider,
@@ -15,10 +15,6 @@ import {
 } from "next-auth/react";
 import type { Session } from "next-auth";
 import type { AppProps } from "next/app";
-import {
-  MagicAuthConnector,
-  // UniversalWalletConnector,
-} from "@magiclabs/wagmi-connector";
 import {
   connectorsForWallets,
   darkTheme,
@@ -52,69 +48,82 @@ const { chains, publicClient, webSocketPublicClient } = configureChains(
   ]
 );
 
-export const rainbowMagicConnector = ({ chains }: { chains: Chain[] }) => ({
-  id: "magic",
-  name: "Magic",
-  iconUrl: "https://svgshare.com/i/pXA.svg",
-  iconBackground: "#fff",
-  createConnector: () => {
-    const connector = new MagicAuthConnector({
-      chains,
-      options: {
-        apiKey: process.env.NEXT_PUBLIC_MAGIC_API_KEY as string,
-        // oauthOptions: {
-        // providers: ["facebook", "google", "twitter"],
-        // callbackUrl: "https://your-callback-url.com" //optional
-        // },
-        accentColor: "#59E970",
-        isDarkMode: true,
-      },
-    });
-    return {
-      connector,
-    };
-  },
-});
+const rainbowMagicConnector = async ({ chains }: { chains: Chain[] }) => {
+  const { MagicAuthConnector } = await import("@magiclabs/wagmi-connector");
+  return {
+    id: "magic",
+    name: "Magic",
+    iconUrl: "https://svgshare.com/i/pXA.svg",
+    iconBackground: "#fff",
+    createConnector: () => {
+      const connector = new MagicAuthConnector({
+        chains,
+        options: {
+          apiKey: process.env.NEXT_PUBLIC_MAGIC_API_KEY as string,
+          // oauthOptions: {
+          // providers: ["facebook", "google", "twitter"],
+          // callbackUrl: "https://your-callback-url.com" //optional
+          // },
+          accentColor: "#59E970",
+          isDarkMode: true,
+        },
+      });
+      return {
+        connector,
+      };
+    },
+  };
+};
 
 export const hasWallets =
   !!process.env.NEXT_PUBLIC_MAGIC_API_KEY ||
   process.env.NEXT_PUBLIC_WALLET_CONNECT_CLOUD_PROJECT_ID;
 
-const walletList = [];
-if (process.env.NEXT_PUBLIC_MAGIC_API_KEY) {
-  walletList.push({
-    groupName: "Recommended",
-    wallets: [rainbowMagicConnector({ chains })],
-  });
-}
-
-if (process.env.NEXT_PUBLIC_WALLET_CONNECT_CLOUD_PROJECT_ID) {
-  walletList.push(
-    ...getDefaultWallets({
-      chains,
-      appName: "Wagmi",
-      projectId: process.env.NEXT_PUBLIC_WALLET_CONNECT_CLOUD_PROJECT_ID,
-    }).wallets
-  );
-}
-
-const connectors =
-  walletList.length > 0 ? connectorsForWallets(walletList) : [];
-
-const config = createConfig({
-  autoConnect: true,
-  connectors,
-  publicClient,
-  webSocketPublicClient,
-});
-
-const queryClient = new QueryClient();
 const MyApp = ({
   Component,
   pageProps,
 }: AppProps<{
   session: Session;
 }>) => {
+  const [connectors, setConnectors] = useState<any[]>([]);
+
+  useEffect(() => {
+    const initConnectors = async () => {
+      const walletList = [];
+      
+      if (process.env.NEXT_PUBLIC_MAGIC_API_KEY) {
+        const magicConnector = await rainbowMagicConnector({ chains });
+        walletList.push({
+          groupName: "Recommended",
+          wallets: [magicConnector],
+        });
+      }
+
+      if (process.env.NEXT_PUBLIC_WALLET_CONNECT_CLOUD_PROJECT_ID) {
+        walletList.push(
+          ...getDefaultWallets({
+            chains,
+            appName: "Wagmi",
+            projectId: process.env.NEXT_PUBLIC_WALLET_CONNECT_CLOUD_PROJECT_ID,
+          }).wallets
+        );
+      }
+
+      setConnectors(walletList.length > 0 ? connectorsForWallets(walletList) : []);
+    };
+
+    void initConnectors();
+  }, [chains]);
+
+  const config = createConfig({
+    autoConnect: true,
+    connectors,
+    publicClient,
+    webSocketPublicClient,
+  });
+
+  const queryClient = new QueryClient();
+
   return (
     <>
       <Head>

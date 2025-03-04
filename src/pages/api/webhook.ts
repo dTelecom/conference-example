@@ -1,10 +1,9 @@
-import { WebhookReceiver } from "@dtelecom/server-sdk-js";
+const { WebhookReceiver } = require("@dtelecom/server-sdk-js");
 import type { NextApiRequest, NextApiResponse } from "next";
 import jwt_decode from "jwt-decode";
 import { getNodeByAddress } from "@dtelecom/server-sdk-js/contract/contract";
 import prisma from "@/lib/prisma";
 import type { Participant, Rewards, Room, User } from "@prisma/client";
-import { createPeaqRecord } from "@/lib/peaq";
 import {
   ADMIN_POINTS_MULTIPLIER,
   BASE_REWARDS_PER_MINUTE,
@@ -156,18 +155,7 @@ export default async function handler(
       }
     }
 
-    if (event.event === "participant_joined" && event.room?.name && event.participant?.identity) {
-      try {
-        await createPeaqRecord(
-          { slug: event.room.name, identity: event.participant?.identity },
-          () => res.status(200).send("ok"));
-      } catch (e) {
-        console.error("Error creating peaq record", e);
-        res.status(200).send("ok");
-      }
-    } else {
-      res.status(200).send("ok");
-    }
+    res.status(200).send("ok");
   } else {
     res.status(200).send("ok");
   }

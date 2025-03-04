@@ -35,7 +35,7 @@ export const RoomNavBar = ({ slug, roomName, iconFull }: RoomNavBarProps) => {
   };
 
   const count = useMemo(() => {
-    const identities = [...new Set(tracks.map((t) => t.participant.identity))];
+    const identities = Array.from(new Set(tracks.map((t) => t.participant.identity)));
     return identities.length;
   }, [tracks]);
 

@@ -20,6 +20,13 @@ const config = {
     locales: ["en"],
     defaultLocale: "en",
   },
+  transpilePackages: [
+    '@rainbow-me/rainbowkit',
+    '@magiclabs/wagmi-connector',
+    '@dtelecom/components-react',
+    '@dtelecom/livekit-client',
+    '@dtelecom/components-styles'
+  ],
   webpack(config) {
     // Grab the existing rule that handles SVG imports
     const fileLoaderRule = config.module.rules.find((/** @type {{ test: { test: (arg0: string) => any; }; }} */ rule) =>
@@ -40,6 +47,18 @@ const config = {
         resourceQuery: { not: /url/ }, // exclude if *.svg?url
         use: ['@svgr/webpack'],
       },
+      // Handle .mts files
+      {
+        test: /\.mts$/,
+        use: [
+          {
+            loader: 'ts-loader',
+            options: {
+              transpileOnly: true,
+            },
+          },
+        ],
+      }
     )
 
     // Modify the file loader rule to ignore *.svg, since we have it handled now.
@@ -47,6 +66,6 @@ const config = {
 
     return config
   },
-
 };
+
 export default config;
