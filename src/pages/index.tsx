@@ -7,18 +7,14 @@ import { Input } from "@/components/ui/Input/Input";
 import type { FormEvent } from "react";
 import React, { useState } from "react";
 import { KeyIcon } from "@/assets";
-import axios from "axios";
-import { setIdentity } from "@/lib/client-utils";
-import { hasWallets } from "@/pages/_app";
-import { CustomConnectButton } from "@/components/ui/CustomConnectButton/CustomConnectButton";
 import { Leaderboard } from "@/components/ui/Leaderboard/Leaderboard";
-import { useSession } from "next-auth/react";
+import { LoginButton } from "@/lib/dtel-auth/components";
+import { IsAuthorizedWrapper } from "@/lib/dtel-auth/components/IsAuthorizedWrapper";
 
 export default function IndexPage() {
   const [roomName, setRoomName] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
   const { push } = useRouter();
-  const { status } = useSession();
   const onCreate = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -26,16 +22,11 @@ export default function IndexPage() {
 
     try {
       setIsLoading(true);
-      const { data } = await axios.post<{ identity: string; slug: string }>(
-        "/api/createRoom",
-        { roomName }
-      );
-      setIdentity(data.slug, data.identity);
       await push({
-        pathname: `/join/${data.slug}`,
+        pathname: `/createRoom`,
         query: {
-          roomName,
-        },
+          roomName
+        }
       });
     } catch (e) {
       console.error(e);
@@ -47,19 +38,15 @@ export default function IndexPage() {
   return (
     <>
       <NavBar>
-        {hasWallets && (
-          <>
-            {status === "authenticated" && (
-              <Leaderboard
-                buttonStyle={{
-                  marginRight: "8px",
-                }}
-              />
-            )}
+        <IsAuthorizedWrapper>
+          <Leaderboard
+            buttonStyle={{
+              marginRight: "8px"
+            }}
+          />
+        </IsAuthorizedWrapper>
 
-            <CustomConnectButton />
-          </>
-        )}
+        <LoginButton />
       </NavBar>
 
       <div className={styles.container}>

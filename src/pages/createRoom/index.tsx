@@ -5,24 +5,21 @@ import { useRouter } from "next/router";
 import { NavBar } from "@/components/ui/NavBar/NavBar";
 import type { GetServerSideProps } from "next";
 import { Footer } from "@/components/ui/Footer/Footer";
+import { ParticipantsBadge } from "@/components/ui/ParticipantsBadge/ParticipantsBadge";
 import axios from "axios";
 import type { IJoinResponse } from "@/pages/api/join";
-import { isMobileBrowser } from "@dtelecom/components-core";
 import type { IGetWsUrl } from "@/pages/api/getWsUrl";
-import styles from "./Join.module.scss";
+import styles from "./CreateRoom.module.scss";
 import { languageOptions } from "@/lib/languageOptions";
-import { IGetRoomResponse } from "@/pages/api/getRoom";
-import { ParticipantsBadge } from "@/components/ui/ParticipantsBadge/ParticipantsBadge";
 
 interface Props {
-  slug: string;
   roomName: string;
 }
 
-const JoinRoomPage = ({ slug, roomName: name }: Props) => {
+const CreateRoomPage = ({ roomName: name }: Props) => {
   const router = useRouter();
-  const isMobile = React.useMemo(() => isMobileBrowser(), []);
 
+  const [roomName] = useState<string>(name);
   const [preJoinChoices, setPreJoinChoices] = useState<
     Partial<LocalUserChoices>
   >({
@@ -31,17 +28,10 @@ const JoinRoomPage = ({ slug, roomName: name }: Props) => {
     audioEnabled: process.env.NODE_ENV !== "development"
   });
 
-  const [roomName] = useState<string>(name);
   const [wsUrl, setWsUrl] = useState<string>();
   const [isLoading, setIsLoading] = useState(true);
-  const [participantsCount, setParticipantsCount] = useState<number>();
 
   useEffect(() => {
-    async function fetchRoom() {
-      const { data } = await axios.post<IGetRoomResponse>(`/api/getRoom?slug=${slug}`);
-      setParticipantsCount(data.participantsCount || 0);
-    }
-
     async function fetchWsUrl() {
       try {
         const { data } = await axios.get<IGetWsUrl>(`/api/getWsUrl`);
@@ -51,17 +41,17 @@ const JoinRoomPage = ({ slug, roomName: name }: Props) => {
       }
     }
 
-    void fetchRoom();
     void fetchWsUrl();
-  }, [router, slug]);
+  }, [router]);
 
-  const onJoin = async (values: Partial<LocalUserChoices>) => {
+  const onCreate = async (values: Partial<LocalUserChoices>) => {
     console.log("Joining with: ", values);
     setIsLoading(true);
-    const { data } = await axios.post<IJoinResponse>(`/api/join`, {
+    const { data } = await axios.post<IJoinResponse>(`/api/createAndJoinRoom`, {
       wsUrl,
-      slug,
       name: values?.username || "",
+      roomName,
+      language: values?.language || "en"
     });
 
     await router.push({
@@ -70,7 +60,8 @@ const JoinRoomPage = ({ slug, roomName: name }: Props) => {
         token: data.token,
         wsUrl: data.url,
         preJoinChoices: JSON.stringify(values),
-        roomName: data.roomName || name
+        roomName,
+        isAdmin: data.isAdmin
       }
     });
 
@@ -84,13 +75,12 @@ const JoinRoomPage = ({ slug, roomName: name }: Props) => {
   return (
     <>
       <NavBar
-        title={roomName || name}
+        title={roomName}
         small
-        iconFull={!isMobile}
+        iconFull
       >
-        {participantsCount !== undefined ? (
-          <ParticipantsBadge count={participantsCount} />
-        ) : <div />}
+        <ParticipantsBadge count={0} />
+
       </NavBar>
 
       <div className={styles.container}>
@@ -99,7 +89,7 @@ const JoinRoomPage = ({ slug, roomName: name }: Props) => {
           defaults={preJoinChoices}
           onSubmit={(values) => {
             setPreJoinChoices(values);
-            void onJoin(values);
+            void onCreate(values);
           }}
           onValidate={(values) => {
             if (!values.username || values.username.length < 1 || isLoading) {
@@ -119,15 +109,13 @@ const JoinRoomPage = ({ slug, roomName: name }: Props) => {
 };
 
 export const getServerSideProps: GetServerSideProps<Props> = async ({
-  params,
-  query,
+  query
 }) => {
   return Promise.resolve({
     props: {
-      slug: params?.slug as string,
-      roomName: (query?.roomName as string) || "",
-    },
+      roomName: (query?.roomName as string) || ""
+    }
   });
 };
 
-export default JoinRoomPage;
+export default CreateRoomPage;

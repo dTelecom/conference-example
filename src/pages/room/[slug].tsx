@@ -4,9 +4,9 @@ import {
   LiveKitRoom,
   useChat,
   useRoomContext,
-  VideoConference,
+  VideoConference
 } from "@dtelecom/components-react";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo } from "react";
 import type { GetServerSideProps, NextPage } from "next";
 import type { RoomOptions } from "@dtelecom/livekit-client";
 import { LogLevel, RoomEvent, VideoPresets } from "@dtelecom/livekit-client";
@@ -15,7 +15,6 @@ import { DebugMode } from "@/lib/Debug";
 import { Footer } from "@/components/ui/Footer/Footer";
 import axios from "axios";
 import { RoomNavBar } from "@/components/ui/RoomNavBar/RoomNavBar";
-import { getIdentity } from "@/lib/client-utils";
 import type { GridLayoutDefinition } from "@dtelecom/components-core";
 import { isMobileBrowser } from "@dtelecom/components-core";
 import { VoiceRecognition } from "@/lib/VoiceRecognition";
@@ -37,14 +36,10 @@ const RoomWrapper: NextPage<Props> = ({
   isAdmin,
   preJoinChoices,
   wsUrl,
-  token,
+  token
 }) => {
   const router = useRouter();
-  const [identity, setIdentity] = useState<string>();
-
   useEffect(() => {
-    setIdentity(getIdentity(slug));
-
     void router.replace(router.pathname.replace("[slug]", slug), undefined, {
       shallow: true,
     });
@@ -84,7 +79,11 @@ const RoomWrapper: NextPage<Props> = ({
 
   const onDisconnected = async () => {
     if (isAdmin) {
-      await axios.post("/api/deleteRoom", { slug, identity });
+      await axios.post("/api/deleteRoom", { slug }, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        }
+      });
     }
 
     void router.push("/");
@@ -114,7 +113,6 @@ const RoomWrapper: NextPage<Props> = ({
             roomName={roomName}
             slug={slug}
             isAdmin={isAdmin}
-            identity={identity}
             preJoinChoices={preJoinChoices}
             token={token}
           />
@@ -127,7 +125,6 @@ const RoomWrapper: NextPage<Props> = ({
 };
 
 interface IWrappedLiveKitRoomProps {
-  identity?: string;
   isAdmin?: boolean;
   slug: string;
   roomName: string;
@@ -140,16 +137,16 @@ const debouncedPlay = debounce(() => {
 }, 1000);
 
 const WrappedLiveKitRoom = ({
-  identity,
   isAdmin,
   slug,
   roomName,
   preJoinChoices,
-  token,
+  token
 }: IWrappedLiveKitRoomProps) => {
   const isMobile = React.useMemo(() => isMobileBrowser(), []);
   const chatContext = useChat();
   const room = useRoomContext();
+  const localParticipantIdentity = room.localParticipant.identity;
 
   useEffect(() => {
     const play = () => {
@@ -166,32 +163,44 @@ const WrappedLiveKitRoom = ({
   const onMute = (participantIdentity: string, trackSid: string) => {
     void axios.post("/api/admin", {
       method: "mute",
-      adminIdentity: identity,
       participantIdentity,
       trackSid,
-      room: slug,
+      room: slug
+    }, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
     });
   };
 
   const onKick = (participantIdentity: string) => {
     void axios.post("/api/admin", {
       method: "kick",
-      adminIdentity: identity,
       participantIdentity,
-      room: slug,
+      room: slug
+    }, {
+      headers: {
+        authorization: `Bearer ${token}`
+      }
     });
   };
 
   return (
     <>
-      <RoomNavBar roomName={roomName} slug={slug} iconFull={!isMobile} />
+      <RoomNavBar
+        token={token}
+        roomName={roomName}
+        slug={slug}
+        iconFull={!isMobile}
+        isAdmin={isAdmin}
+      />
 
       <VideoConference
         chatMessageFormatter={formatChatMessageLinks}
         onKick={isAdmin ? onKick : undefined}
         onMute={isAdmin ? onMute : undefined}
         isAdmin={isAdmin}
-        localIdentity={identity}
+        localIdentity={localParticipantIdentity}
         gridLayouts={GRID_LAYOUTS}
         chatContext={chatContext}
         languageOptions={languageOptions}

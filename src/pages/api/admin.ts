@@ -2,38 +2,41 @@ const { RoomServiceClient } = require("@dtelecom/server-sdk-js");
 import type { NextApiRequest, NextApiResponse } from "next";
 import type { TypeOf } from "zod";
 import { z } from "zod";
-import prisma from "@/lib/prisma";
+import jwt_decode from "jwt-decode";
+import { getWsUrl } from "@/lib/getWsUrl";
+import { JwtKey } from "@/lib";
 
 const schema = z.object({
   method: z.enum(["kick", "mute"]),
-  adminIdentity: z.string(),
   participantIdentity: z.string(),
   room: z.string(),
   trackSid: z.string().optional()
 });
 
 interface AdminApiRequest extends NextApiRequest {
-  // use TypeOf to infer the properties from helloSchema
   body: TypeOf<typeof schema>;
+  headers: {
+    authorization: string;
+  };
 }
 
 export default async function handler(
   req: AdminApiRequest,
   res: NextApiResponse
 ) {
+  const jwt = jwt_decode<JwtKey>(req.headers.authorization);
+
+  if (!jwt.video.roomAdmin) {
+    res.status(403).json("Forbidden");
+    return;
+  }
+
   if (req.method === "POST") {
     const input = req.body;
-    const admin = await prisma?.participant.findFirst({
-      where: {
-        identity: input.adminIdentity
-      }
-    });
 
-    if (!admin || !admin.server) {
-      throw new Error("Not found");
-    }
-
-    const svc = new RoomServiceClient(admin.server.replace("wss:", "https:"), process.env.API_KEY, process.env.API_SECRET);
+    let url = await getWsUrl(req);
+    url = url.replace("wss:", "https:");
+    const svc = new RoomServiceClient(url, process.env.API_KEY, process.env.API_SECRET);
 
     svc.authHeader({
       room: input.room,
