@@ -3,7 +3,7 @@
 import { useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 
-const INVITE_CODE_LOCAL_STORAGE_KEY = "invite_code_v1";
+const INVITE_CODE_LOCAL_STORAGE_KEY = "invite_code_v2";
 export const INVITE_CODE_QUERY_KEY = "invite";
 
 export const getInviteCode = () => {

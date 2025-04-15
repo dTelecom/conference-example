@@ -1,0 +1,14 @@
+.button > button {
+    background: #59E970;
+    border-radius: 10px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #000000;
+    padding: 8px 16px;
+    gap:8px;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 14px;
+}

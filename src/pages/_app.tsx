@@ -1,212 +1,40 @@
-import "@rainbow-me/rainbowkit/styles.css";
 import "@dtelecom/components-styles";
 import "@dtelecom/components-styles/prefabs";
 import "@/styles/globals.css";
 import { ThemeProvider } from "next-themes";
 import Head from "next/head";
 import type { PropsWithChildren } from "react";
-import React, { useEffect, useState } from "react";
-import {
-  getCsrfToken,
-  SessionProvider,
-  signIn,
-  signOut,
-  useSession,
-} from "next-auth/react";
-import type { Session } from "next-auth";
+import React, { useEffect } from "react";
 import type { AppProps } from "next/app";
-import {
-  connectorsForWallets,
-  darkTheme,
-  getDefaultWallets,
-  RainbowKitProvider,
-} from "@rainbow-me/rainbowkit";
-import {
-  configureChains,
-  createConfig,
-  useAccount,
-  useDisconnect,
-  useNetwork,
-  useSignMessage,
-  WagmiConfig,
-} from "wagmi";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { publicProvider } from "wagmi/providers/public";
-import { polygon } from "viem/chains";
-import type { Chain } from "@wagmi/core";
-import { SiweMessage } from "siwe";
-import { infuraProvider } from "wagmi/providers/infura";
-import useInviteCode, { getInviteCode } from "@/lib/hooks/useInviteCode";
-
-const { chains, publicClient, webSocketPublicClient } = configureChains(
-  [polygon],
-  [
-    infuraProvider({
-      apiKey: process.env.NEXT_PUBLIC_WEB3_PROVIDER_FRONTEND_KEY as string,
-    }),
-    publicProvider(),
-  ]
-);
-
-const rainbowMagicConnector = async ({ chains }: { chains: Chain[] }) => {
-  const { MagicAuthConnector } = await import("@magiclabs/wagmi-connector");
-  return {
-    id: "magic",
-    name: "Magic",
-    iconUrl: "https://svgshare.com/i/pXA.svg",
-    iconBackground: "#fff",
-    createConnector: () => {
-      const connector = new MagicAuthConnector({
-        chains,
-        options: {
-          apiKey: process.env.NEXT_PUBLIC_MAGIC_API_KEY as string,
-          // oauthOptions: {
-          // providers: ["facebook", "google", "twitter"],
-          // callbackUrl: "https://your-callback-url.com" //optional
-          // },
-          accentColor: "#59E970",
-          isDarkMode: true,
-        },
-      });
-      return {
-        connector,
-      };
-    },
-  };
-};
-
-export const hasWallets =
-  !!process.env.NEXT_PUBLIC_MAGIC_API_KEY ||
-  process.env.NEXT_PUBLIC_WALLET_CONNECT_CLOUD_PROJECT_ID;
+import useInviteCode, { getInviteCode, setInviteCode } from "@/lib/hooks/useInviteCode";
+import { AuthProvider } from "@/lib/dtel-auth/components";
 
 const MyApp = ({
   Component,
-  pageProps,
-}: AppProps<{
-  session: Session;
-}>) => {
-  const [connectors, setConnectors] = useState<any[]>([]);
-
-  useEffect(() => {
-    const initConnectors = async () => {
-      const walletList = [];
-      
-      if (process.env.NEXT_PUBLIC_MAGIC_API_KEY) {
-        const magicConnector = await rainbowMagicConnector({ chains });
-        walletList.push({
-          groupName: "Recommended",
-          wallets: [magicConnector],
-        });
-      }
-
-      if (process.env.NEXT_PUBLIC_WALLET_CONNECT_CLOUD_PROJECT_ID) {
-        walletList.push(
-          ...getDefaultWallets({
-            chains,
-            appName: "Wagmi",
-            projectId: process.env.NEXT_PUBLIC_WALLET_CONNECT_CLOUD_PROJECT_ID,
-          }).wallets
-        );
-      }
-
-      setConnectors(walletList.length > 0 ? connectorsForWallets(walletList) : []);
-    };
-
-    void initConnectors();
-  }, [chains]);
-
-  const config = createConfig({
-    autoConnect: true,
-    connectors,
-    publicClient,
-    webSocketPublicClient,
-  });
-
-  const queryClient = new QueryClient();
-
+  pageProps
+}: AppProps) => {
   return (
     <>
       <Head>
         <title>dMeet | Web3 Meeting App</title>
       </Head>
 
-      <WagmiConfig config={config}>
-        <QueryClientProvider client={queryClient}>
-          <RainbowKitProvider
-            chains={chains}
-            theme={darkTheme({
-              accentColor: "#59E970",
-              accentColorForeground: "black",
-              borderRadius: "small",
-              fontStack: "system",
-              overlayBlur: "large",
-            })}
-          >
-            <SessionProvider session={pageProps.session} refetchInterval={0}>
-              <AppWrapper>
-                <Component {...pageProps} />
-              </AppWrapper>
-            </SessionProvider>
-          </RainbowKitProvider>
-        </QueryClientProvider>
-      </WagmiConfig>
+      <AppWrapper>
+        <Component {...pageProps} />
+      </AppWrapper>
     </>
   );
 };
 
 const AppWrapper = ({ children }: PropsWithChildren) => {
-  const { signMessageAsync } = useSignMessage();
-  const { chain } = useNetwork();
-  const { address, isConnected } = useAccount();
-  const { status } = useSession();
-  const { disconnect } = useDisconnect();
   useInviteCode();
 
-  const handleLogin = async () => {
-    try {
-      const callbackUrl = "/protected";
-      const message = new SiweMessage({
-        domain: window.location.host,
-        address: address,
-        statement: "Sign in with Ethereum to the app.",
-        uri: window.location.origin,
-        version: "1",
-        chainId: chain?.id,
-        nonce: await getCsrfToken(),
-      });
-      const signature = await signMessageAsync({
-        message: message.prepareMessage(),
-      }).catch(() => {
-        void disconnect();
-      });
-      void signIn(
-        "credentials",
-        {
-          message: JSON.stringify(message),
-          redirect: false,
-          signature,
-          callbackUrl,
-        },
-        { inviteCode: getInviteCode() || "" }
-      );
-    } catch (error) {
-      window.alert(error);
-    }
-  };
-
-  useEffect(() => {
-    if (isConnected && status === "unauthenticated") {
-      void handleLogin();
-    } else if (!isConnected && status === "authenticated") {
-      void signOut();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isConnected, status]);
-
   return (
-    <ThemeProvider forcedTheme={"dark"}>
-      <main data-lk-theme="default">{children}</main>
-    </ThemeProvider>
+    <AuthProvider>
+      <ThemeProvider forcedTheme={"dark"}>
+        <main data-lk-theme="default">{children}</main>
+      </ThemeProvider>
+    </AuthProvider>
   );
 };
 

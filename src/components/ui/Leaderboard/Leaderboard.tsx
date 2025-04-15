@@ -1,24 +1,13 @@
 import type { CSSProperties } from "react";
 import React, { useMemo, useState } from "react";
 import styles from "./Leaderboard.module.scss";
-import {
-  ChainIcon,
-  CloseIcon,
-  InfoIcon,
-  LeaderboardIcon,
-  PlusIcon,
-  TickIcon,
-} from "@/assets";
+import { ChainIcon, CloseIcon, InfoIcon, LeaderboardIcon, PlusIcon, TickIcon } from "@/assets";
 import axios from "axios";
 import { clsx } from "clsx";
 import type { LeaderboardRecord } from "@/pages/api/leaderboard";
-import { INVITE_CODE_QUERY_KEY } from "@/lib/hooks/useInviteCode";
+import { getInviteCode, INVITE_CODE_QUERY_KEY } from "@/lib/hooks/useInviteCode";
 import { CopyIcon } from "lucide-react";
-import {
-  ADMIN_POINTS_MULTIPLIER,
-  BASE_REWARDS_PER_MINUTE,
-  REFERRAL_REWARD_PERCENTAGE,
-} from "@/lib/constants";
+import { ADMIN_POINTS_MULTIPLIER, BASE_REWARDS_PER_MINUTE, REFERRAL_REWARD_PERCENTAGE } from "@/lib/constants";
 
 interface Leaderboard {
   buttonStyle?: CSSProperties;
@@ -33,18 +22,20 @@ export const Leaderboard = ({ buttonStyle }: Leaderboard) => {
 
   const getPoints = async () => {
     try {
-      const { data } = await axios.get<{
+      const { data } = await axios.post<{
         result: LeaderboardRecord[];
         referralCode: string | null;
-      }>("/api/leaderboard");
+      }>("/api/leaderboard", {
+        refCode: getInviteCode()
+      });
 
       if (data.referralCode) {
         setReferralLink(
           window.location.origin +
-            "?" +
-            INVITE_CODE_QUERY_KEY +
-            "=" +
-            data.referralCode
+          "?" +
+          INVITE_CODE_QUERY_KEY +
+          "=" +
+          data.referralCode
         );
       }
 
@@ -240,7 +231,7 @@ export const Leaderboard = ({ buttonStyle }: Leaderboard) => {
 
             <p
               style={{
-                marginBottom: "16px",
+                marginBottom: "16px"
               }}
             >
               Points will be exchanged for the utility token $DTEL.
