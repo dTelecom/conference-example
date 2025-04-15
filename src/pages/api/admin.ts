@@ -4,7 +4,7 @@ import type { TypeOf } from "zod";
 import { z } from "zod";
 import jwt_decode from "jwt-decode";
 import { getWsUrl } from "@/lib/getWsUrl";
-import { JwtKey } from "@/pages/api/webhook";
+import { JwtKey } from "@/lib";
 
 const schema = z.object({
   method: z.enum(["kick", "mute"]),

@@ -3,7 +3,7 @@ import type { TypeOf } from "zod";
 import { z } from "zod";
 const { RoomServiceClient } = require("@dtelecom/server-sdk-js");
 import jwt_decode from "jwt-decode";
-import { JwtKey, roomParticipants } from "@/pages/api/webhook";
+import { JwtKey, roomParticipants } from "@/lib";
 import { getWsUrl } from "@/lib/getWsUrl";
 
 const schema = z.object({

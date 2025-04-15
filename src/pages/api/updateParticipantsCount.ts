@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { JwtKey, roomParticipants } from "@/pages/api/webhook";
+import { JwtKey, roomParticipants } from "@/lib";
 import { TypeOf, z } from "zod";
 import jwt_decode from "jwt-decode";
 

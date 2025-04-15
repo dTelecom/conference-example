@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { roomParticipants } from "@/pages/api/webhook";
+import { roomParticipants } from "@/lib";
 
 export interface IGetRoomResponse {
   participantsCount: number;
