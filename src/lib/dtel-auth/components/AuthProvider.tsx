@@ -1,8 +1,8 @@
-import React from 'react';
+import React from "react";
 import { PrivyProvider } from "@privy-io/react-auth";
-import {toSolanaWalletConnectors} from "@privy-io/react-auth/solana";
+import { toSolanaWalletConnectors } from "@privy-io/react-auth/solana";
 
-export function AuthProvider({children}: {children: React.ReactNode}) {
+export function AuthProvider({ children }: { children: React.ReactNode }) {
   if (!process.env.NEXT_PUBLIC_POINTS_BACKEND_URL) {
     return children;
   }
@@ -14,7 +14,14 @@ export function AuthProvider({children}: {children: React.ReactNode}) {
         externalWallets: {solana: {connectors: toSolanaWalletConnectors()}},
         appearance: {
           theme: "dark",
-          accentColor: "#59E970"
+          accentColor: "#59E970",
+          walletList: [
+            "detected_solana_wallets",
+            "phantom",
+            "okx_wallet",
+            "solflare",
+            "backpack"
+          ]
         }
       }}
     >
