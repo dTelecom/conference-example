@@ -30,6 +30,11 @@ export default async function handler(
   }
 
   const { slug } = req.body;
+
+  if (roomParticipants[slug]) {
+    delete roomParticipants[slug];
+  }
+
   let url = await getWsUrl(req);
   url = url.replace("wss:", "https:");
   const svc = new RoomServiceClient(url, process.env.API_KEY, process.env.API_SECRET);
@@ -41,11 +46,10 @@ export default async function handler(
 
   await svc.deleteRoom(slug).then(() => {
     console.log("room deleted");
+  }).catch((e: Error) => {
+    console.log("error", e);
+    res.status(200).json("ok");
   });
-
-  if (roomParticipants[slug]) {
-    delete roomParticipants[slug];
-  }
 
   res.status(200).json("ok");
 }
