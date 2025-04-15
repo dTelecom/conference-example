@@ -20,6 +20,7 @@ export const LoginButton = () => {
         <WalletIcon /> : <>
           <WalletIcon />Connect</>}
       ui={{
+        minimal: true,
         background: "accent"
       }}
       size={2}
