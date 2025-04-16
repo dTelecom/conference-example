@@ -40,12 +40,6 @@ API_KEY=<your api key>
 API_SECRET=<your api secret>
 ```
 
-To use webhooks locally add url pointed to deployment without protocol:
-
-```
-NEXT_PUBLIC_POINTS_BACKEND_URL=<url>
-```
-
 Then run the development server:
 
 ```bash
