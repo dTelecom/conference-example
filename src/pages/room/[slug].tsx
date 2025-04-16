@@ -204,6 +204,7 @@ const WrappedLiveKitRoom = ({
         gridLayouts={GRID_LAYOUTS}
         chatContext={chatContext}
         languageOptions={languageOptions}
+        supportedChatMessageTypes={['text', 'transcription']}
       />
 
       <DebugMode
