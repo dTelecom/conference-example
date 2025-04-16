@@ -21,8 +21,6 @@ const config = {
     defaultLocale: "en",
   },
   transpilePackages: [
-    '@rainbow-me/rainbowkit',
-    '@magiclabs/wagmi-connector',
     '@dtelecom/components-react',
     '@dtelecom/livekit-client',
     '@dtelecom/components-styles'

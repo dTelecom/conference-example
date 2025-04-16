@@ -2,11 +2,14 @@ import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
 export async function middleware(request: NextRequest) {
+  const nonce = Buffer.from(crypto.randomUUID()).toString("base64");
   const cspHeader = `
   default-src 'self';
-  script-src 'self' https://challenges.cloudflare.com;
-  style-src 'self' https://fonts.googleapis.com;
-  img-src 'self' https://explorer-api.walletconnect.com data: blob:;
+  script-src 'self' https://challenges.cloudflare.com 'nonce-${nonce}' 'strict-dynamic' https: http: ${
+    process.env.NODE_ENV === "production" ? "" : `'unsafe-eval'`
+  };
+  style-src 'self' https://fonts.googleapis.com 'nonce-${nonce}' 'unsafe-inline';
+  img-src 'self' https://explorer-api.walletconnect.com https://upload.wikimedia.org data: blob:;
   font-src 'self' https://fonts.gstatic.com;
   object-src 'none';
   base-uri 'self'; form-action 'self';
@@ -23,6 +26,7 @@ export async function middleware(request: NextRequest) {
   response.headers.set("X-Content-Type-Options", "nosniff");
   response.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
   response.headers.set("Permissions-Policy", "geolocation=(), microphone=(), camera=()");
+  response.headers.set("x-nonce", nonce);
 
   return response;
 }
