@@ -54,7 +54,9 @@ export const Leaderboard = ({ buttonStyle }: Leaderboard) => {
 
       setLeaderboard(data.top);
     } catch (e) {
-      setOpen(false);
+      if (!leaderboard) {
+        setOpen(false);
+      }
       setTimeout(() => {
         void getPoints()
       }, 5000);
