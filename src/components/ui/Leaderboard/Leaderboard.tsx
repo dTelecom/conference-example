@@ -8,6 +8,7 @@ import type { LeaderboardRecord } from "@/app/api/leaderboard/route";
 import { getInviteCode, INVITE_CODE_QUERY_KEY } from "@/lib/hooks/useInviteCode";
 import { CopyIcon } from "lucide-react";
 import { ADMIN_POINTS_MULTIPLIER, BASE_REWARDS_PER_MINUTE, REFERRAL_REWARD_PERCENTAGE } from "@/lib/constants";
+import { getAccessToken } from "@privy-io/react-auth";
 
 interface Leaderboard {
   buttonStyle?: CSSProperties;
@@ -22,11 +23,16 @@ export const Leaderboard = ({ buttonStyle }: Leaderboard) => {
 
   const getPoints = async () => {
     try {
+      const authToken = await getAccessToken();
       const { data } = await axios.post<{
         result: LeaderboardRecord[];
         referralCode: string | null;
-      }>("/api/leaderboard", {
+      }>(`${process.env.NEXT_PUBLIC_POINTS_BACKEND_URL}/api/leaderboard`, {
         refCode: getInviteCode()
+      }, {
+        headers: {
+          Authorization: `Bearer ${authToken}`
+        }
       });
 
       if (data.referralCode) {

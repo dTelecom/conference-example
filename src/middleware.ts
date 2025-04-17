@@ -2,7 +2,6 @@ import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
 export async function middleware(request: NextRequest) {
-  console.log('Middleware running for:', request.nextUrl.pathname);
   const nonce = Buffer.from(crypto.randomUUID()).toString("base64");
   const cspHeader = `
   default-src 'self';
