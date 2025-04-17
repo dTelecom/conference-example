@@ -75,7 +75,7 @@ const JoinRoomPage = () => {
     setIsLoading(false);
   };
 
-  if (roomName === undefined) {
+  if (roomName === undefined || isLoading) {
     return null;
   }
 
