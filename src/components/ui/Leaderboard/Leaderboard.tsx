@@ -32,8 +32,8 @@ export const Leaderboard = ({ buttonStyle }: Leaderboard) => {
     try {
       const authToken = await getAccessToken();
       const { data } = await axios.post<{
-        result: LeaderboardRecord[];
-        referralCode: string | null;
+        top: LeaderboardRecord[];
+        refCode: string | null;
       }>(`https://${process.env.NEXT_PUBLIC_POINTS_BACKEND_URL}/api/leaderboard`, {
         refCode: getInviteCode()
       }, {
@@ -42,17 +42,17 @@ export const Leaderboard = ({ buttonStyle }: Leaderboard) => {
         }
       });
       setInitialRequestReturnedData(true);
-      if (data.referralCode) {
+      if (data.refCode) {
         setReferralLink(
           window.location.origin +
           "?" +
           INVITE_CODE_QUERY_KEY +
           "=" +
-          data.referralCode
+          data.refCode
         );
       }
 
-      setLeaderboard(data.result);
+      setLeaderboard(data.top);
     } catch (e) {
       setOpen(false);
       setTimeout(() => {
