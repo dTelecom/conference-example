@@ -9,11 +9,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return children;
   }
 
+  const solanaConnectors = toSolanaWalletConnectors({
+    shouldAutoConnect: false,
+  })
+
   return (
     <PrivyProvider
       appId={process.env.NEXT_PUBLIC_PRIVY_APP_ID as string}
       config={{
-        externalWallets: {solana: {connectors: toSolanaWalletConnectors()}},
+        externalWallets: {solana: {connectors: solanaConnectors}},
         appearance: {
           theme: "dark",
           accentColor: "#59E970",
