@@ -4,11 +4,17 @@ import styles from "./Leaderboard.module.scss";
 import { ChainIcon, CloseIcon, InfoIcon, LeaderboardIcon, PlusIcon, TickIcon } from "@/assets";
 import axios from "axios";
 import { clsx } from "clsx";
-import type { LeaderboardRecord } from "@/app/api/leaderboard/route";
 import { getInviteCode, INVITE_CODE_QUERY_KEY } from "@/lib/hooks/useInviteCode";
 import { CopyIcon } from "lucide-react";
 import { ADMIN_POINTS_MULTIPLIER, BASE_REWARDS_PER_MINUTE, REFERRAL_REWARD_PERCENTAGE } from "@/lib/constants";
 import { getAccessToken } from "@privy-io/react-auth";
+
+interface LeaderboardRecord {
+  position: number;
+  wallet?: string;
+  points: number;
+  isCurrentUser?: boolean;
+}
 
 interface Leaderboard {
   buttonStyle?: CSSProperties;
@@ -27,7 +33,7 @@ export const Leaderboard = ({ buttonStyle }: Leaderboard) => {
       const { data } = await axios.post<{
         result: LeaderboardRecord[];
         referralCode: string | null;
-      }>(`${process.env.NEXT_PUBLIC_POINTS_BACKEND_URL}/api/leaderboard`, {
+      }>(`https://${process.env.NEXT_PUBLIC_POINTS_BACKEND_URL}/api/leaderboard`, {
         refCode: getInviteCode()
       }, {
         headers: {
