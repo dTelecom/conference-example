@@ -1,3 +1,5 @@
+'use client';
+
 import React from "react";
 import { PrivyProvider } from "@privy-io/react-auth";
 import { toSolanaWalletConnectors } from "@privy-io/react-auth/solana";

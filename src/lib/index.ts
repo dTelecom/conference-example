@@ -1,4 +1,4 @@
-export let roomParticipants: Record<string, {
+export const roomParticipants: Record<string, {
   count: number;
   createdAt: number;
 }> = {};

@@ -1,10 +1,10 @@
 import type { CSSProperties } from "react";
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import styles from "./Leaderboard.module.scss";
 import { ChainIcon, CloseIcon, InfoIcon, LeaderboardIcon, PlusIcon, TickIcon } from "@/assets";
 import axios from "axios";
 import { clsx } from "clsx";
-import type { LeaderboardRecord } from "@/pages/api/leaderboard";
+import type { LeaderboardRecord } from "@/app/api/leaderboard/route";
 import { getInviteCode, INVITE_CODE_QUERY_KEY } from "@/lib/hooks/useInviteCode";
 import { CopyIcon } from "lucide-react";
 import { ADMIN_POINTS_MULTIPLIER, BASE_REWARDS_PER_MINUTE, REFERRAL_REWARD_PERCENTAGE } from "@/lib/constants";
@@ -44,6 +44,10 @@ export const Leaderboard = ({ buttonStyle }: Leaderboard) => {
       setOpen(false);
     }
   };
+
+  useEffect(() => {
+    void getPoints();
+  }, []);
 
   const currentUserPoints = useMemo(() => {
     return leaderboard.find((r) => r.isCurrentUser)?.points || "";
