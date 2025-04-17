@@ -40,7 +40,7 @@ export async function POST(req: NextRequest) {
 
     token.metadata = JSON.stringify({ admin: false });
 
-    token.webHookURL = process.env.NEXT_PUBLIC_POINTS_BACKEND_URL
+    token.webHookURL = userId && process.env.NEXT_PUBLIC_POINTS_BACKEND_URL
       ? `https://${process.env.NEXT_PUBLIC_POINTS_BACKEND_URL}/api/webhook`
       : undefined;
 
