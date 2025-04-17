@@ -26,6 +26,7 @@ export const Leaderboard = ({ buttonStyle }: Leaderboard) => {
   const [instructionOpen, setInstructionOpen] = useState(false);
   const [referralLink, setReferralLink] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
+  const [initialRequestReturnedData, setInitialRequestReturnedData] = useState(false);
 
   const getPoints = async () => {
     try {
@@ -40,7 +41,7 @@ export const Leaderboard = ({ buttonStyle }: Leaderboard) => {
           Authorization: `Bearer ${authToken}`
         }
       });
-
+      setInitialRequestReturnedData(true);
       if (data.referralCode) {
         setReferralLink(
           window.location.origin +
@@ -54,6 +55,9 @@ export const Leaderboard = ({ buttonStyle }: Leaderboard) => {
       setLeaderboard(data.result);
     } catch (e) {
       setOpen(false);
+      setTimeout(() => {
+        void getPoints()
+      }, 5000);
     }
   };
 
@@ -77,6 +81,10 @@ export const Leaderboard = ({ buttonStyle }: Leaderboard) => {
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
+
+  if (!initialRequestReturnedData) {
+    return null;
+  }
 
   return (
     <>
