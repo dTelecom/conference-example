@@ -1,8 +1,4 @@
-'use client';
-import { getCrossSubdomainCookie, setCrossSubdomainCookie } from '@/lib/cookie';
-
-export const dynamic = "force-dynamic";
-
+"use client";
 import { Button } from "@/components/ui";
 import { useRouter } from "next/navigation";
 import { NavBar } from "@/components/ui/NavBar/NavBar";
@@ -15,7 +11,9 @@ import { KeyIcon } from "@/assets";
 import { Leaderboard } from "@/components/ui/Leaderboard/Leaderboard";
 import { LoginButton } from "@/lib/dtel-auth/components";
 import { IsAuthorizedWrapper } from "@/lib/dtel-auth/components/IsAuthorizedWrapper";
-import { getCookie, setCookie } from '@/app/actions';
+import { getCookie, setCookie } from "@/app/actions";
+
+export const dynamic = "force-dynamic";
 
 export default function Home() {
   const [roomName, setRoomName] = useState<string>("");
@@ -23,10 +21,10 @@ export default function Home() {
   const { push } = useRouter();
 
   useEffect(() => {
-    getCookie('roomName').then((cookie) => {
-      setRoomName(cookie || '');
-    })
-  }, [])
+    getCookie("roomName").then((cookie) => {
+      setRoomName(cookie || "");
+    });
+  }, []);
 
   const onCreate = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -36,7 +34,7 @@ export default function Home() {
     try {
       setIsLoading(true);
 
-      setCookie('roomName', roomName, window.location.origin)
+      setCookie("roomName", roomName, window.location.origin);
       push(`/createRoom?roomName=${encodeURIComponent(roomName)}`);
     } catch (e) {
       console.error(e);
