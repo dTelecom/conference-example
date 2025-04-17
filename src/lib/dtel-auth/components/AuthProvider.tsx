@@ -9,9 +9,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return children;
   }
 
-  const solanaConnectors = toSolanaWalletConnectors({
-    shouldAutoConnect: false,
-  })
+  const solanaConnectors = toSolanaWalletConnectors()
 
   return (
     <PrivyProvider
