@@ -22,7 +22,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           walletList: [
             "detected_solana_wallets",
             "phantom",
-            "wallet_connect",
             "okx_wallet",
             "solflare",
             "backpack"
