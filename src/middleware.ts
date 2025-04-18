@@ -9,7 +9,7 @@ export async function middleware(request: NextRequest) {
     process.env.NODE_ENV === "production" ? `'nonce-${nonce}'` : `'unsafe-inline' 'unsafe-eval'`
   } https: http:;
   style-src 'self' https://fonts.googleapis.com 'unsafe-inline';
-  img-src 'self' https://explorer-api.walletconnect.com https://upload.wikimedia.org data: blob:;
+  img-src 'self' https://explorer-api.walletconnect.com https://upload.wikimedia.org https://dmeet.org data: blob:;
   font-src 'self' https://fonts.gstatic.com;
   object-src 'none';
   base-uri 'self'; form-action 'self';
@@ -51,6 +51,6 @@ export const config = {
      * - favicon.ico (favicon file)
      * - robots.txt (robots file)
      */
-    '/((?!api|_next/static|_next/image|images|favicon.ico).*)',
+    '/((?!api|_next/static|_next/image|images|favicon.ico|favicon.png).*)',
   ],
 };
