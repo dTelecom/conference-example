@@ -40,12 +40,6 @@ API_KEY=<your api key>
 API_SECRET=<your api secret>
 ```
 
-To use webhooks locally add url pointed to deployment without protocol:
-
-```
-VERCEL_PROJECT_PRODUCTION_URL=<url>
-```
-
 Then run the development server:
 
 ```bash

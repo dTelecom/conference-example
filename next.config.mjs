@@ -9,17 +9,11 @@
 /** @type {import("next").NextConfig} */
 const config = {
   reactStrictMode: true,
-
-  /**
-   * If you have the "experimental: { appDir: true }" setting enabled, then you
-   * must comment the below `i18n` config out.
-   *
-   * @see https://github.com/vercel/next.js/issues/41980
-   */
-  i18n: {
-    locales: ["en"],
-    defaultLocale: "en",
-  },
+  transpilePackages: [
+    '@dtelecom/components-react',
+    '@dtelecom/livekit-client',
+    '@dtelecom/components-styles'
+  ],
   webpack(config) {
     // Grab the existing rule that handles SVG imports
     const fileLoaderRule = config.module.rules.find((/** @type {{ test: { test: (arg0: string) => any; }; }} */ rule) =>
@@ -40,6 +34,18 @@ const config = {
         resourceQuery: { not: /url/ }, // exclude if *.svg?url
         use: ['@svgr/webpack'],
       },
+      // Handle .mts files
+      {
+        test: /\.mts$/,
+        use: [
+          {
+            loader: 'ts-loader',
+            options: {
+              transpileOnly: true,
+            },
+          },
+        ],
+      }
     )
 
     // Modify the file loader rule to ignore *.svg, since we have it handled now.
@@ -47,6 +53,6 @@ const config = {
 
     return config
   },
-
 };
+
 export default config;

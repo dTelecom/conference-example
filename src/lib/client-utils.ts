@@ -8,15 +8,3 @@ export function generateUUID(): string {
     return (c === "x" ? r : (r & 0x3 | 0x8)).toString(16);
   });
 }
-
-export const setIdentity = (slug: string, identity: string) => {
-  sessionStorage.setItem(slug, identity);
-};
-
-export const getIdentity = (slug: string) => {
-  return sessionStorage.getItem(slug) || undefined;
-}
-
-export const removeIdentity = (slug: string) => {
-  sessionStorage.removeItem(slug)
-}
