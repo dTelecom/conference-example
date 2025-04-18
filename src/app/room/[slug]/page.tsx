@@ -1,3 +1,5 @@
+'use client';
+
 import type { LocalUserChoices } from "@dtelecom/components-react";
 import {
   formatChatMessageLinks,
@@ -7,10 +9,10 @@ import {
   VideoConference
 } from "@dtelecom/components-react";
 import React, { useEffect, useMemo } from "react";
-import type { GetServerSideProps, NextPage } from "next";
+import type { NextPage } from "next";
 import type { RoomOptions } from "@dtelecom/livekit-client";
 import { LogLevel, RoomEvent, VideoPresets } from "@dtelecom/livekit-client";
-import { useRouter } from "next/router";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { DebugMode } from "@/lib/Debug";
 import { Footer } from "@/components/ui/Footer/Footer";
 import axios from "axios";
@@ -21,49 +23,54 @@ import { VoiceRecognition } from "@/lib/VoiceRecognition";
 import { debounce } from "ts-debounce";
 import { languageOptions } from "@/lib/languageOptions";
 
-interface Props {
-  slug: string;
-  token: string;
-  wsUrl: string;
-  preJoinChoices: LocalUserChoices | null;
-  roomName: string;
-  isAdmin?: boolean;
-}
-
-const RoomWrapper: NextPage<Props> = ({
-  slug,
-  roomName,
-  isAdmin,
-  preJoinChoices,
-  wsUrl,
-  token
-}) => {
+const useRoomParams = () => {
+  const params = useSearchParams();
   const router = useRouter();
-  useEffect(() => {
-    void router.replace(router.pathname.replace("[slug]", slug), undefined, {
-      shallow: true,
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const p = useParams();
+  const slug = p.slug as string || "";
+
+  const token = params.get("token") || "";
+  const wsUrl = params.get("wsUrl") || "";
+  const roomName = params.get("roomName") || "";
+  const isAdmin = params.get("isAdmin") === "true";
+  const hq = params.get("hq") === "true";
+  const preJoinChoices = useMemo(() => {
+    const choices = params.get("preJoinChoices");
+    return choices ? (JSON.parse(choices) as LocalUserChoices | null) : null;
+  }, [params]);
+
+  // store everything in state
+  const [roomState,] = React.useState({
+    slug,
+    token,
+    wsUrl,
+    roomName,
+    isAdmin,
+    hq,
+    preJoinChoices
+  });
 
   useEffect(() => {
-    if (!wsUrl) {
+    if (!roomState.wsUrl) {
       void router.push(`/join/${slug}`);
     }
-  }, [router, slug, wsUrl]);
+  }, [router, slug, roomState.wsUrl]);
 
-  const { hq } = router.query;
-  const roomOptions = useMemo((): RoomOptions => {
+  return { ...roomState };
+};
+
+
+const useRoomOptions = (preJoinChoices: LocalUserChoices | null, hq: boolean): RoomOptions => {
+  return useMemo((): RoomOptions => {
     return {
       videoCaptureDefaults: {
         deviceId: preJoinChoices?.videoDeviceId ?? undefined,
-        resolution: hq === "true" ? VideoPresets.h2160 : VideoPresets.h720,
+        resolution: hq ? VideoPresets.h2160 : VideoPresets.h720,
       },
       publishDefaults: {
-        videoSimulcastLayers:
-          hq === "true"
-            ? [VideoPresets.h1080, VideoPresets.h720]
-            : [VideoPresets.h360, VideoPresets.h180],
+        videoSimulcastLayers: hq
+          ? [VideoPresets.h1080, VideoPresets.h720]
+          : [VideoPresets.h360, VideoPresets.h180],
         stopMicTrackOnMute: true,
       },
       audioCaptureDefaults: {
@@ -76,38 +83,58 @@ const RoomWrapper: NextPage<Props> = ({
       dynacast: false,
     };
   }, [preJoinChoices, hq]);
+};
+
+const RoomWrapper: NextPage = () => {
+  const router = useRouter();
+  const { slug, token, wsUrl, roomName, isAdmin, hq, preJoinChoices } = useRoomParams();
+
+  const roomOptions = useRoomOptions(preJoinChoices, hq);
+
+  useEffect(() => {
+    window.history.replaceState(null, '', window.location.pathname);
+  }, [router, slug]);
 
   const onDisconnected = async () => {
     if (isAdmin) {
-      await axios.post("/api/deleteRoom", { slug }, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        }
-      });
+      try {
+        await axios.post(
+          "/api/deleteRoom",
+          { slug },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+      } catch (error) {
+        console.error("Error deleting room:", error);
+        // Optionally handle the error, e.g., show a notification
+      }
     }
-
     void router.push("/");
   };
 
   return (
     <>
-      {wsUrl && (
+      {wsUrl ? (
         <LiveKitRoom
           token={token}
           serverUrl={wsUrl}
           options={roomOptions}
           video={preJoinChoices?.videoEnabled}
           audio={preJoinChoices?.audioEnabled}
-          onDisconnected={() => void onDisconnected()}
+          onDisconnected={onDisconnected}
         >
-          <div
+          {/* This div might not be necessary as the server URL is passed to LiveKitRoom */}
+          {/* <div
             id="test-server-url"
             style={{
               display: "none",
             }}
           >
             {wsUrl}
-          </div>
+          </div> */}
 
           <WrappedLiveKitRoom
             roomName={roomName}
@@ -117,14 +144,14 @@ const RoomWrapper: NextPage<Props> = ({
             token={token}
           />
         </LiveKitRoom>
-      )}
+      ) : null}
 
       <Footer />
     </>
   );
 };
 
-interface IWrappedLiveKitRoomProps {
+interface WrappedLiveKitRoomProps {
   isAdmin?: boolean;
   slug: string;
   roomName: string;
@@ -132,9 +159,12 @@ interface IWrappedLiveKitRoomProps {
   token: string;
 }
 
+const USER_JOINED_SOUND_PATH = "/sounds/user-joined.mp3";
+const USER_JOINED_DEBOUNCE_DELAY = 1000;
+
 const debouncedPlay = debounce(() => {
-  void new Audio("/sounds/user-joined.mp3").play();
-}, 1000);
+  void new Audio(USER_JOINED_SOUND_PATH).play();
+}, USER_JOINED_DEBOUNCE_DELAY);
 
 const WrappedLiveKitRoom = ({
   isAdmin,
@@ -142,48 +172,54 @@ const WrappedLiveKitRoom = ({
   roomName,
   preJoinChoices,
   token
-}: IWrappedLiveKitRoomProps) => {
-  const isMobile = React.useMemo(() => isMobileBrowser(), []);
+}: WrappedLiveKitRoomProps) => {
+  const isMobile = useMemo(() => isMobileBrowser(), []);
   const chatContext = useChat();
   const room = useRoomContext();
   const localParticipantIdentity = room.localParticipant.identity;
 
   useEffect(() => {
-    const play = () => {
+    const handleParticipantConnected = () => {
       void debouncedPlay();
     };
 
-    room.on(RoomEvent.ParticipantConnected, play);
+    room.on(RoomEvent.ParticipantConnected, handleParticipantConnected);
 
     return () => {
-      room.off(RoomEvent.ParticipantConnected, play);
+      room.off(RoomEvent.ParticipantConnected, handleParticipantConnected);
     };
   }, [room]);
 
-  const onMute = (participantIdentity: string, trackSid: string) => {
-    void axios.post("/api/admin", {
-      method: "mute",
-      participantIdentity,
-      trackSid,
-      room: slug
-    }, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    });
+  const handleAdminAction = async (method: "mute" | "kick", participantIdentity: string, trackSid?: string) => {
+    try {
+      await axios.post(
+        "/api/admin",
+        {
+          method,
+          participantIdentity,
+          trackSid,
+          room: slug,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+    } catch (error) {
+      console.error(`Error performing admin action (${method}):`, error);
+      // Optionally handle the error, e.g., show a notification
+    }
   };
 
-  const onKick = (participantIdentity: string) => {
-    void axios.post("/api/admin", {
-      method: "kick",
-      participantIdentity,
-      room: slug
-    }, {
-      headers: {
-        authorization: `Bearer ${token}`
-      }
-    });
-  };
+  const onMute = isAdmin
+    ? (participantIdentity: string, trackSid: string) =>
+      void handleAdminAction("mute", participantIdentity, trackSid)
+    : undefined;
+
+  const onKick = isAdmin
+    ? (participantIdentity: string) => void handleAdminAction("kick", participantIdentity)
+    : undefined;
 
   return (
     <>
@@ -197,8 +233,8 @@ const WrappedLiveKitRoom = ({
 
       <VideoConference
         chatMessageFormatter={formatChatMessageLinks}
-        onKick={isAdmin ? onKick : undefined}
-        onMute={isAdmin ? onMute : undefined}
+        onKick={onKick}
+        onMute={onMute}
         isAdmin={isAdmin}
         localIdentity={localParticipantIdentity}
         gridLayouts={GRID_LAYOUTS}
@@ -226,27 +262,7 @@ const WrappedLiveKitRoom = ({
   );
 };
 
-export default RoomWrapper;
-
-export const getServerSideProps: GetServerSideProps<Props> = async ({
-  params,
-  query,
-}) => {
-  const preJoinChoices: LocalUserChoices | null = query?.preJoinChoices
-    ? (JSON.parse(query.preJoinChoices as string) as LocalUserChoices)
-    : null;
-  return Promise.resolve({
-    props: {
-      slug: params?.slug as string,
-      token: (query?.token || "") as string,
-      wsUrl: (query?.wsUrl || "") as string,
-      preJoinChoices,
-      roomName: (query?.roomName || "") as string,
-      isAdmin: query?.isAdmin === "true",
-    },
-  });
-};
-
+// Moved GRID_LAYOUTS closer to where it's used (VideoConference)
 const GRID_LAYOUTS: GridLayoutDefinition[] = [
   {
     columns: 1,
@@ -303,3 +319,5 @@ const GRID_LAYOUTS: GridLayoutDefinition[] = [
     minHeight: 0,
   },
 ];
+
+export default RoomWrapper;

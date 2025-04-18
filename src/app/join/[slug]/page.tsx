@@ -1,26 +1,24 @@
+'use client';
+
 import type { LocalUserChoices } from "@dtelecom/components-react";
 import { PreJoin } from "@dtelecom/components-react";
 import React, { useEffect, useState } from "react";
-import { useRouter } from "next/router";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { NavBar } from "@/components/ui/NavBar/NavBar";
-import type { GetServerSideProps } from "next";
 import { Footer } from "@/components/ui/Footer/Footer";
 import axios from "axios";
-import type { IJoinResponse } from "@/pages/api/join";
 import { isMobileBrowser } from "@dtelecom/components-core";
-import type { IGetWsUrl } from "@/pages/api/getWsUrl";
 import styles from "./Join.module.scss";
 import { languageOptions } from "@/lib/languageOptions";
-import { IGetRoomResponse } from "@/pages/api/getRoom";
+import { IGetRoomResponse } from "@/app/api/getRoom/route";
 import { ParticipantsBadge } from "@/components/ui/ParticipantsBadge/ParticipantsBadge";
+import { getCookie, setCookie } from '@/app/actions';
 
-interface Props {
-  slug: string;
-  roomName: string;
-}
-
-const JoinRoomPage = ({ slug, roomName: name }: Props) => {
+const JoinRoomPage = () => {
   const router = useRouter();
+  const { slug } = useParams();
+  const params = useSearchParams();
+  const name = params.get("roomName") || "";
   const isMobile = React.useMemo(() => isMobileBrowser(), []);
 
   const [preJoinChoices, setPreJoinChoices] = useState<
@@ -37,6 +35,13 @@ const JoinRoomPage = ({ slug, roomName: name }: Props) => {
   const [participantsCount, setParticipantsCount] = useState<number>();
 
   useEffect(() => {
+    getCookie('username').then((cookie) => {
+      setPreJoinChoices((prev) => ({
+        ...prev,
+        username: cookie || ''
+      }));
+    });
+
     async function fetchRoom() {
       const { data } = await axios.post<IGetRoomResponse>(`/api/getRoom?slug=${slug}`);
       setParticipantsCount(data.participantsCount || 0);
@@ -44,7 +49,7 @@ const JoinRoomPage = ({ slug, roomName: name }: Props) => {
 
     async function fetchWsUrl() {
       try {
-        const { data } = await axios.get<IGetWsUrl>(`/api/getWsUrl`);
+        const { data } = await axios.get(`/api/getWsUrl`);
         setWsUrl(data.wsUrl);
       } finally {
         setIsLoading(false);
@@ -58,26 +63,19 @@ const JoinRoomPage = ({ slug, roomName: name }: Props) => {
   const onJoin = async (values: Partial<LocalUserChoices>) => {
     console.log("Joining with: ", values);
     setIsLoading(true);
-    const { data } = await axios.post<IJoinResponse>(`/api/join`, {
+    const { data } = await axios.post(`/api/join`, {
       wsUrl,
       slug,
       name: values?.username || "",
     });
+    await setCookie('username', values?.username || '', window.location.origin);
 
-    await router.push({
-      pathname: `/room/${data.slug}`,
-      query: {
-        token: data.token,
-        wsUrl: data.url,
-        preJoinChoices: JSON.stringify(values),
-        roomName: data.roomName || name
-      }
-    });
+    await router.push(`/room/${data.slug}?token=${data.token}&wsUrl=${data.url}&preJoinChoices=${JSON.stringify(values)}&roomName=${data.roomName || name}`);
 
     setIsLoading(false);
   };
 
-  if (roomName === undefined) {
+  if (roomName === undefined || isLoading) {
     return null;
   }
 
@@ -116,18 +114,6 @@ const JoinRoomPage = ({ slug, roomName: name }: Props) => {
       <Footer />
     </>
   );
-};
-
-export const getServerSideProps: GetServerSideProps<Props> = async ({
-  params,
-  query,
-}) => {
-  return Promise.resolve({
-    props: {
-      slug: params?.slug as string,
-      roomName: (query?.roomName as string) || "",
-    },
-  });
 };
 
 export default JoinRoomPage;

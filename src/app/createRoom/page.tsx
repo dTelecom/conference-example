@@ -1,25 +1,23 @@
+'use client';
+
 import type { LocalUserChoices } from "@dtelecom/components-react";
 import { PreJoin } from "@dtelecom/components-react";
 import React, { useEffect, useState } from "react";
-import { useRouter } from "next/router";
+import { useRouter, useSearchParams } from "next/navigation";
 import { NavBar } from "@/components/ui/NavBar/NavBar";
-import type { GetServerSideProps } from "next";
 import { Footer } from "@/components/ui/Footer/Footer";
 import { ParticipantsBadge } from "@/components/ui/ParticipantsBadge/ParticipantsBadge";
 import axios from "axios";
-import type { IJoinResponse } from "@/pages/api/join";
-import type { IGetWsUrl } from "@/pages/api/getWsUrl";
+import type { IGetWsUrl } from "@/app/api/getWsUrl/route";
 import styles from "./CreateRoom.module.scss";
 import { languageOptions } from "@/lib/languageOptions";
+import { getCookie, setCookie } from '@/app/actions';
 
-interface Props {
-  roomName: string;
-}
-
-const CreateRoomPage = ({ roomName: name }: Props) => {
+const CreateRoomPage = () => {
   const router = useRouter();
+  const params = useSearchParams()
 
-  const [roomName] = useState<string>(name);
+  const [roomName] = useState<string>(params.get("roomName") || "");
   const [preJoinChoices, setPreJoinChoices] = useState<
     Partial<LocalUserChoices>
   >({
@@ -32,6 +30,14 @@ const CreateRoomPage = ({ roomName: name }: Props) => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    getCookie('username').then((cookie) => {
+      setPreJoinChoices((prev) => ({
+        ...prev,
+        username: cookie || ''
+      }));
+      setIsLoading(false)
+    });
+
     async function fetchWsUrl() {
       try {
         const { data } = await axios.get<IGetWsUrl>(`/api/getWsUrl`);
@@ -47,28 +53,24 @@ const CreateRoomPage = ({ roomName: name }: Props) => {
   const onCreate = async (values: Partial<LocalUserChoices>) => {
     console.log("Joining with: ", values);
     setIsLoading(true);
-    const { data } = await axios.post<IJoinResponse>(`/api/createAndJoinRoom`, {
+    const { data } = await axios.post(`/api/createAndJoinRoom`, {
       wsUrl,
       name: values?.username || "",
       roomName,
       language: values?.language || "en"
     });
+    await setCookie('username', values?.username || '', window.location.origin);
 
-    await router.push({
-      pathname: `/room/${data.slug}`,
-      query: {
-        token: data.token,
-        wsUrl: data.url,
-        preJoinChoices: JSON.stringify(values),
-        roomName,
-        isAdmin: data.isAdmin
-      }
-    });
+    router.push(
+      `/room/${data.slug}?token=${data.token}&wsUrl=${data.url}&preJoinChoices=${encodeURIComponent(
+        JSON.stringify(values)
+      )}&roomName=${roomName}&isAdmin=${data.isAdmin}`
+    );
 
     setIsLoading(false);
   };
 
-  if (roomName === undefined) {
+  if (roomName === undefined || isLoading) {
     return null;
   }
 
@@ -107,15 +109,4 @@ const CreateRoomPage = ({ roomName: name }: Props) => {
     </>
   );
 };
-
-export const getServerSideProps: GetServerSideProps<Props> = async ({
-  query
-}) => {
-  return Promise.resolve({
-    props: {
-      roomName: (query?.roomName as string) || ""
-    }
-  });
-};
-
 export default CreateRoomPage;

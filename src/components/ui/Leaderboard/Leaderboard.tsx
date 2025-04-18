@@ -1,13 +1,20 @@
 import type { CSSProperties } from "react";
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import styles from "./Leaderboard.module.scss";
 import { ChainIcon, CloseIcon, InfoIcon, LeaderboardIcon, PlusIcon, TickIcon } from "@/assets";
 import axios from "axios";
 import { clsx } from "clsx";
-import type { LeaderboardRecord } from "@/pages/api/leaderboard";
 import { getInviteCode, INVITE_CODE_QUERY_KEY } from "@/lib/hooks/useInviteCode";
 import { CopyIcon } from "lucide-react";
 import { ADMIN_POINTS_MULTIPLIER, BASE_REWARDS_PER_MINUTE, REFERRAL_REWARD_PERCENTAGE } from "@/lib/constants";
+import { getAccessToken } from "@privy-io/react-auth";
+
+interface LeaderboardRecord {
+  position: number;
+  wallet?: string;
+  points: number;
+  isCurrentUser?: boolean;
+}
 
 interface Leaderboard {
   buttonStyle?: CSSProperties;
@@ -19,31 +26,46 @@ export const Leaderboard = ({ buttonStyle }: Leaderboard) => {
   const [instructionOpen, setInstructionOpen] = useState(false);
   const [referralLink, setReferralLink] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
+  const [initialRequestReturnedData, setInitialRequestReturnedData] = useState(false);
 
   const getPoints = async () => {
     try {
+      const authToken = await getAccessToken();
       const { data } = await axios.post<{
-        result: LeaderboardRecord[];
-        referralCode: string | null;
-      }>("/api/leaderboard", {
+        top: LeaderboardRecord[];
+        refCode: string | null;
+      }>(`https://${process.env.NEXT_PUBLIC_POINTS_BACKEND_URL}/api/leaderboard`, {
         refCode: getInviteCode()
+      }, {
+        headers: {
+          Authorization: `Bearer ${authToken}`
+        }
       });
-
-      if (data.referralCode) {
+      setInitialRequestReturnedData(true);
+      if (data.refCode) {
         setReferralLink(
           window.location.origin +
           "?" +
           INVITE_CODE_QUERY_KEY +
           "=" +
-          data.referralCode
+          data.refCode
         );
       }
 
-      setLeaderboard(data.result);
+      setLeaderboard(data.top);
     } catch (e) {
-      setOpen(false);
+      if (!leaderboard) {
+        setOpen(false);
+      }
+      setTimeout(() => {
+        void getPoints()
+      }, 5000);
     }
   };
+
+  useEffect(() => {
+    void getPoints();
+  }, []);
 
   const currentUserPoints = useMemo(() => {
     return leaderboard.find((r) => r.isCurrentUser)?.points || "";
@@ -61,6 +83,10 @@ export const Leaderboard = ({ buttonStyle }: Leaderboard) => {
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
+
+  if (!initialRequestReturnedData) {
+    return null;
+  }
 
   return (
     <>

@@ -1,10 +1,10 @@
 import { PrivyClient } from "@privy-io/server-auth";
-import { NextApiRequest } from "next";
+import { NextRequest } from 'next/server';
 
 let privy: PrivyClient | null = null;
 
-export const getUserIdFromHeaders = async (req: NextApiRequest) => {
-  const authToken = req.cookies["privy-token"];
+export const getUserIdFromHeaders = async (req: NextRequest) => {
+  const authToken = req.cookies.get('privy-token')?.value;
 
   if (!process.env.NEXT_PUBLIC_POINTS_BACKEND_URL) {
     return null;

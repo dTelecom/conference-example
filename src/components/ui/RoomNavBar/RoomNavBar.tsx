@@ -53,7 +53,7 @@ export const RoomNavBar = ({ slug, roomName, iconFull, isAdmin, token }: RoomNav
         }
       })
     }
-  }, [count]);
+  }, [count, isAdmin, slug, token]);
 
   return (
     <NavBar title={roomName} small iconFull={iconFull}>
