@@ -20,11 +20,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           theme: "dark",
           accentColor: "#59E970",
           walletList: [
-            "detected_solana_wallets",
-            "phantom",
-            "okx_wallet",
-            "solflare",
-            "backpack"
+            "detected_solana_wallets"
           ]
         }
       }}
