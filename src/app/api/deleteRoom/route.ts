@@ -39,7 +39,7 @@ export async function POST(req: NextRequest) {
     });
 
     await svc.deleteRoom(slug).catch((e: Error) => {
-      console.error("Error deleting room:", e);
+      console.error("Error deleting room:", e, 'url:', url, 'slug:', slug);
       return NextResponse.json("Error deleting room", { status: 500 });
     });
 
