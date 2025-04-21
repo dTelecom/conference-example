@@ -64,7 +64,9 @@ export const Leaderboard = ({ buttonStyle }: Leaderboard) => {
   };
 
   useEffect(() => {
-    void getPoints();
+    if (process.env.NODE_ENV === "production") {
+      void getPoints();
+    }
   }, []);
 
   const currentUserPoints = useMemo(() => {

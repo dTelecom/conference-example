@@ -18,7 +18,10 @@ main {
     height: 100%;
     margin: 0;
     background: #000;
-    font-family: Inter, serif;
+}
+
+body {
+    font-family: var(--font-inter), serif;
 }
 
 #__next> [data-rk]{
