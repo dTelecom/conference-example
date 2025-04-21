@@ -66,8 +66,6 @@ const CreateRoomPage = () => {
         JSON.stringify(values)
       )}&roomName=${roomName}&isAdmin=${data.isAdmin}`
     );
-
-    setIsLoading(false);
   };
 
   if (roomName === undefined || isLoading) {
