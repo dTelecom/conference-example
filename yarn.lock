@@ -902,7 +902,7 @@
     loglevel "^1.8.1"
     rxjs "^7.8.0"
 
-"@dtelecom/components-react@^1.0.37":
+"@dtelecom/components-react@^1.0.38":
   version "1.0.38"
   resolved "https://registry.yarnpkg.com/@dtelecom/components-react/-/components-react-1.0.38.tgz#8fca7f965f420b1dd430e100aa781cc89467fd1d"
   integrity sha512-WRDjDpZMXqE2aNNSwI41im/QBO3l5dsxH8UY5kp5wl0YVeLWo3v7qQFD6L29H4A3xyMYm4fA6+9NGs89Sg5qCw==
@@ -912,7 +912,7 @@
     clsx "^1.2.1"
     country-flags-svg "^2.0.0-beta.1"
 
-"@dtelecom/components-styles@^1.0.20":
+"@dtelecom/components-styles@^1.0.21":
   version "1.0.21"
   resolved "https://registry.yarnpkg.com/@dtelecom/components-styles/-/components-styles-1.0.21.tgz#c7d0fb69eb2d673cd5096bd96c7ab2d3a5ee367d"
   integrity sha512-rNieefVS5MU8WMjgPhLm7PqRb9jGJgTh/I5gnel39z1LOyJU2VXwDLng53jbi/Bn7L4EJd/tHDhUs+sC3uLz1Q==
