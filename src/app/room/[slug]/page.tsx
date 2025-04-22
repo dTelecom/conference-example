@@ -125,6 +125,7 @@ const RoomWrapper: NextPage = () => {
           video={preJoinChoices?.videoEnabled}
           audio={preJoinChoices?.audioEnabled}
           onDisconnected={onDisconnected}
+          activityModalEnabled
         >
           {/* This div might not be necessary as the server URL is passed to LiveKitRoom */}
           {/* <div
