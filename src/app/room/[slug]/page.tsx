@@ -4,7 +4,7 @@ import type { LocalUserChoices } from "@dtelecom/components-react";
 import {
   formatChatMessageLinks,
   LiveKitRoom,
-  useChat,
+  useChat, useLocalParticipant,
   useRoomContext,
   VideoConference
 } from "@dtelecom/components-react";
@@ -177,7 +177,7 @@ const WrappedLiveKitRoom = ({
   const isMobile = useMemo(() => isMobileBrowser(), []);
   const chatContext = useChat();
   const room = useRoomContext();
-  const localParticipantIdentity = room.localParticipant.identity;
+  const { localParticipant } = useLocalParticipant();
 
   useEffect(() => {
     const handleParticipantConnected = () => {
@@ -237,7 +237,7 @@ const WrappedLiveKitRoom = ({
         onKick={onKick}
         onMute={onMute}
         isAdmin={isAdmin}
-        localIdentity={localParticipantIdentity}
+        localIdentity={localParticipant.identity}
         gridLayouts={GRID_LAYOUTS}
         chatContext={chatContext}
         languageOptions={languageOptions}
