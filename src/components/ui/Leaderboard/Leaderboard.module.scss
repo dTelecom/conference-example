@@ -6,6 +6,8 @@
 	display: flex;
 	align-items: center;
 	justify-content: center;
+	max-height: 90%;
+	overflow-y: auto;
 }
 
 .leaderboardModalWrapper {
