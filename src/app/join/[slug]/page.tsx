@@ -71,8 +71,6 @@ const JoinRoomPage = () => {
     await setCookie('username', values?.username || '', window.location.origin);
 
     await router.push(`/room/${data.slug}?token=${data.token}&wsUrl=${data.url}&preJoinChoices=${JSON.stringify(values)}&roomName=${data.roomName || name}`);
-
-    setIsLoading(false);
   };
 
   if (roomName === undefined || isLoading) {
