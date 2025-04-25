@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import type { LocalUserChoices } from "@dtelecom/components-react";
 import { PreJoin } from "@dtelecom/components-react";
@@ -11,11 +11,11 @@ import axios from "axios";
 import type { IGetWsUrl } from "@/app/api/getWsUrl/route";
 import styles from "./CreateRoom.module.scss";
 import { languageOptions } from "@/lib/languageOptions";
-import { getCookie, setCookie } from '@/app/actions';
+import { getCookie, setCookie } from "@/app/actions";
 
 const CreateRoomPage = () => {
   const router = useRouter();
-  const params = useSearchParams()
+  const params = useSearchParams();
 
   const [roomName] = useState<string>(params.get("roomName") || "");
   const [preJoinChoices, setPreJoinChoices] = useState<
@@ -30,12 +30,12 @@ const CreateRoomPage = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    getCookie('username').then((cookie) => {
+    getCookie("username").then((cookie) => {
       setPreJoinChoices((prev) => ({
         ...prev,
-        username: cookie || ''
+        username: cookie || ""
       }));
-      setIsLoading(false)
+      setIsLoading(false);
     });
 
     async function fetchWsUrl() {
@@ -51,21 +51,26 @@ const CreateRoomPage = () => {
   }, [router]);
 
   const onCreate = async (values: Partial<LocalUserChoices>) => {
-    console.log("Joining with: ", values);
-    setIsLoading(true);
-    const { data } = await axios.post(`/api/createAndJoinRoom`, {
-      wsUrl,
-      name: values?.username || "",
-      roomName,
-      language: values?.language || "en"
-    });
-    await setCookie('username', values?.username || '', window.location.origin);
+    try {
+      console.log("Joining with: ", values);
+      setIsLoading(true);
+      const { data } = await axios.post(`/api/createAndJoinRoom`, {
+        wsUrl,
+        name: values?.username || "",
+        roomName,
+        language: values?.language || "en"
+      });
+      await setCookie("username", values?.username || "", window.location.origin);
 
-    router.push(
-      `/room/${data.slug}?token=${data.token}&wsUrl=${data.url}&preJoinChoices=${encodeURIComponent(
-        JSON.stringify(values)
-      )}&roomName=${roomName}&isAdmin=${data.isAdmin}`
-    );
+      router.push(
+        `/room/${data.slug}?token=${data.token}&wsUrl=${data.url}&preJoinChoices=${encodeURIComponent(
+          JSON.stringify(values)
+        )}&roomName=${roomName}&isAdmin=${data.isAdmin}`
+      );
+    } catch (e) {
+      console.error(e);
+      setIsLoading(false);
+    }
   };
 
   if (roomName === undefined || isLoading) {

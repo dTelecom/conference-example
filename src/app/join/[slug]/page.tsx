@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import type { LocalUserChoices } from "@dtelecom/components-react";
 import { PreJoin } from "@dtelecom/components-react";
@@ -12,7 +12,7 @@ import styles from "./Join.module.scss";
 import { languageOptions } from "@/lib/languageOptions";
 import { IGetRoomResponse } from "@/app/api/getRoom/route";
 import { ParticipantsBadge } from "@/components/ui/ParticipantsBadge/ParticipantsBadge";
-import { getCookie, setCookie } from '@/app/actions';
+import { getCookie, setCookie } from "@/app/actions";
 
 const JoinRoomPage = () => {
   const router = useRouter();
@@ -35,10 +35,10 @@ const JoinRoomPage = () => {
   const [participantsCount, setParticipantsCount] = useState<number>();
 
   useEffect(() => {
-    getCookie('username').then((cookie) => {
+    getCookie("username").then((cookie) => {
       setPreJoinChoices((prev) => ({
         ...prev,
-        username: cookie || ''
+        username: cookie || ""
       }));
     });
 
@@ -63,14 +63,20 @@ const JoinRoomPage = () => {
   const onJoin = async (values: Partial<LocalUserChoices>) => {
     console.log("Joining with: ", values);
     setIsLoading(true);
-    const { data } = await axios.post(`/api/join`, {
-      wsUrl,
-      slug,
-      name: values?.username || "",
-    });
-    await setCookie('username', values?.username || '', window.location.origin);
+    try {
 
-    await router.push(`/room/${data.slug}?token=${data.token}&wsUrl=${data.url}&preJoinChoices=${JSON.stringify(values)}&roomName=${data.roomName || name}`);
+      const { data } = await axios.post(`/api/join`, {
+        wsUrl,
+        slug,
+        name: values?.username || ""
+      });
+      await setCookie("username", values?.username || "", window.location.origin);
+
+      await router.push(`/room/${data.slug}?token=${data.token}&wsUrl=${data.url}&preJoinChoices=${JSON.stringify(values)}&roomName=${data.roomName || name}`);
+    } catch (e) {
+      console.error(e);
+      setIsLoading(false);
+    }
   };
 
   if (roomName === undefined || isLoading) {
