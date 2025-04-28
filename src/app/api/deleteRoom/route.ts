@@ -25,11 +25,12 @@ export async function POST(req: NextRequest) {
       return NextResponse.json("Forbidden", { status: 403 });
     }
 
+    let url = roomParticipants[slug]?.adminWsUrl || await getWsUrl(req);
+
     if (roomParticipants[slug]) {
       delete roomParticipants[slug];
     }
 
-    let url = await getWsUrl(req);
     url = url.replace("wss:", "https:");
     const svc = new RoomServiceClient(url, process.env.API_KEY, process.env.API_SECRET);
 

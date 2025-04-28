@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@dtelecom/components-react": "^1.0.38",
+    "@dtelecom/components-react": "^1.0.39",
     "@dtelecom/components-styles": "^1.0.21",
     "@dtelecom/livekit-client": "^1.12.13",
     "@dtelecom/server-sdk-js": "^2.0.6",

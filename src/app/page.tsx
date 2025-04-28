@@ -1,4 +1,6 @@
 "use client";
+export const dynamic = "force-dynamic";
+
 import { Button } from "@/components/ui";
 import { useRouter } from "next/navigation";
 import { NavBar } from "@/components/ui/NavBar/NavBar";
@@ -12,8 +14,7 @@ import { Leaderboard } from "@/components/ui/Leaderboard/Leaderboard";
 import { LoginButton } from "@/lib/dtel-auth/components";
 import { IsAuthorizedWrapper } from "@/lib/dtel-auth/components/IsAuthorizedWrapper";
 import { getCookie, setCookie } from "@/app/actions";
-
-export const dynamic = "force-dynamic";
+import { Loader } from "@dtelecom/components-react";
 
 export default function Home() {
   const [roomName, setRoomName] = useState<string>("");
@@ -34,13 +35,12 @@ export default function Home() {
     try {
       setIsLoading(true);
 
-      setCookie("roomName", roomName, window.location.origin);
+      await setCookie("roomName", roomName, window.location.origin);
       push(`/createRoom?roomName=${encodeURIComponent(roomName)}`);
     } catch (e) {
       console.error(e);
+      setIsLoading(false);
     }
-
-    setIsLoading(false);
   };
 
   return (
@@ -88,7 +88,7 @@ export default function Home() {
             className={styles.button}
             disabled={!roomName || isLoading}
           >
-            Create a Room
+            {isLoading ? <Loader /> : "Create a Room"}
           </Button>
         </form>
       </div>
