@@ -78,7 +78,7 @@ const JoinRoomPage = () => {
     }
   };
 
-  if (roomName === undefined && !preJoinChoices) {
+  if (roomName === undefined || !preJoinChoices) {
     return null;
   }
 
