@@ -29,11 +29,8 @@ import { NextRequest, NextResponse } from "next/server";
       const maxCount = 9999;
       const count = Math.min(participantsCount || 0, maxCount);
 
-      if (!roomParticipants[slug]) {
-        roomParticipants[slug] = {
-          count: 0,
-          createdAt: Math.floor(new Date().getTime() / 1000),
-        };
+      if (roomParticipants[slug]) {
+        roomParticipants[slug].count = count;
       }
 
       roomParticipants[slug].count = count;
