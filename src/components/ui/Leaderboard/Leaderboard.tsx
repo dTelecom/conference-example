@@ -272,7 +272,7 @@ export const Leaderboard = ({ buttonStyle }: Leaderboard) => {
               {description.footer.text2}
             </p>
 
-            <a className={styles.learMoreLink} href={''}>{'Learn More >'}</a>
+            {/*<a className={styles.learMoreLink} href={''}>{'Learn More >'}</a>*/}
           </div>
         </div>
       )}

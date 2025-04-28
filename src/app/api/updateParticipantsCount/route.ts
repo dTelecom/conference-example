@@ -33,8 +33,6 @@ import { NextRequest, NextResponse } from "next/server";
         roomParticipants[slug].count = count;
       }
 
-      roomParticipants[slug].count = count;
-
       return NextResponse.json("ok", { status: 200 });
     } catch (error) {
       console.error(error);
