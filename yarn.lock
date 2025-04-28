@@ -902,10 +902,10 @@
     loglevel "^1.8.1"
     rxjs "^7.8.0"
 
-"@dtelecom/components-react@^1.0.38":
-  version "1.0.38"
-  resolved "https://registry.yarnpkg.com/@dtelecom/components-react/-/components-react-1.0.38.tgz#8fca7f965f420b1dd430e100aa781cc89467fd1d"
-  integrity sha512-WRDjDpZMXqE2aNNSwI41im/QBO3l5dsxH8UY5kp5wl0YVeLWo3v7qQFD6L29H4A3xyMYm4fA6+9NGs89Sg5qCw==
+"@dtelecom/components-react@^1.0.39":
+  version "1.0.39"
+  resolved "https://registry.yarnpkg.com/@dtelecom/components-react/-/components-react-1.0.39.tgz#171b298e0e64c4b022ec873362cca32bf0e36165"
+  integrity sha512-lTKJm/l0kfHPyeJcvVagV2q9ZYvISuzuNty1pkgxvurIDSaJuWqQ5yXXySaApksAdDQJdelFlf18f/TnRvM3qw==
   dependencies:
     "@dtelecom/components-core" "0.6.19"
     "@react-hook/latest" "^1.0.3"

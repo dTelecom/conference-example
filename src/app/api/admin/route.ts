@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import jwt_decode from "jwt-decode";
 import { getWsUrl } from "@/lib/getWsUrl";
-import { JwtKey } from "@/lib";
+import { JwtKey, roomParticipants } from "@/lib";
 
 const { RoomServiceClient } = require("@dtelecom/server-sdk-js");
 
@@ -29,7 +29,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json("Forbidden", { status: 403 });
     }
 
-    let url = await getWsUrl(req);
+    let url = roomParticipants[input.room]?.adminWsUrl || await getWsUrl(req);
     url = url.replace("wss:", "https:");
     const svc = new RoomServiceClient(url, process.env.API_KEY, process.env.API_SECRET);
 

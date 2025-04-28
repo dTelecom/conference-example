@@ -1,7 +1,7 @@
 import type { CSSProperties } from "react";
 import React, { useEffect, useMemo, useState } from "react";
 import styles from "./Leaderboard.module.scss";
-import { ChainIcon, CloseIcon, InfoIcon, LeaderboardIcon, PlusIcon, TickIcon } from "@/assets";
+import { ChainIcon, CloseIcon, InfoIcon, LeaderboardIcon, TickIcon } from "@/assets";
 import axios from "axios";
 import { clsx } from "clsx";
 import { getInviteCode, INVITE_CODE_QUERY_KEY } from "@/lib/hooks/useInviteCode";
@@ -19,6 +19,35 @@ interface LeaderboardRecord {
 interface Leaderboard {
   buttonStyle?: CSSProperties;
 }
+
+const description = {
+  title: "Use dMeet and Get Points",
+  text: "We have launched a campaign for early adopters who use dMeet, create and participate in audio/video meetings.",
+  rules: {
+    title: "Point Earning Rules:",
+    items: [
+      {
+        badge: "Host",
+        text: `${BASE_REWARDS_PER_MINUTE * ADMIN_POINTS_MULTIPLIER} points/minute`,
+        text2: "for hosting a meeting\n(with 1+ participant required)"
+      },
+      {
+        badge: "Participant",
+        text: `${BASE_REWARDS_PER_MINUTE} points/minute`,
+        text2: "for attending\na meeting"
+      },
+      {
+        badge: "Referral",
+        text: `${REFERRAL_REWARD_PERCENTAGE}% of all points`,
+        text2: "earned by\nthe invited participant"
+      }
+    ]
+  },
+  footer: {
+    text: "Points will be exchanged for the utility token $DTEL.",
+    text2: "We will 💎 reward the active campaign participants for their commitment to the dMeet."
+  }
+};
 
 export const Leaderboard = ({ buttonStyle }: Leaderboard) => {
   const [open, setOpen] = useState(false);
@@ -57,9 +86,11 @@ export const Leaderboard = ({ buttonStyle }: Leaderboard) => {
       if (!leaderboard) {
         setOpen(false);
       }
-      setTimeout(() => {
-        void getPoints()
-      }, 5000);
+      if (process.env.NODE_ENV !== "development") {
+        setTimeout(() => {
+          void getPoints();
+        }, 5000);
+      }
     }
   };
 
@@ -86,7 +117,7 @@ export const Leaderboard = ({ buttonStyle }: Leaderboard) => {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  if (!initialRequestReturnedData) {
+  if (process.env.NODE_ENV !== "development" && !initialRequestReturnedData) {
     return null;
   }
 
@@ -120,17 +151,20 @@ export const Leaderboard = ({ buttonStyle }: Leaderboard) => {
             </button>
             <div className={styles.header}>
               <span className={styles.title}>Leaderboard</span>
+            </div>
+
+            <div className={styles.info}>
+            <div className={styles.badge}>
+              <span>Your Points:</span>&nbsp;
+              <span>{currentUserPoints || 0}</span>
+            </div>
               <button
                 onClick={() => setInstructionOpen(true)}
                 className={styles.infoButton}
               >
                 <InfoIcon />
+                How it works
               </button>
-            </div>
-
-            <div className={styles.badge}>
-              <span>Your Points:</span>&nbsp;
-              <span>{currentUserPoints || 0}</span>
             </div>
 
             {referralLink && (
@@ -187,7 +221,7 @@ export const Leaderboard = ({ buttonStyle }: Leaderboard) => {
           }}
           className={styles.leaderboardModalWrapper}
         >
-          <div className={styles.leaderboardModalContainer}>
+          <div className={styles.leaderboardInfoModalContainer}>
             <button
               onClick={() => {
                 setInstructionOpen(false);
@@ -198,77 +232,47 @@ export const Leaderboard = ({ buttonStyle }: Leaderboard) => {
             </button>
 
             <div className={styles.header}>
-              <span className={styles.title}>Use dMeet and Get Points</span>
+              <span className={styles.title}>{description.title}</span>
             </div>
 
             <p className={styles.description}>
-              We have launched a campaign for early adopters who use dMeet,
-              create and participate in audio/video meetings.
+              {description.text}
             </p>
 
             <div className={styles.block}>
-              <div className={styles.blockHeader}>Point Earning Rules:</div>
+              <div className={styles.blockHeader}>{description.rules.title}</div>
 
               <div className={styles.blockBody}>
-                <div className={styles.blockRow}>
-                  <span className={styles.blockBadge}>Host</span>
-                  <div className={styles.rewardBlockWrapper}>
-                    <div className={styles.rewardBlock}>
-                      <div>
-                        <span>
-                          {BASE_REWARDS_PER_MINUTE * ADMIN_POINTS_MULTIPLIER}{" "}
-                          points
-                        </span>
-                        /min.
-                      </div>
-                      <span>as a host</span>
-                    </div>
-                    <div className={styles.plusIcon}>
-                      <PlusIcon />
-                    </div>
-                    <div className={styles.rewardBlock}>
-                      <div>
-                        <span>{BASE_REWARDS_PER_MINUTE} point</span>/min.
-                      </div>
-                      <span>for each invited participant</span>
-                    </div>
-                  </div>
-                </div>
+                {description.rules.items.map((item, index) => (
+                  <div className={styles.blockRow} key={index}>
+                    <span className={styles.blockBadge}>{item.badge}</span>
+                    <div className={styles.rewardBlockWrapper}>
+                      <div className={styles.rewardBlock}>
+                        <div>
+                          <span className={styles.rewardBlockGreenText}>{item.text.split('/minute')[0]}</span>
+                          {item.text.includes('/minute') && "/minute"}&nbsp;<span className={styles.rewardBlockGrayText}>{item.text2}</span>
+                        </div>
 
-                <div className={styles.blockRow}>
-                  <span className={styles.blockBadge}>Participant</span>
-                  <div className={styles.rewardBlock}>
-                    <div>
-                      <span>{BASE_REWARDS_PER_MINUTE} point</span>/min.
+                      </div>
                     </div>
-                    <span>as a participant</span>
                   </div>
-                </div>
-
-                <div className={styles.blockRow}>
-                  <span className={styles.blockBadge}>Referral</span>
-                  <div className={styles.rewardBlock}>
-                    <div>
-                      <span>{REFERRAL_REWARD_PERCENTAGE}%</span> of the points
-                    </div>
-                    <span>earned by the invited participant</span>
-                  </div>
-                </div>
+                ))}
               </div>
             </div>
 
             <p
               style={{
-                marginBottom: "16px"
+                marginBottom: "8px"
               }}
             >
-              Points will be exchanged for the utility token $DTEL.
+              {description.footer.text}
             </p>
 
             <p>
-              We will 💎 reward the active campaign participants for their
-              commitment to the dMeet.
+              {description.footer.text2}
             </p>
+
+            <a className={styles.learMoreLink} href={''}>{'Learn More >'}</a>
           </div>
         </div>
       )}

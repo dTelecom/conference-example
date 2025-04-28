@@ -32,7 +32,7 @@ import { NextRequest, NextResponse } from "next/server";
       if (!roomParticipants[slug]) {
         roomParticipants[slug] = {
           count: 0,
-          createdAt: new Date().getTime() / 1000,
+          createdAt: Math.floor(new Date().getTime() / 1000),
         };
       }
 

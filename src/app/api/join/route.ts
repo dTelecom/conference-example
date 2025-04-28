@@ -38,7 +38,7 @@ export async function POST(req: NextRequest) {
       roomAdmin: false,
     });
 
-    token.metadata = JSON.stringify({ admin: false });
+    token.metadata = JSON.stringify({ admin: false, project: process.env.PROJECT_NAME });
 
     token.webHookURL = userId && process.env.NEXT_PUBLIC_POINTS_BACKEND_URL
       ? `https://${process.env.NEXT_PUBLIC_POINTS_BACKEND_URL}/api/webhook`

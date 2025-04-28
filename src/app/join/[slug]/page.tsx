@@ -13,6 +13,7 @@ import { languageOptions } from "@/lib/languageOptions";
 import { IGetRoomResponse } from "@/app/api/getRoom/route";
 import { ParticipantsBadge } from "@/components/ui/ParticipantsBadge/ParticipantsBadge";
 import { getCookie, setCookie } from "@/app/actions";
+import { defaultPreJoinChoices } from "@/lib/constants";
 
 const JoinRoomPage = () => {
   const router = useRouter();
@@ -23,11 +24,7 @@ const JoinRoomPage = () => {
 
   const [preJoinChoices, setPreJoinChoices] = useState<
     Partial<LocalUserChoices>
-  >({
-    username: "",
-    videoEnabled: true,
-    audioEnabled: process.env.NODE_ENV !== "development"
-  });
+  >();
 
   const [roomName] = useState<string>(name);
   const [wsUrl, setWsUrl] = useState<string>();
@@ -36,10 +33,12 @@ const JoinRoomPage = () => {
 
   useEffect(() => {
     getCookie("username").then((cookie) => {
-      setPreJoinChoices((prev) => ({
-        ...prev,
+      setPreJoinChoices(() => ({
+        ...defaultPreJoinChoices,
         username: cookie || ""
       }));
+    }).catch(() => {
+      setPreJoinChoices(() => (defaultPreJoinChoices));
     });
 
     async function fetchRoom() {
@@ -79,7 +78,7 @@ const JoinRoomPage = () => {
     }
   };
 
-  if (roomName === undefined || isLoading) {
+  if (roomName === undefined && !preJoinChoices) {
     return null;
   }
 
