@@ -144,7 +144,7 @@
 			background-color: #2E3031;
 			border-radius: 5px;
 			height: 40px;
-			font-size: 11px;
+			font-size: 16px;
 			font-weight: 500;
 			line-height: 110%;
 			letter-spacing: 0em;
@@ -154,6 +154,10 @@
 			justify-content: space-between;
 			padding: 0 16px;
 			margin-bottom: 16px;
+
+			@media (max-width: 600px) {
+				font-size: 11px;
+			}
 
 			svg {
 				margin-left: auto;
