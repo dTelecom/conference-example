@@ -5,7 +5,11 @@ import { UserPill } from "@privy-io/react-auth/ui";
 import React from "react";
 import { isMobileBrowser } from "@dtelecom/components-core";
 
-export const LoginButton = () => {
+type LoginButtonProps = {
+  fullTitle?: boolean;
+}
+
+export const LoginButton = ({fullTitle}: LoginButtonProps) => {
   const { authenticated } = usePrivy();
   const isMobile = React.useMemo(() => isMobileBrowser(), []);
 
@@ -15,7 +19,7 @@ export const LoginButton = () => {
 
   return <div className={styles.button}>
     <UserPill
-      label={authenticated || isMobile ?
+      label={authenticated || (!fullTitle && isMobile) ?
         <WalletIcon /> : <>
           <WalletIcon />Connect</>}
       ui={{

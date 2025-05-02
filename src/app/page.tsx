@@ -54,7 +54,7 @@ export default function Home() {
           />
         </IsAuthorizedWrapper>
 
-        <LoginButton />
+        <LoginButton fullTitle />
       </NavBar>
 
       <div className={styles.container}>
