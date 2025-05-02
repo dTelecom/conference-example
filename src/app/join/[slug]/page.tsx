@@ -14,6 +14,9 @@ import { IGetRoomResponse } from "@/app/api/getRoom/route";
 import { ParticipantsBadge } from "@/components/ui/ParticipantsBadge/ParticipantsBadge";
 import { getCookie, setCookie } from "@/app/actions";
 import { defaultPreJoinChoices } from "@/lib/constants";
+import { IsAuthorizedWrapper } from "@/lib/dtel-auth/components/IsAuthorizedWrapper";
+import { Leaderboard } from "@/components/ui/Leaderboard/Leaderboard";
+import { LoginButton } from "@/lib/dtel-auth/components";
 
 const JoinRoomPage = () => {
   const router = useRouter();
@@ -88,10 +91,27 @@ const JoinRoomPage = () => {
         title={roomName || name}
         small
         iconFull={!isMobile}
+        divider
       >
         {participantsCount !== undefined ? (
           <ParticipantsBadge count={participantsCount} />
         ) : <div />}
+
+        <div style={{
+          display: "flex",
+        }}>
+          {!isMobile && (
+            <IsAuthorizedWrapper>
+              <Leaderboard
+                buttonStyle={{
+                  marginRight: "8px"
+                }}
+              />
+            </IsAuthorizedWrapper>
+          )}
+
+          <LoginButton />
+        </div>
       </NavBar>
 
       <div className={styles.container}>

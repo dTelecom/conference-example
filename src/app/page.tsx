@@ -86,7 +86,7 @@ export default function Home() {
             variant={"default"}
             size={"lg"}
             className={styles.button}
-            disabled={!roomName || isLoading}
+            disabled={!roomName || isLoading || roomName.length < 3}
           >
             {isLoading ? <Loader /> : "Create a Room"}
           </Button>

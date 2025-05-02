@@ -8,6 +8,9 @@ import styles from "./RoomNavBar.module.scss";
 import { useTracks } from "@dtelecom/components-react";
 import { RoomEvent, Track } from "@dtelecom/livekit-client";
 import axios from "axios";
+import { usePrivy } from "@privy-io/react-auth";
+import { Leaderboard } from "@/components/ui/Leaderboard/Leaderboard";
+import { LoginButton } from "@/lib/dtel-auth/components";
 
 interface RoomNavBarProps {
   slug: string;
@@ -18,11 +21,12 @@ interface RoomNavBarProps {
 }
 
 export const RoomNavBar = ({ slug, roomName, iconFull, isAdmin, token }: RoomNavBarProps) => {
+  const { authenticated } = usePrivy();
   const tracks = useTracks(
     [
       { source: Track.Source.Camera, withPlaceholder: true },
       { source: Track.Source.ScreenShare, withPlaceholder: false },
-      { source: Track.Source.Microphone, withPlaceholder: true },
+      { source: Track.Source.Microphone, withPlaceholder: true }
     ],
     { updateOnlyOn: [RoomEvent.ActiveSpeakersChanged] }
   );
@@ -44,24 +48,29 @@ export const RoomNavBar = ({ slug, roomName, iconFull, isAdmin, token }: RoomNav
 
   useEffect(() => {
     if (isAdmin) {
-      void axios.post('/api/updateParticipantsCount', {
+      void axios.post("/api/updateParticipantsCount", {
         slug,
-        participantsCount: count,
+        participantsCount: count
       }, {
         headers: {
-          'Authorization': `Bearer ${token}`,
+          "Authorization": `Bearer ${token}`
         }
-      })
+      });
     }
   }, [count, isAdmin, slug, token]);
 
   return (
-    <NavBar title={roomName} small iconFull={iconFull}>
+    <NavBar
+      title={roomName}
+      small
+      iconFull={iconFull}
+      divider
+    >
       <div
         style={{
           display: "flex",
           alignItems: "center",
-          gap: "20px",
+          gap: "8px"
         }}
       >
         <ParticipantsBadge count={count} />
@@ -79,9 +88,19 @@ export const RoomNavBar = ({ slug, roomName, iconFull, isAdmin, token }: RoomNav
           variant={"default"}
         >
           <span>{copied ? <TickIcon /> : <ChainIcon />}</span>
-          <span>{copied ? "Copied" : "Copy invite link"}</span>
+          <span>{copied ? "Copied" : "Copy"}</span>
         </Button>
       </div>
+
+      {authenticated ? (
+        <Leaderboard
+          showPoints
+          isAdmin={isAdmin}
+        />
+      ) : (
+        <LoginButton />
+      )}
+
     </NavBar>
   );
 };

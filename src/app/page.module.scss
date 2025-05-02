@@ -53,6 +53,11 @@
     .button {
       font-weight: 700;
       font-size: 20px;
+      height: 56px;
+
+      @media (max-width: 600px) {
+		  height: 54px;
+      }
     }
   }
 }

@@ -1,10 +1,11 @@
-'use client';
+"use client";
 
 import type { LocalUserChoices } from "@dtelecom/components-react";
 import {
   formatChatMessageLinks,
   LiveKitRoom,
-  useChat, useLocalParticipant,
+  useChat,
+  useLocalParticipant,
   useRoomContext,
   VideoConference
 } from "@dtelecom/components-react";
@@ -22,6 +23,8 @@ import { isMobileBrowser } from "@dtelecom/components-core";
 import { VoiceRecognition } from "@/lib/VoiceRecognition";
 import { debounce } from "ts-debounce";
 import { languageOptions } from "@/lib/languageOptions";
+import { getAccessToken, usePrivy } from "@privy-io/react-auth";
+import { formatUserId } from "@/lib/dtel-auth/helpers";
 
 const useRoomParams = () => {
   const params = useSearchParams();
@@ -40,7 +43,7 @@ const useRoomParams = () => {
   }, [params]);
 
   // store everything in state
-  const [roomState,] = React.useState({
+  const [roomState, setRoomState] = React.useState({
     slug,
     token,
     wsUrl,
@@ -56,7 +59,7 @@ const useRoomParams = () => {
     }
   }, [router, slug, roomState.wsUrl]);
 
-  return { ...roomState };
+  return { ...roomState, setRoomState };
 };
 
 
@@ -65,34 +68,43 @@ const useRoomOptions = (preJoinChoices: LocalUserChoices | null, hq: boolean): R
     return {
       videoCaptureDefaults: {
         deviceId: preJoinChoices?.videoDeviceId ?? undefined,
-        resolution: hq ? VideoPresets.h2160 : VideoPresets.h720,
+        resolution: hq ? VideoPresets.h2160 : VideoPresets.h720
       },
       publishDefaults: {
         videoSimulcastLayers: hq
           ? [VideoPresets.h1080, VideoPresets.h720]
           : [VideoPresets.h360, VideoPresets.h180],
-        stopMicTrackOnMute: true,
+        stopMicTrackOnMute: true
       },
       audioCaptureDefaults: {
-        deviceId: preJoinChoices?.audioDeviceId ?? undefined,
+        deviceId: preJoinChoices?.audioDeviceId ?? undefined
       },
       adaptiveStream: {
         pauseWhenNotVisible: true,
-        pauseVideoInBackground: true,
+        pauseVideoInBackground: true
       },
-      dynacast: false,
+      dynacast: false
     };
   }, [preJoinChoices, hq]);
 };
 
 const RoomWrapper: NextPage = () => {
   const router = useRouter();
-  const { slug, token, wsUrl, roomName, isAdmin, hq, preJoinChoices } = useRoomParams();
-
+  const { slug, token, wsUrl, roomName, isAdmin, hq, preJoinChoices, setRoomState } = useRoomParams();
   const roomOptions = useRoomOptions(preJoinChoices, hq);
 
+  const [timeSpentInComponent, setTimeSpentInComponent] = React.useState(0);
+  const startTime = React.useRef(Date.now());
   useEffect(() => {
-    window.history.replaceState(null, '', window.location.pathname);
+    const interval = setInterval(() => {
+      setTimeSpentInComponent(Math.floor((Date.now() - startTime.current) / 1000));
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    window.history.replaceState(null, "", window.location.pathname);
   }, [router, slug]);
 
   const onDisconnected = async () => {
@@ -103,8 +115,8 @@ const RoomWrapper: NextPage = () => {
           { slug },
           {
             headers: {
-              Authorization: `Bearer ${token}`,
-            },
+              Authorization: `Bearer ${token}`
+            }
           }
         );
       } catch (error) {
@@ -112,7 +124,11 @@ const RoomWrapper: NextPage = () => {
         // Optionally handle the error, e.g., show a notification
       }
     }
-    void router.push("/");
+    if (process.env.NEXT_PUBLIC_POINTS_BACKEND_URL) {
+      void router.push("/summary?roomName=" + roomName + "&timeSec=" + timeSpentInComponent + "&isAdmin=" + isAdmin);
+    } else {
+      void router.push("/");
+    }
   };
 
   return (
@@ -143,6 +159,7 @@ const RoomWrapper: NextPage = () => {
             isAdmin={isAdmin}
             preJoinChoices={preJoinChoices}
             token={token}
+            setRoomState={setRoomState}
           />
         </LiveKitRoom>
       ) : null}
@@ -158,6 +175,7 @@ interface WrappedLiveKitRoomProps {
   roomName: string;
   preJoinChoices: LocalUserChoices | null;
   token: string;
+  setRoomState: React.Dispatch<React.SetStateAction<any>>;
 }
 
 const USER_JOINED_SOUND_PATH = "/sounds/user-joined.mp3";
@@ -172,12 +190,36 @@ const WrappedLiveKitRoom = ({
   slug,
   roomName,
   preJoinChoices,
-  token
+  token,
+  setRoomState
 }: WrappedLiveKitRoomProps) => {
+  const { user } = usePrivy();
   const isMobile = useMemo(() => isMobileBrowser(), []);
   const chatContext = useChat();
   const room = useRoomContext();
   const { localParticipant } = useLocalParticipant();
+
+  const updateToken = async () => {
+    const authToken = await getAccessToken();
+    const { data } = await axios.post(`/api/roomAuthorize`, {
+      token,
+      slug
+    }, {
+      headers: {
+        Authorization: `Bearer ${authToken}`
+      }
+    });
+    setRoomState((prevState: any) => ({
+      ...prevState,
+      token: data.token
+    }));
+  };
+
+  useEffect(() => {
+    if (user && localParticipant.identity && formatUserId(user.id) !== localParticipant.identity) {
+      void updateToken();
+    }
+  }, [user?.id, localParticipant.identity]);
 
   useEffect(() => {
     const handleParticipantConnected = () => {
@@ -199,12 +241,12 @@ const WrappedLiveKitRoom = ({
           method,
           participantIdentity,
           trackSid,
-          room: slug,
+          room: slug
         },
         {
           headers: {
-            Authorization: `Bearer ${token}`,
-          },
+            Authorization: `Bearer ${token}`
+          }
         }
       );
     } catch (error) {
@@ -241,7 +283,7 @@ const WrappedLiveKitRoom = ({
         gridLayouts={GRID_LAYOUTS}
         chatContext={chatContext}
         languageOptions={languageOptions}
-        supportedChatMessageTypes={['text', 'transcription']}
+        supportedChatMessageTypes={["text", "transcription"]}
       />
 
       <DebugMode
@@ -272,7 +314,7 @@ const GRID_LAYOUTS: GridLayoutDefinition[] = [
     minTiles: 1,
     maxTiles: 1,
     minWidth: 0,
-    minHeight: 0,
+    minHeight: 0
   },
   {
     columns: 1,
@@ -281,7 +323,7 @@ const GRID_LAYOUTS: GridLayoutDefinition[] = [
     minTiles: 2,
     maxTiles: 2,
     minWidth: 0,
-    minHeight: 0,
+    minHeight: 0
   },
   {
     columns: 2,
@@ -290,7 +332,7 @@ const GRID_LAYOUTS: GridLayoutDefinition[] = [
     minTiles: 2,
     maxTiles: 2,
     minWidth: 900,
-    minHeight: 0,
+    minHeight: 0
   },
   {
     columns: 2,
@@ -299,7 +341,7 @@ const GRID_LAYOUTS: GridLayoutDefinition[] = [
     minTiles: 3,
     maxTiles: 4,
     minWidth: 560,
-    minHeight: 0,
+    minHeight: 0
   },
   {
     columns: 3,
@@ -308,7 +350,7 @@ const GRID_LAYOUTS: GridLayoutDefinition[] = [
     minTiles: 5,
     maxTiles: 6,
     minWidth: 700,
-    minHeight: 0,
+    minHeight: 0
   },
   {
     columns: 4,
@@ -317,8 +359,8 @@ const GRID_LAYOUTS: GridLayoutDefinition[] = [
     minTiles: 6,
     maxTiles: 12,
     minWidth: 960,
-    minHeight: 0,
-  },
+    minHeight: 0
+  }
 ];
 
 export default RoomWrapper;

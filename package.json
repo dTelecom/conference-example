@@ -9,8 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@dtelecom/components-react": "^1.0.39",
-    "@dtelecom/components-styles": "^1.0.21",
+    "@dtelecom/components-react": "^1.0.40",
+    "@dtelecom/components-styles": "^1.0.22",
     "@dtelecom/livekit-client": "^1.12.13",
     "@dtelecom/server-sdk-js": "^2.0.6",
     "@privy-io/react-auth": "2.8.0",
@@ -28,28 +28,28 @@
     "referral-codes": "^3.0.0",
     "sass": "^1.77.7",
     "superjson": "2.2.1",
-    "zod": "^3.23.8",
     "tailwind-merge": "^2.4.0",
-    "tailwindcss-animate": "^1.0.5"
+    "tailwindcss-animate": "^1.0.5",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
-    "@types/node": "^20",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "eslint": "^9",
-    "eslint-config-next": "15.3.0",
-    "typescript": "^5",
     "@svgr/webpack": "^8.0.1",
     "@types/jsonwebtoken": "^9.0.6",
+    "@types/node": "^20",
     "@types/prettier": "^3.0.0",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
     "@typescript-eslint/eslint-plugin": "^7.16.0",
     "@typescript-eslint/parser": "^7.16.0",
     "autoprefixer": "^10.4.7",
+    "eslint": "^9",
+    "eslint-config-next": "15.3.0",
     "postcss": "^8.4.39",
     "prettier": "^3.3.2",
-    "ts-loader": "^9.5.2",
     "prettier-plugin-tailwindcss": "^0.6.5",
-    "tailwindcss": "^3.4.4"
+    "tailwindcss": "^3.4.4",
+    "ts-loader": "^9.5.2",
+    "typescript": "^5"
   }
 }

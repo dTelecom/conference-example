@@ -9,7 +9,6 @@ interface Props {
 export const ParticipantsBadge = ({ count }: Props) => {
   return (
     <div className={styles.participants}>
-      <span>At the room:</span>
       <div className={styles.participantsBadge}><ParticipantsIcon />{count}</div>
     </div>
   );

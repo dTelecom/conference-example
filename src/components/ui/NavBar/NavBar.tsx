@@ -8,9 +8,21 @@ interface Props extends React.PropsWithChildren {
   title?: string;
   small?: boolean;
   iconFull?: boolean;
+  divider?: boolean;
 }
 
-export function NavBar({ title, small, iconFull, children }: Props) {
+export function NavBar({ title, small, iconFull, divider, children }: Props) {
+  const dividerElement = divider ? <div className={styles.divider} /> : null;
+  const childrenWithDivider = React.Children.map(children, (child, index) => {
+    if (index === 0) return child;
+    return (
+      <>
+        {dividerElement}
+        {child}
+      </>
+    );
+  });
+
   return (
     <header className={clsx(styles.container, small && styles.small)}>
       <Link
@@ -26,7 +38,7 @@ export function NavBar({ title, small, iconFull, children }: Props) {
 
       {title && <h2>{title}</h2>}
 
-      {children && <div className={styles.children}>{children}</div>}
+      {children && <div className={styles.children}>{childrenWithDivider}</div>}
     </header>
   );
 }

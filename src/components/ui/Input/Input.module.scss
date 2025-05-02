@@ -14,7 +14,7 @@
 		justify-content: center;
 		position: absolute;
 		left: 16px;
-		top: 16.5px;
+		top: 15px;
 
 		border-right: 2px solid #2E3031;
 		padding-right: 16px;
@@ -32,7 +32,7 @@
 		border-radius: 10px;
 		background: transparent;
 		border: none;
-		padding: 16.5px 24px 16.5px 24px;
+		padding: 15px 24px 15px 24px;
 		margin: 0;
 		font-weight: 500;
 		font-size: 20px;
@@ -56,7 +56,7 @@
 
 	&:has(.startIcon) {
 		.input {
-			padding: 16.5px 24px 16.5px 86px;
+			padding: 15px 24px 15px 86px;
 		}
 	}
 }
