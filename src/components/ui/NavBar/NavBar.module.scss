@@ -42,13 +42,16 @@
 		height: 64px;
 
 		.link {
-			width: initial;
-
 			svg {
 				transform: translateX(-10%) scale(0.8);
 			}
 		}
+	}
 
+	&.smallTitle {
+		.link {
+			width: initial;
+		}
 		h2 {
 			color: #777575;
 			text-align: left;

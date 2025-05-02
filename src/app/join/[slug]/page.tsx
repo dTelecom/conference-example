@@ -92,6 +92,7 @@ const JoinRoomPage = () => {
         small
         iconFull={!isMobile}
         divider
+        smallTitle={isMobile}
       >
         {participantsCount !== undefined ? (
           <ParticipantsBadge count={participantsCount} />

@@ -11,6 +11,7 @@ import axios from "axios";
 import { usePrivy } from "@privy-io/react-auth";
 import { Leaderboard } from "@/components/ui/Leaderboard/Leaderboard";
 import { LoginButton } from "@/lib/dtel-auth/components";
+import { isMobileBrowser } from "@dtelecom/components-core";
 
 interface RoomNavBarProps {
   slug: string;
@@ -22,6 +23,7 @@ interface RoomNavBarProps {
 
 export const RoomNavBar = ({ slug, roomName, iconFull, isAdmin, token }: RoomNavBarProps) => {
   const { authenticated } = usePrivy();
+  const isMobile = React.useMemo(() => isMobileBrowser(), []);
   const tracks = useTracks(
     [
       { source: Track.Source.Camera, withPlaceholder: true },
@@ -65,6 +67,7 @@ export const RoomNavBar = ({ slug, roomName, iconFull, isAdmin, token }: RoomNav
       small
       iconFull={iconFull}
       divider
+      smallTitle={isMobile}
     >
       <div
         style={{

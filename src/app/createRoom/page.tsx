@@ -86,6 +86,7 @@ const CreateRoomPage = () => {
         small
         iconFull={!isMobile}
         divider
+        smallTitle={isMobile}
       >
         <ParticipantsBadge count={0} />
         <div style={{

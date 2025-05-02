@@ -79,6 +79,7 @@ export const SummaryPage = () => {
         small
         iconFull={!isMobile}
         title={roomName}
+        smallTitle={isMobile}
       >
         <IsAuthorizedWrapper>
           <Leaderboard

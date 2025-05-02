@@ -9,9 +9,10 @@ interface Props extends React.PropsWithChildren {
   small?: boolean;
   iconFull?: boolean;
   divider?: boolean;
+  smallTitle?: boolean;
 }
 
-export function NavBar({ title, small, iconFull, divider, children }: Props) {
+export function NavBar({ title, small, iconFull, divider, children, smallTitle }: Props) {
   const dividerElement = divider ? <div className={styles.divider} /> : null;
   const childrenWithDivider = React.Children.map(children, (child, index) => {
     if (index === 0) return child;
@@ -24,7 +25,7 @@ export function NavBar({ title, small, iconFull, divider, children }: Props) {
   });
 
   return (
-    <header className={clsx(styles.container, small && styles.small)}>
+    <header className={clsx(styles.container, small && styles.small, smallTitle && styles.smallTitle)}>
       <Link
         href="/"
         target="_blank"
