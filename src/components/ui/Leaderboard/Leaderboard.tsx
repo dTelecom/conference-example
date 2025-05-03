@@ -114,6 +114,7 @@ export const Leaderboard = ({ buttonStyle, showPoints, isAdmin }: Leaderboard) =
     if (process.env.NODE_ENV === "production") {
       void getPoints();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const currentUserPoints = useMemo(() => {

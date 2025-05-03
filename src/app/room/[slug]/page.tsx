@@ -26,6 +26,16 @@ import { languageOptions } from "@/lib/languageOptions";
 import { getAccessToken, usePrivy } from "@privy-io/react-auth";
 import { formatUserId } from "@/lib/dtel-auth/helpers";
 
+type RoomState = {
+  slug: string;
+  token: string;
+  wsUrl: string;
+  roomName: string;
+  isAdmin: boolean;
+  hq: boolean;
+  preJoinChoices: LocalUserChoices | null;
+}
+
 const useRoomParams = () => {
   const params = useSearchParams();
   const router = useRouter();
@@ -43,7 +53,7 @@ const useRoomParams = () => {
   }, [params]);
 
   // store everything in state
-  const [roomState, setRoomState] = React.useState({
+  const [roomState, setRoomState] = React.useState<RoomState>({
     slug,
     token,
     wsUrl,
@@ -175,7 +185,7 @@ interface WrappedLiveKitRoomProps {
   roomName: string;
   preJoinChoices: LocalUserChoices | null;
   token: string;
-  setRoomState: React.Dispatch<React.SetStateAction<any>>;
+  setRoomState: React.Dispatch<React.SetStateAction<RoomState>>;
 }
 
 const USER_JOINED_SOUND_PATH = "/sounds/user-joined.mp3";
@@ -203,13 +213,12 @@ const WrappedLiveKitRoom = ({
     const authToken = await getAccessToken();
     const { data } = await axios.post(`/api/roomAuthorize`, {
       token,
-      slug
     }, {
       headers: {
         Authorization: `Bearer ${authToken}`
       }
     });
-    setRoomState((prevState: any) => ({
+    setRoomState((prevState) => ({
       ...prevState,
       token: data.token
     }));
@@ -219,7 +228,7 @@ const WrappedLiveKitRoom = ({
     if (user && localParticipant.identity && formatUserId(user.id) !== localParticipant.identity) {
       void updateToken();
     }
-  }, [user?.id, localParticipant.identity]);
+  }, [user, localParticipant.identity, updateToken]);
 
   useEffect(() => {
     const handleParticipantConnected = () => {

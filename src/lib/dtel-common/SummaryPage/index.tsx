@@ -51,7 +51,7 @@ export const SummaryPage = () => {
     const points = minutes * BASE_REWARDS_PER_MINUTE * (isAdmin ? ADMIN_POINTS_MULTIPLIER : 1);
 
     return points.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-  }, [timeSec]);
+  }, [timeSec, isAdmin]);
 
   const onFeedbackSubmit = async () => {
     const accessToken = await getAccessToken();

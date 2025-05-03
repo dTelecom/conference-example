@@ -9,7 +9,6 @@ import jwt_decode from "jwt-decode";
 const { AccessToken, VideoGrant } = require("@dtelecom/server-sdk-js");
 
 const schema = z.object({
-  slug: z.string(),
   token: z.string()
 });
 
@@ -22,7 +21,7 @@ export async function POST(req: NextRequest) {
     const formattedUserId = formatUserId(userId);
 
     const identity = formattedUserId || generateUUID();
-    const { slug, token: oldToken } = parsedBody;
+    const { token: oldToken } = parsedBody;
 
     const jwt = jwt_decode<{
       name: string,
