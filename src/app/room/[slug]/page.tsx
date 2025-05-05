@@ -124,7 +124,7 @@ const RoomWrapper: NextPage = () => {
     }
     if (process.env.NEXT_PUBLIC_POINTS_BACKEND_URL) {
       const time = Math.floor((Date.now() - startTime.current) / 1000);
-      void router.push("/summary?roomName=" + roomName + "&timeSec=" + time + "&isAdmin=" + isAdmin);
+      void router.push("/summary?roomName=" + roomName + "&timeSec=" + time + "&isAdmin=" + isAdmin + "&slug=" + slug);
     } else {
       void router.push("/");
     }

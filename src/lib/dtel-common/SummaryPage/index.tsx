@@ -24,6 +24,7 @@ import {
 import axios from "axios";
 import { isMobileBrowser } from "@dtelecom/components-core";
 import aboutImage from "../assets/about.png";
+import { Loader } from "@dtelecom/components-react";
 
 export const SummaryPage = () => {
   const { authenticated, login } = usePrivy();
@@ -34,6 +35,7 @@ export const SummaryPage = () => {
   const roomName = params.get("roomName") || "";
   const timeSec = parseInt(params.get("timeSec") || "0", 10);
   const isAdmin = params.get("isAdmin") === "true";
+  const slug = params.get("slug") || "";
 
   const [callQuality, setCallQuality] = React.useState({
     video: 0,
@@ -42,6 +44,35 @@ export const SummaryPage = () => {
   });
   const [comment, setComment] = React.useState("");
   const [feedbackSubmitted, setFeedbackSubmitted] = React.useState(false);
+  const [isLoading, setIsLoading] = React.useState(true);
+  const [hadViewers, setHadViewers] = React.useState(false);
+
+  React.useEffect(() => {
+    const needToCheckViewers = isAdmin && authenticated;
+    const checkViewers = async () => {
+      setIsLoading(true);
+      const accessToken = await getAccessToken();
+      await axios.post<boolean>("https://" + process.env.NEXT_PUBLIC_POINTS_BACKEND_URL + "/api/points/verify", {
+        room: slug
+      }, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        }
+      }).then((res) => {
+        if (res.data) {
+          setHadViewers(true);
+        }
+      }).finally(() => {
+        setIsLoading(false);
+      });
+    };
+    if (needToCheckViewers) {
+      void checkViewers();
+    } else {
+      setIsLoading(false);
+    }
+
+  }, [authenticated, isAdmin, slug]);
 
   const timeFormatted = React.useMemo(() => {
     const minutes = Math.floor((timeSec % 3600) / 60);
@@ -54,11 +85,14 @@ export const SummaryPage = () => {
   }, [timeSec]);
 
   const potentialPoints = React.useMemo(() => {
+    if (isAdmin && authenticated && !hadViewers) {
+      return "0";
+    }
     const pointsPerMinute = BASE_REWARDS_PER_MINUTE * (isAdmin ? ADMIN_POINTS_MULTIPLIER : 1);
     const points = Math.floor(timeSec * pointsPerMinute / 60);
 
     return points.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-  }, [timeSec, isAdmin]);
+  }, [timeSec, isAdmin, hadViewers, authenticated]);
 
   const onFeedbackSubmit = async () => {
     const accessToken = await getAccessToken();
@@ -113,7 +147,13 @@ export const SummaryPage = () => {
 
             <div className={styles.meetingInfoItem}>
               <div className={styles.meetingInfoPoints}>{authenticated ? "Points Earned" : "Potential Points*"}</div>
-              <div className={styles.meetingInfoValue}><PointsIcon />{potentialPoints}</div>
+              <div className={styles.meetingInfoValue}>
+                {
+                  isLoading ? <Loader /> : (
+                    <><PointsIcon />{potentialPoints}</>
+                  )
+                }
+              </div>
             </div>
           </div>
 
