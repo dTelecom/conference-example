@@ -63,12 +63,6 @@ const useRoomParams = () => {
     preJoinChoices
   });
 
-  useEffect(() => {
-    if (!roomState.wsUrl) {
-      void router.push(`/join/${slug}`);
-    }
-  }, [router, slug, roomState.wsUrl]);
-
   return { ...roomState };
 };
 
@@ -108,6 +102,12 @@ const RoomWrapper: NextPage = () => {
   useEffect(() => {
     window.history.replaceState(null, "", window.location.pathname);
   }, [router, slug, token]);
+
+  useEffect(() => {
+    if (!wsUrl) {
+      void router.replace(`/join/${slug}`);
+    }
+  }, [router, slug, wsUrl]);
 
   const onDisconnected = async () => {
     if (onDisconnectedDisabled) return;
