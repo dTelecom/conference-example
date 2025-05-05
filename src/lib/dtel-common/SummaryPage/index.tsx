@@ -3,7 +3,7 @@
 import styles from "./SummaryPage.module.scss";
 import { NavBar } from "@/components/ui/NavBar/NavBar";
 import { IsAuthorizedWrapper } from "@/lib/dtel-auth/components/IsAuthorizedWrapper";
-import { Leaderboard } from "@/components/ui/Leaderboard/Leaderboard";
+import { Leaderboard } from "@/lib/dtel-common/Leaderboard/Leaderboard";
 import { LoginButton } from "@/lib/dtel-auth/components";
 import React from "react";
 import { Footer } from "@/components/ui/Footer/Footer";

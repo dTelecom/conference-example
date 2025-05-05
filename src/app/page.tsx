@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/Input/Input";
 import type { FormEvent } from "react";
 import React, { useEffect, useState } from "react";
 import { KeyIcon } from "@/assets";
-import { Leaderboard } from "@/components/ui/Leaderboard/Leaderboard";
+import { Leaderboard } from "@/lib/dtel-common/Leaderboard/Leaderboard";
 import { LoginButton } from "@/lib/dtel-auth/components";
 import { IsAuthorizedWrapper } from "@/lib/dtel-auth/components/IsAuthorizedWrapper";
 import { getCookie, setCookie } from "@/app/actions";

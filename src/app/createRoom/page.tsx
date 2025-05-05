@@ -15,7 +15,7 @@ import { getCookie, setCookie } from "@/app/actions";
 import { defaultPreJoinChoices } from "@/lib/constants";
 import { LoginButton } from "@/lib/dtel-auth/components";
 import { IsAuthorizedWrapper } from "@/lib/dtel-auth/components/IsAuthorizedWrapper";
-import { Leaderboard } from "@/components/ui/Leaderboard/Leaderboard";
+import { Leaderboard } from "@/lib/dtel-common/Leaderboard/Leaderboard";
 import { isMobileBrowser } from "@dtelecom/components-core";
 
 const CreateRoomPage = () => {

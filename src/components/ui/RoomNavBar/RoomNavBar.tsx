@@ -9,7 +9,7 @@ import { useTracks } from "@dtelecom/components-react";
 import { RoomEvent, Track } from "@dtelecom/livekit-client";
 import axios from "axios";
 import { usePrivy } from "@privy-io/react-auth";
-import { Leaderboard } from "@/components/ui/Leaderboard/Leaderboard";
+import { Leaderboard } from "@/lib/dtel-common/Leaderboard/Leaderboard";
 import { isMobileBrowser } from "@dtelecom/components-core";
 import { IsAuthorizedWrapper } from "@/lib/dtel-auth/components/IsAuthorizedWrapper";
 

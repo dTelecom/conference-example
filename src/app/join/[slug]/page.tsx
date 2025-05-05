@@ -15,7 +15,7 @@ import { ParticipantsBadge } from "@/components/ui/ParticipantsBadge/Participant
 import { getCookie, setCookie } from "@/app/actions";
 import { defaultPreJoinChoices } from "@/lib/constants";
 import { IsAuthorizedWrapper } from "@/lib/dtel-auth/components/IsAuthorizedWrapper";
-import { Leaderboard } from "@/components/ui/Leaderboard/Leaderboard";
+import { Leaderboard } from "@/lib/dtel-common/Leaderboard/Leaderboard";
 import { LoginButton } from "@/lib/dtel-auth/components";
 
 const JoinRoomPage = () => {
