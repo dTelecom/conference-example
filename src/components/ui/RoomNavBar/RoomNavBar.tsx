@@ -10,8 +10,8 @@ import { RoomEvent, Track } from "@dtelecom/livekit-client";
 import axios from "axios";
 import { usePrivy } from "@privy-io/react-auth";
 import { Leaderboard } from "@/components/ui/Leaderboard/Leaderboard";
-import { LoginButton } from "@/lib/dtel-auth/components";
 import { isMobileBrowser } from "@dtelecom/components-core";
+import { IsAuthorizedWrapper } from "@/lib/dtel-auth/components/IsAuthorizedWrapper";
 
 interface RoomNavBarProps {
   slug: string;
@@ -66,7 +66,7 @@ export const RoomNavBar = ({ slug, roomName, iconFull, isAdmin, token }: RoomNav
       title={roomName}
       small
       iconFull={iconFull}
-      divider
+      divider={authenticated}
       smallTitle={isMobile}
     >
       <div
@@ -95,15 +95,12 @@ export const RoomNavBar = ({ slug, roomName, iconFull, isAdmin, token }: RoomNav
         </Button>
       </div>
 
-      {authenticated ? (
+      <IsAuthorizedWrapper>
         <Leaderboard
           showPoints
           isAdmin={isAdmin}
         />
-      ) : (
-        <LoginButton />
-      )}
-
+      </IsAuthorizedWrapper>
     </NavBar>
   );
 };

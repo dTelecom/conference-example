@@ -23,8 +23,6 @@ import { isMobileBrowser } from "@dtelecom/components-core";
 import { VoiceRecognition } from "@/lib/VoiceRecognition";
 import { debounce } from "ts-debounce";
 import { languageOptions } from "@/lib/languageOptions";
-import { getAccessToken, usePrivy } from "@privy-io/react-auth";
-import { formatUserId } from "@/lib/dtel-auth/helpers";
 
 type RoomState = {
   slug: string;
@@ -38,7 +36,6 @@ type RoomState = {
 
 const useRoomParams = () => {
   const params = useSearchParams();
-  const router = useRouter();
   const p = useParams();
   const slug = p.slug as string || "";
 
@@ -96,7 +93,6 @@ const RoomWrapper: NextPage = () => {
   const router = useRouter();
   const { slug, token, wsUrl, roomName, isAdmin, hq, preJoinChoices } = useRoomParams();
   const roomOptions = useRoomOptions(preJoinChoices, hq);
-  const [onDisconnectedDisabled, setOnDisconnectedDisabled] = React.useState(false);
   const startTime = React.useRef(Date.now());
 
   useEffect(() => {
@@ -110,7 +106,6 @@ const RoomWrapper: NextPage = () => {
   }, [router, slug, wsUrl]);
 
   const onDisconnected = async () => {
-    if (onDisconnectedDisabled) return;
     if (isAdmin) {
       try {
         await axios.post(
@@ -163,8 +158,6 @@ const RoomWrapper: NextPage = () => {
             isAdmin={isAdmin}
             preJoinChoices={preJoinChoices}
             token={token}
-            wsUrl={wsUrl}
-            setOnDisconnectedDisabled={setOnDisconnectedDisabled}
           />
         </LiveKitRoom>
       ) : null}
@@ -180,8 +173,6 @@ interface WrappedLiveKitRoomProps {
   roomName: string;
   preJoinChoices: LocalUserChoices | null;
   token: string;
-  wsUrl: string;
-  setOnDisconnectedDisabled: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const USER_JOINED_SOUND_PATH = "/sounds/user-joined.mp3";
@@ -196,46 +187,12 @@ const WrappedLiveKitRoom = ({
   slug,
   roomName,
   preJoinChoices,
-  token,
-  wsUrl,
-  setOnDisconnectedDisabled
+  token
 }: WrappedLiveKitRoomProps) => {
-  const { user } = usePrivy();
   const isMobile = useMemo(() => isMobileBrowser(), []);
   const chatContext = useChat();
   const room = useRoomContext();
   const { localParticipant } = useLocalParticipant();
-
-  const updateToken = async () => {
-    const authToken = await getAccessToken();
-    const { data } = await axios.post(`/api/roomAuthorize`, {
-      token
-    }, {
-      headers: {
-        Authorization: `Bearer ${authToken}`
-      }
-    });
-    setOnDisconnectedDisabled(true);
-
-    try {
-      await room.disconnect();
-      window.open(
-        `/room/${slug}?token=${data.token}&wsUrl=${wsUrl}&preJoinChoices=${encodeURIComponent(
-          JSON.stringify(preJoinChoices)
-        )}&roomName=${roomName}&isAdmin=${isAdmin}`,
-        "_self"
-      );
-    } catch (error) {
-      console.error("Error updating token:", error);
-      setOnDisconnectedDisabled(false);
-    }
-  };
-
-  useEffect(() => {
-    if (user && localParticipant.identity && formatUserId(user.id) !== localParticipant.identity) {
-      void updateToken();
-    }
-  }, [user, localParticipant.identity]);
 
   useEffect(() => {
     const handleParticipantConnected = () => {
