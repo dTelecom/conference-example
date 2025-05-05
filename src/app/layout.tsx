@@ -21,10 +21,6 @@ export const metadata: Metadata = {
     siteName: title,
     images: ["/og.png"]
   },
-  viewport: {
-    width: "device-width",
-    initialScale: 1
-  },
   icons: {
     icon: "/favicon.ico",
     shortcut: "/favicon.ico",

@@ -63,6 +63,7 @@ export async function POST(req: NextRequest) {
       isAdmin: true,
     });
   } catch (error) {
+    console.error("Error creating room:", error);
     return NextResponse.json(
       { error: "Invalid request or server error" },
       { status: 400 }

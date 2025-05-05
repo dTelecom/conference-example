@@ -1,5 +1,5 @@
 .button > button {
-    background: #59E970;
+    background: linear-gradient(96.18deg, #90C7FD 0%, #16B5EE 25%, #2DFF73 100%);
     border-radius: 10px;
     height: 36px;
     display: flex;
@@ -7,8 +7,22 @@
     justify-content: center;
     color: #000000;
     padding: 8px 16px;
-    gap:8px;
+    gap: 8px;
     font-weight: 500;
     font-size: 14px;
     line-height: 14px;
+
+}
+
+.button > button:hover {
+    background: linear-gradient(96.18deg, #90C7FD 0%, #16B5EE 25%, #2DFF73 100%);
+    opacity: 0.7;
+}
+
+@media (max-width: 600px) {
+    .button > button {
+        height: 32px;
+        border-radius: 5px;
+        padding: 8px;
+    }
 }

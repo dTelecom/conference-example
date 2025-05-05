@@ -13,11 +13,15 @@ import styles from "./CreateRoom.module.scss";
 import { languageOptions } from "@/lib/languageOptions";
 import { getCookie, setCookie } from "@/app/actions";
 import { defaultPreJoinChoices } from "@/lib/constants";
+import { LoginButton } from "@/lib/dtel-auth/components";
+import { IsAuthorizedWrapper } from "@/lib/dtel-auth/components/IsAuthorizedWrapper";
+import { Leaderboard } from "@/lib/dtel-common/Leaderboard/Leaderboard";
+import { isMobileBrowser } from "@dtelecom/components-core";
 
 const CreateRoomPage = () => {
   const router = useRouter();
   const params = useSearchParams();
-
+  const isMobile = React.useMemo(() => isMobileBrowser(), []);
   const [roomName] = useState<string>(params.get("roomName") || "");
   const [preJoinChoices, setPreJoinChoices] = useState<
     Partial<LocalUserChoices>
@@ -80,10 +84,26 @@ const CreateRoomPage = () => {
       <NavBar
         title={roomName}
         small
-        iconFull
+        iconFull={!isMobile}
+        divider
+        smallTitle={isMobile}
       >
         <ParticipantsBadge count={0} />
+        <div
+          style={{
+            display: "flex"
+          }}
+        >
+          <IsAuthorizedWrapper>
+            <Leaderboard
+              buttonStyle={{
+                marginRight: "8px"
+              }}
+            />
+          </IsAuthorizedWrapper>
 
+          <LoginButton />
+        </div>
       </NavBar>
 
       <div className={styles.container}>

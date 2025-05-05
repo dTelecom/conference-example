@@ -1,5 +1,5 @@
 import type { CSSProperties } from "react";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import styles from "./Leaderboard.module.scss";
 import { ChainIcon, CloseIcon, InfoIcon, LeaderboardIcon, TickIcon } from "@/assets";
 import axios from "axios";
@@ -18,6 +18,8 @@ interface LeaderboardRecord {
 
 interface Leaderboard {
   buttonStyle?: CSSProperties;
+  showPoints?: boolean;
+  isAdmin?: boolean;
 }
 
 const description = {
@@ -49,13 +51,36 @@ const description = {
   }
 };
 
-export const Leaderboard = ({ buttonStyle }: Leaderboard) => {
+export const Leaderboard = ({ buttonStyle, showPoints, isAdmin }: Leaderboard) => {
   const [open, setOpen] = useState(false);
   const [leaderboard, setLeaderboard] = useState<LeaderboardRecord[]>([]);
   const [instructionOpen, setInstructionOpen] = useState(false);
   const [referralLink, setReferralLink] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
   const [initialRequestReturnedData, setInitialRequestReturnedData] = useState(false);
+  const [animationActive, setAnimationActive] = useState(false);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    if (showPoints) {
+      const interval = setInterval(() => {
+        setAnimationActive((prev) => !prev);
+        setTimeout(() => {
+          setAnimationActive(false);
+        }, 3000);
+      }, 60000);
+
+      return () => clearInterval(interval);
+    }
+  }, [showPoints]);
 
   const getPoints = async () => {
     try {
@@ -86,18 +111,16 @@ export const Leaderboard = ({ buttonStyle }: Leaderboard) => {
       if (!leaderboard) {
         setOpen(false);
       }
-      if (process.env.NODE_ENV !== "development") {
-        setTimeout(() => {
-          void getPoints();
-        }, 5000);
-      }
+
+      timeoutRef.current = setTimeout(() => {
+        void getPoints();
+      }, 5000);
     }
   };
 
   useEffect(() => {
-    if (process.env.NODE_ENV === "production") {
-      void getPoints();
-    }
+    void getPoints();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const currentUserPoints = useMemo(() => {
@@ -117,7 +140,7 @@ export const Leaderboard = ({ buttonStyle }: Leaderboard) => {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  if (process.env.NODE_ENV !== "development" && !initialRequestReturnedData) {
+  if (!initialRequestReturnedData) {
     return null;
   }
 
@@ -126,9 +149,12 @@ export const Leaderboard = ({ buttonStyle }: Leaderboard) => {
       <button
         style={buttonStyle}
         onClick={onOpen}
-        className={styles.leaderBoardButton}
+        className={clsx(styles.leaderBoardButton, animationActive && showPoints && styles.leaderBoardButtonAnimation)}
       >
         <LeaderboardIcon />
+        <span className={styles.leaderBoardButtonText}>
+            +{isAdmin ? ADMIN_POINTS_MULTIPLIER * BASE_REWARDS_PER_MINUTE : BASE_REWARDS_PER_MINUTE}
+          </span>
       </button>
 
       {open && !instructionOpen && (
@@ -154,10 +180,10 @@ export const Leaderboard = ({ buttonStyle }: Leaderboard) => {
             </div>
 
             <div className={styles.info}>
-            <div className={styles.badge}>
-              <span>Your Points:</span>&nbsp;
-              <span>{currentUserPoints || 0}</span>
-            </div>
+              <div className={styles.badge}>
+                <span>Your Points:</span>&nbsp;
+                <span>{currentUserPoints || 0}</span>
+              </div>
               <button
                 onClick={() => setInstructionOpen(true)}
                 className={styles.infoButton}
@@ -244,13 +270,17 @@ export const Leaderboard = ({ buttonStyle }: Leaderboard) => {
 
               <div className={styles.blockBody}>
                 {description.rules.items.map((item, index) => (
-                  <div className={styles.blockRow} key={index}>
+                  <div
+                    className={styles.blockRow}
+                    key={index}
+                  >
                     <span className={styles.blockBadge}>{item.badge}</span>
                     <div className={styles.rewardBlockWrapper}>
                       <div className={styles.rewardBlock}>
                         <div>
-                          <span className={styles.rewardBlockGreenText}>{item.text.split('/minute')[0]}</span>
-                          {item.text.includes('/minute') && "/minute"}&nbsp;<span className={styles.rewardBlockGrayText}>{item.text2}</span>
+                          <span className={styles.rewardBlockGreenText}>{item.text.split("/minute")[0]}</span>
+                          {item.text.includes("/minute") && "/minute"}&nbsp;
+                          <span className={styles.rewardBlockGrayText}>{item.text2}</span>
                         </div>
 
                       </div>
@@ -272,7 +302,11 @@ export const Leaderboard = ({ buttonStyle }: Leaderboard) => {
               {description.footer.text2}
             </p>
 
-            {/*<a className={styles.learMoreLink} href={''}>{'Learn More >'}</a>*/}
+            <a
+              className={styles.learMoreLink}
+              href={"https://www.dtelecom.org/airdrop"}
+              target={"_blank"}
+            >{"Learn More >"}</a>
           </div>
         </div>
       )}

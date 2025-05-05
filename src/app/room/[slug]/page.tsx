@@ -1,10 +1,11 @@
-'use client';
+"use client";
 
 import type { LocalUserChoices } from "@dtelecom/components-react";
 import {
   formatChatMessageLinks,
   LiveKitRoom,
-  useChat, useLocalParticipant,
+  useChat,
+  useLocalParticipant,
   useRoomContext,
   VideoConference
 } from "@dtelecom/components-react";
@@ -23,9 +24,18 @@ import { VoiceRecognition } from "@/lib/VoiceRecognition";
 import { debounce } from "ts-debounce";
 import { languageOptions } from "@/lib/languageOptions";
 
+type RoomState = {
+  slug: string;
+  token: string;
+  wsUrl: string;
+  roomName: string;
+  isAdmin: boolean;
+  hq: boolean;
+  preJoinChoices: LocalUserChoices | null;
+}
+
 const useRoomParams = () => {
   const params = useSearchParams();
-  const router = useRouter();
   const p = useParams();
   const slug = p.slug as string || "";
 
@@ -40,7 +50,7 @@ const useRoomParams = () => {
   }, [params]);
 
   // store everything in state
-  const [roomState,] = React.useState({
+  const [roomState] = React.useState<RoomState>({
     slug,
     token,
     wsUrl,
@@ -49,12 +59,6 @@ const useRoomParams = () => {
     hq,
     preJoinChoices
   });
-
-  useEffect(() => {
-    if (!roomState.wsUrl) {
-      void router.push(`/join/${slug}`);
-    }
-  }, [router, slug, roomState.wsUrl]);
 
   return { ...roomState };
 };
@@ -65,22 +69,22 @@ const useRoomOptions = (preJoinChoices: LocalUserChoices | null, hq: boolean): R
     return {
       videoCaptureDefaults: {
         deviceId: preJoinChoices?.videoDeviceId ?? undefined,
-        resolution: hq ? VideoPresets.h2160 : VideoPresets.h720,
+        resolution: hq ? VideoPresets.h2160 : VideoPresets.h720
       },
       publishDefaults: {
         videoSimulcastLayers: hq
           ? [VideoPresets.h1080, VideoPresets.h720]
           : [VideoPresets.h360, VideoPresets.h180],
-        stopMicTrackOnMute: true,
+        stopMicTrackOnMute: true
       },
       audioCaptureDefaults: {
-        deviceId: preJoinChoices?.audioDeviceId ?? undefined,
+        deviceId: preJoinChoices?.audioDeviceId ?? undefined
       },
       adaptiveStream: {
         pauseWhenNotVisible: true,
-        pauseVideoInBackground: true,
+        pauseVideoInBackground: true
       },
-      dynacast: false,
+      dynacast: false
     };
   }, [preJoinChoices, hq]);
 };
@@ -88,12 +92,18 @@ const useRoomOptions = (preJoinChoices: LocalUserChoices | null, hq: boolean): R
 const RoomWrapper: NextPage = () => {
   const router = useRouter();
   const { slug, token, wsUrl, roomName, isAdmin, hq, preJoinChoices } = useRoomParams();
-
   const roomOptions = useRoomOptions(preJoinChoices, hq);
+  const startTime = React.useRef(Date.now());
 
   useEffect(() => {
-    window.history.replaceState(null, '', window.location.pathname);
-  }, [router, slug]);
+    window.history.replaceState(null, "", window.location.pathname);
+  }, [router, slug, token]);
+
+  useEffect(() => {
+    if (!wsUrl) {
+      void router.replace(`/join/${slug}`);
+    }
+  }, [router, slug, wsUrl]);
 
   const onDisconnected = async () => {
     if (isAdmin) {
@@ -103,8 +113,8 @@ const RoomWrapper: NextPage = () => {
           { slug },
           {
             headers: {
-              Authorization: `Bearer ${token}`,
-            },
+              Authorization: `Bearer ${token}`
+            }
           }
         );
       } catch (error) {
@@ -112,7 +122,12 @@ const RoomWrapper: NextPage = () => {
         // Optionally handle the error, e.g., show a notification
       }
     }
-    void router.push("/");
+    if (process.env.NEXT_PUBLIC_POINTS_BACKEND_URL) {
+      const time = Math.floor((Date.now() - startTime.current) / 1000);
+      void router.push("/summary?roomName=" + roomName + "&timeSec=" + time + "&isAdmin=" + isAdmin);
+    } else {
+      void router.push("/");
+    }
   };
 
   return (
@@ -199,12 +214,12 @@ const WrappedLiveKitRoom = ({
           method,
           participantIdentity,
           trackSid,
-          room: slug,
+          room: slug
         },
         {
           headers: {
-            Authorization: `Bearer ${token}`,
-          },
+            Authorization: `Bearer ${token}`
+          }
         }
       );
     } catch (error) {
@@ -241,7 +256,7 @@ const WrappedLiveKitRoom = ({
         gridLayouts={GRID_LAYOUTS}
         chatContext={chatContext}
         languageOptions={languageOptions}
-        supportedChatMessageTypes={['text', 'transcription']}
+        supportedChatMessageTypes={["text", "transcription"]}
       />
 
       <DebugMode
@@ -263,7 +278,6 @@ const WrappedLiveKitRoom = ({
   );
 };
 
-// Moved GRID_LAYOUTS closer to where it's used (VideoConference)
 const GRID_LAYOUTS: GridLayoutDefinition[] = [
   {
     columns: 1,
@@ -272,7 +286,7 @@ const GRID_LAYOUTS: GridLayoutDefinition[] = [
     minTiles: 1,
     maxTiles: 1,
     minWidth: 0,
-    minHeight: 0,
+    minHeight: 0
   },
   {
     columns: 1,
@@ -281,7 +295,7 @@ const GRID_LAYOUTS: GridLayoutDefinition[] = [
     minTiles: 2,
     maxTiles: 2,
     minWidth: 0,
-    minHeight: 0,
+    minHeight: 0
   },
   {
     columns: 2,
@@ -290,7 +304,7 @@ const GRID_LAYOUTS: GridLayoutDefinition[] = [
     minTiles: 2,
     maxTiles: 2,
     minWidth: 900,
-    minHeight: 0,
+    minHeight: 0
   },
   {
     columns: 2,
@@ -299,7 +313,7 @@ const GRID_LAYOUTS: GridLayoutDefinition[] = [
     minTiles: 3,
     maxTiles: 4,
     minWidth: 560,
-    minHeight: 0,
+    minHeight: 0
   },
   {
     columns: 3,
@@ -308,7 +322,7 @@ const GRID_LAYOUTS: GridLayoutDefinition[] = [
     minTiles: 5,
     maxTiles: 6,
     minWidth: 700,
-    minHeight: 0,
+    minHeight: 0
   },
   {
     columns: 4,
@@ -317,8 +331,8 @@ const GRID_LAYOUTS: GridLayoutDefinition[] = [
     minTiles: 6,
     maxTiles: 12,
     minWidth: 960,
-    minHeight: 0,
-  },
+    minHeight: 0
+  }
 ];
 
 export default RoomWrapper;

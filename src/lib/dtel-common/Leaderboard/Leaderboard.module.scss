@@ -6,6 +6,77 @@
 	display: flex;
 	align-items: center;
 	justify-content: center;
+	position: relative;
+
+	@media (max-width: 600px) {
+		border-radius: 5px;
+		height: 32px;
+		width: 32px;
+	}
+
+	.leaderBoardButtonText {
+		display: none;
+	}
+
+	&.leaderBoardButtonAnimation {
+		border-color: #59E970;
+		background: #000000;
+		animation: leaderboardButtonAnimation 3s ease-in-out forwards;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+
+		@keyframes leaderboardButtonAnimation {
+			0% {
+			}
+			25% {
+				border-color: #59E970;
+			}
+			75% {
+				border-color: #59E970;
+			}
+			100% {
+				border-color: #2E3031;
+			}
+		}
+
+		.leaderBoardButtonText {
+			opacity: 0;
+			background: #000000;
+			border-radius: 10px;
+			position: absolute;
+			inset: 0;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			color: #59E970;
+			font-weight: 700;
+			font-size: 14px;
+			line-height: 140%;
+			text-align: center;
+			animation: leaderboardButtonTextAnimation 3s ease-in-out forwards;
+
+			@media (max-width: 600px) {
+				font-size: 12px;
+				line-height: 100%;
+			}
+
+			@keyframes leaderboardButtonTextAnimation {
+				0% {
+					opacity: 0;
+				}
+				25% {
+					opacity: 1;
+				}
+				75% {
+					opacity: 1;
+				}
+				100% {
+					opacity: 0;
+				}
+			}
+		}
+	}
 }
 
 .leaderboardModalWrapper {
@@ -111,12 +182,17 @@
 				line-height: 140%;
 				box-sizing: border-box;
 
+				&:hover {
+					border-color: #FFFFFF;
+				}
+
 				@media (max-width: 600px) {
 					height: 28px;
 					font-size: 14px;
 					gap: 2px;
 					padding-left: 10px;
 					padding-right: 14px;
+
 					svg {
 						transform: translateX(-10%) scale(.8)
 					}
