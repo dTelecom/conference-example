@@ -118,7 +118,9 @@ export const SummaryPage = () => {
           </div>
 
           <div className={styles.callQualityBlock}>
-            <div className={styles.callQualityBlockTitle}>Rate the call quality and earn 10 points*:</div>
+            <div className={styles.callQualityBlockTitle}>Rate the call quality and earn 10
+              points{authenticated ? "" : "*"}:
+            </div>
             <div className={styles.callQualityStats}>
               <div><span>Video</span> {
                 Array.from({ length: 5 }, (_, index) => (
@@ -166,13 +168,13 @@ export const SummaryPage = () => {
             >
               Skip
             </Button>
-          <Button
-            onClick={onFeedbackSubmit}
-            className={styles.submitButton}
-            disabled={isButtonDisabled}
-          >
-            Send
-          </Button>
+            <Button
+              onClick={onFeedbackSubmit}
+              className={styles.submitButton}
+              disabled={isButtonDisabled}
+            >
+              Send
+            </Button>
           </div>
 
 
@@ -247,7 +249,7 @@ const ThankYouPage = () => {
       <div className={styles.buttonsContainer}>
         <Button
           onClick={() => {
-            router.push("/")
+            router.push("/");
           }}
           className={styles.createNewMeetingButton}
         >
@@ -260,7 +262,10 @@ const ThankYouPage = () => {
           }}
           className={styles.aboutButton}
         >
-          About Points Program<ChevronRightIcon/><img src={aboutImage.src} alt="points" />
+          About Points Program<ChevronRightIcon /><img
+          src={aboutImage.src}
+          alt="points"
+        />
         </Button>
       </div>
     </div>

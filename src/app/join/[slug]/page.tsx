@@ -98,18 +98,18 @@ const JoinRoomPage = () => {
           <ParticipantsBadge count={participantsCount} />
         ) : <div />}
 
-        <div style={{
-          display: "flex",
-        }}>
-          {!isMobile && (
-            <IsAuthorizedWrapper>
-              <Leaderboard
-                buttonStyle={{
-                  marginRight: "8px"
-                }}
-              />
-            </IsAuthorizedWrapper>
-          )}
+        <div
+          style={{
+            display: "flex"
+          }}
+        >
+          <IsAuthorizedWrapper>
+            <Leaderboard
+              buttonStyle={{
+                marginRight: "8px"
+              }}
+            />
+          </IsAuthorizedWrapper>
 
           <LoginButton />
         </div>

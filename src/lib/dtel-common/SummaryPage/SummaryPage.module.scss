@@ -7,7 +7,7 @@
 	padding-bottom: 40px;
 
 	@media (max-width: 600px) {
-		margin-top: 40px;
+		padding-top: 40px;
 		padding-left: 16px;
 		padding-right: 16px;
 		margin-bottom: auto;
@@ -276,9 +276,8 @@
 	padding: 26px 16px 16px;
 
 	@media (max-width: 600px) {
-		padding: 8px 16px 16px;
+		padding: 30px 16px 16px;
 		margin-bottom: auto;
-		margin-top: 22px;
 		gap: 16px;
 	}
 
