@@ -218,6 +218,7 @@ const WrappedLiveKitRoom = ({
     setOnDisconnectedDisabled(true);
 
     try {
+      await room.disconnect();
       window.open(
         `/room/${slug}?token=${data.token}&wsUrl=${wsUrl}&preJoinChoices=${encodeURIComponent(
           JSON.stringify(preJoinChoices)
