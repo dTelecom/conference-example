@@ -909,10 +909,10 @@
     clsx "^1.2.1"
     country-flags-svg "^2.0.0-beta.1"
 
-"@dtelecom/components-styles@^1.0.25":
-  version "1.0.25"
-  resolved "https://registry.yarnpkg.com/@dtelecom/components-styles/-/components-styles-1.0.25.tgz#e0ab6ff5bc4d65f987d9d275f02b2e1802c1b373"
-  integrity sha512-wwhqkjSp2XJLAZFUXuTxCaKhSHhgt26gIyUpqRMAUWBttGZGHRWSZIZX7iam6VGbrUcInW5oSNeRegvtp+EI+Q==
+"@dtelecom/components-styles@^1.0.26":
+  version "1.0.26"
+  resolved "https://registry.yarnpkg.com/@dtelecom/components-styles/-/components-styles-1.0.26.tgz#b337678773be17e1af7352f62a456fc8a85ff5df"
+  integrity sha512-zdXGM4xX6vFIeDRzZe6VibBm3NpA76ksyhNMDMxsYWgg0/Nr6+C/m5SBkXTokZMoDTQqmX1f02b7r6U5J5aBQw==
 
 "@dtelecom/livekit-client@^1.12.13":
   version "1.12.13"
