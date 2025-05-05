@@ -127,14 +127,20 @@
 					display: flex;
 					align-items: center;
 				}
-
 				.star {
 					color: #2E3031;
-					height: 39.2px;
-					width: 39.2px;
+
+					@media (max-width: 600px) {
+						height: 39.2px;
+						width: 39.2px;
+					}
 
 					&:hover {
 						cursor: pointer;
+						color: #59E970;
+					}
+
+					&:has(~ .star:hover) {
 						color: #59E970;
 					}
 
@@ -148,9 +154,11 @@
 
 				.activeStar {
 					color: #59E970;
-					height: 39.2px;
-					width: 39.2px;
 
+					@media (max-width: 600px) {
+						height: 39.2px;
+						width: 39.2px;
+					}
 					& svg {
 						@media (max-width: 600px) {
 							transform: scale(1.4) translateX(20%);

@@ -1,5 +1,5 @@
 import type { CSSProperties } from "react";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import styles from "./Leaderboard.module.scss";
 import { ChainIcon, CloseIcon, InfoIcon, LeaderboardIcon, TickIcon } from "@/assets";
 import axios from "axios";
@@ -59,6 +59,15 @@ export const Leaderboard = ({ buttonStyle, showPoints, isAdmin }: Leaderboard) =
   const [copied, setCopied] = useState(false);
   const [initialRequestReturnedData, setInitialRequestReturnedData] = useState(false);
   const [animationActive, setAnimationActive] = useState(false);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
 
   useEffect(() => {
     if (showPoints) {
@@ -102,18 +111,15 @@ export const Leaderboard = ({ buttonStyle, showPoints, isAdmin }: Leaderboard) =
       if (!leaderboard) {
         setOpen(false);
       }
-      if (process.env.NODE_ENV !== "development") {
-        setTimeout(() => {
-          void getPoints();
-        }, 5000);
-      }
+
+      timeoutRef.current = setTimeout(() => {
+        void getPoints();
+      }, 5000);
     }
   };
 
   useEffect(() => {
-    if (process.env.NODE_ENV === "production") {
-      void getPoints();
-    }
+    void getPoints();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -134,7 +140,7 @@ export const Leaderboard = ({ buttonStyle, showPoints, isAdmin }: Leaderboard) =
     setTimeout(() => setCopied(false), 2000);
   };
 
-  if (process.env.NODE_ENV !== "development" && !initialRequestReturnedData) {
+  if (!initialRequestReturnedData) {
     return null;
   }
 

@@ -102,7 +102,7 @@ const RoomWrapper: NextPage = () => {
   const router = useRouter();
   const { slug, token, wsUrl, roomName, isAdmin, hq, preJoinChoices, setRoomState } = useRoomParams();
   const roomOptions = useRoomOptions(preJoinChoices, hq);
-
+  const [onDisconnectedDisabled, setOnDisconnectedDisabled] = React.useState(false);
   const [timeSpentInComponent, setTimeSpentInComponent] = React.useState(0);
   const startTime = React.useRef(Date.now());
   useEffect(() => {
@@ -118,6 +118,7 @@ const RoomWrapper: NextPage = () => {
   }, [router, slug]);
 
   const onDisconnected = async () => {
+    if (onDisconnectedDisabled) return;
     if (isAdmin) {
       try {
         await axios.post(
@@ -170,6 +171,8 @@ const RoomWrapper: NextPage = () => {
             preJoinChoices={preJoinChoices}
             token={token}
             setRoomState={setRoomState}
+            wsUrl={wsUrl}
+            setOnDisconnectedDisabled={setOnDisconnectedDisabled}
           />
         </LiveKitRoom>
       ) : null}
@@ -186,6 +189,8 @@ interface WrappedLiveKitRoomProps {
   preJoinChoices: LocalUserChoices | null;
   token: string;
   setRoomState: React.Dispatch<React.SetStateAction<RoomState>>;
+  wsUrl: string;
+  setOnDisconnectedDisabled: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const USER_JOINED_SOUND_PATH = "/sounds/user-joined.mp3";
@@ -201,7 +206,9 @@ const WrappedLiveKitRoom = ({
   roomName,
   preJoinChoices,
   token,
-  setRoomState
+  setRoomState,
+  wsUrl,
+  setOnDisconnectedDisabled
 }: WrappedLiveKitRoomProps) => {
   const { user } = usePrivy();
   const isMobile = useMemo(() => isMobileBrowser(), []);
@@ -218,17 +225,27 @@ const WrappedLiveKitRoom = ({
         Authorization: `Bearer ${authToken}`
       }
     });
+    setOnDisconnectedDisabled(true);
     setRoomState((prevState) => ({
       ...prevState,
       token: data.token
     }));
+
+    try {
+      await room.disconnect();
+      await room.connect(wsUrl, token);
+    } catch (error) {
+      console.error("Error updating token:", error);
+    } finally {
+      setOnDisconnectedDisabled(false);
+    }
   };
 
   useEffect(() => {
     if (user && localParticipant.identity && formatUserId(user.id) !== localParticipant.identity) {
       void updateToken();
     }
-  }, [user, localParticipant.identity, updateToken]);
+  }, [user, localParticipant.identity]);
 
   useEffect(() => {
     const handleParticipantConnected = () => {
@@ -314,7 +331,6 @@ const WrappedLiveKitRoom = ({
   );
 };
 
-// Moved GRID_LAYOUTS closer to where it's used (VideoConference)
 const GRID_LAYOUTS: GridLayoutDefinition[] = [
   {
     columns: 1,

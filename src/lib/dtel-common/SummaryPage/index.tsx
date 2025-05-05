@@ -47,8 +47,8 @@ export const SummaryPage = () => {
   }, [timeSec]);
 
   const potentialPoints = React.useMemo(() => {
-    const minutes = Math.floor(timeSec / 60);
-    const points = minutes * BASE_REWARDS_PER_MINUTE * (isAdmin ? ADMIN_POINTS_MULTIPLIER : 1);
+    const pointsPerMinute = BASE_REWARDS_PER_MINUTE * (isAdmin ? ADMIN_POINTS_MULTIPLIER : 1);
+    const points = Math.floor(timeSec * pointsPerMinute / 60);
 
     return points.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   }, [timeSec, isAdmin]);
@@ -193,13 +193,13 @@ const ThankYouPage = () => {
         </div>
 
         <div className={styles.videoContainer}>
-        <video
-          muted
-          autoPlay
-          playsInline
-          loop
-          src={"/feedback.webm"}
-        />
+          <video
+            muted
+            autoPlay
+            playsInline
+            loop
+            src={"/feedback.webm"}
+          />
         </div>
       </div>
 
