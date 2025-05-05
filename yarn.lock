@@ -899,16 +899,20 @@
     loglevel "^1.8.1"
     rxjs "^7.8.0"
 
-"@dtelecom/components-react@file:../components-js/packages/react":
-  version "1.0.40"
+"@dtelecom/components-react@^1.0.41":
+  version "1.0.41"
+  resolved "https://registry.yarnpkg.com/@dtelecom/components-react/-/components-react-1.0.41.tgz#9f2ba9037657617457ec470b16c796b7abcf18e9"
+  integrity sha512-yBAKNsBmhE9KwpRtP7ZoZUIi/WY7S2q8SXrJP81cpAxYp1LGNxMABg6pLGbX2JqZ87X1TkcOr6UxzbXyPkylAg==
   dependencies:
     "@dtelecom/components-core" "0.6.19"
     "@react-hook/latest" "^1.0.3"
     clsx "^1.2.1"
     country-flags-svg "^2.0.0-beta.1"
 
-"@dtelecom/components-styles@file:../components-js/packages/styles":
-  version "1.0.23"
+"@dtelecom/components-styles@^1.0.24":
+  version "1.0.24"
+  resolved "https://registry.yarnpkg.com/@dtelecom/components-styles/-/components-styles-1.0.24.tgz#470465d2d4aba8c997fa16eb85e03fbf3f7b74f5"
+  integrity sha512-DZZAADIROTrk1txD9wrAK00En/gDQVxm+ruq17V9h8jiNtNXBCMXBBxQD9QpHU0azJRCJhGPgnWUc9KWX+pQ+w==
 
 "@dtelecom/livekit-client@^1.12.13":
   version "1.12.13"
@@ -3918,9 +3922,9 @@ camelize@^1.0.0:
   integrity sha512-dU+Tx2fsypxTgtLoE36npi3UqcjSSMNYfkqgmoEhtZrraP5VWq0K7FkWVTYa8eMPtnU/G2txVsfdCJTn9uzpuQ==
 
 caniuse-lite@^1.0.30001579, caniuse-lite@^1.0.30001702, caniuse-lite@^1.0.30001716:
-  version "1.0.30001716"
-  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001716.tgz#39220dfbc58c85d9d4519e7090b656aa11ca4b85"
-  integrity sha512-49/c1+x3Kwz7ZIWt+4DvK3aMJy9oYXXG6/97JKsnjdCk/6n9vVyWL8NAwVt95Lwt9eigI10Hl782kDfZUUlRXw==
+  version "1.0.30001717"
+  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001717.tgz#5d9fec5ce09796a1893013825510678928aca129"
+  integrity sha512-auPpttCq6BDEG8ZAuHJIplGw6GODhjw+/11e7IjpnYCxZcW/ONgPs0KVBJ0d1bY3e2+7PRe5RCLyP+PfwVgkYw==
 
 canonicalize@^2.0.0:
   version "2.1.0"
@@ -8313,9 +8317,9 @@ viem@2.23.2:
     ws "8.18.0"
 
 viem@>=2.23.11, viem@^2, viem@^2.24.1:
-  version "2.28.3"
-  resolved "https://registry.yarnpkg.com/viem/-/viem-2.28.3.tgz#102dd52dc748aa24436990ea5c55ed63029a3b23"
-  integrity sha512-kGYmSHNmzXqg7uZlaV6OEL1p68Z45BYTRPsUM0jYLmOn2zWy6DRA+YxntKnt6jBiCPjiWbVrbFm5QS6TWnfAXQ==
+  version "2.28.4"
+  resolved "https://registry.yarnpkg.com/viem/-/viem-2.28.4.tgz#5f4d855bb570070506ce8b4c27753cf4ee51e5c3"
+  integrity sha512-X/UTf3NX5mzh74tBsoZEGDAVqC8UrUxhRJw4nDfJwuFmZoszqaO9Ht1Wjs8z8JmnUENmAkP91WJBwfTua5KkaQ==
   dependencies:
     "@noble/curves" "1.8.2"
     "@noble/hashes" "1.7.2"
@@ -8529,9 +8533,9 @@ zod@3.22.4:
   integrity sha512-iC+8Io04lddc+mVqQ9AZ7OQ2MrUKGN+oIQyq1vemgt46jwCwLfhq7/pwnBnNXXXZb8VTVLKwp9EDkx+ryxIWmg==
 
 zod@^3.21.4, zod@^3.22.4, zod@^3.23.8, zod@^3.24.2:
-  version "3.24.3"
-  resolved "https://registry.yarnpkg.com/zod/-/zod-3.24.3.tgz#1f40f750a05e477396da64438e0e1c0995dafd87"
-  integrity sha512-HhY1oqzWCQWuUqvBFnsyrtZRhyPeR7SUGv+C4+MsisMuVfSPx8HpwWqH8tRahSlt6M3PiFAcoeFhZAqIXTxoSg==
+  version "3.24.4"
+  resolved "https://registry.yarnpkg.com/zod/-/zod-3.24.4.tgz#e2e2cca5faaa012d76e527d0d36622e0a90c315f"
+  integrity sha512-OdqJE9UDRPwWsrHjLN2F8bPxvwJBK22EHLWtanu0LSYr5YqzsaaW3RMgmjwr8Rypg5k+meEJdSPXJZXE/yqOMg==
 
 zustand@^5.0.0:
   version "5.0.4"
