@@ -53,7 +53,7 @@ const useRoomParams = () => {
   }, [params]);
 
   // store everything in state
-  const [roomState, setRoomState] = React.useState<RoomState>({
+  const [roomState] = React.useState<RoomState>({
     slug,
     token,
     wsUrl,
@@ -69,7 +69,7 @@ const useRoomParams = () => {
     }
   }, [router, slug, roomState.wsUrl]);
 
-  return { ...roomState, setRoomState };
+  return { ...roomState };
 };
 
 
@@ -100,22 +100,14 @@ const useRoomOptions = (preJoinChoices: LocalUserChoices | null, hq: boolean): R
 
 const RoomWrapper: NextPage = () => {
   const router = useRouter();
-  const { slug, token, wsUrl, roomName, isAdmin, hq, preJoinChoices, setRoomState } = useRoomParams();
+  const { slug, token, wsUrl, roomName, isAdmin, hq, preJoinChoices } = useRoomParams();
   const roomOptions = useRoomOptions(preJoinChoices, hq);
   const [onDisconnectedDisabled, setOnDisconnectedDisabled] = React.useState(false);
-  const [timeSpentInComponent, setTimeSpentInComponent] = React.useState(0);
   const startTime = React.useRef(Date.now());
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setTimeSpentInComponent(Math.floor((Date.now() - startTime.current) / 1000));
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, []);
 
   useEffect(() => {
     window.history.replaceState(null, "", window.location.pathname);
-  }, [router, slug]);
+  }, [router, slug, token]);
 
   const onDisconnected = async () => {
     if (onDisconnectedDisabled) return;
@@ -136,7 +128,8 @@ const RoomWrapper: NextPage = () => {
       }
     }
     if (process.env.NEXT_PUBLIC_POINTS_BACKEND_URL) {
-      void router.push("/summary?roomName=" + roomName + "&timeSec=" + timeSpentInComponent + "&isAdmin=" + isAdmin);
+      const time = Math.floor((Date.now() - startTime.current) / 1000);
+      void router.push("/summary?roomName=" + roomName + "&timeSec=" + time + "&isAdmin=" + isAdmin);
     } else {
       void router.push("/");
     }
@@ -170,7 +163,6 @@ const RoomWrapper: NextPage = () => {
             isAdmin={isAdmin}
             preJoinChoices={preJoinChoices}
             token={token}
-            setRoomState={setRoomState}
             wsUrl={wsUrl}
             setOnDisconnectedDisabled={setOnDisconnectedDisabled}
           />
@@ -188,7 +180,6 @@ interface WrappedLiveKitRoomProps {
   roomName: string;
   preJoinChoices: LocalUserChoices | null;
   token: string;
-  setRoomState: React.Dispatch<React.SetStateAction<RoomState>>;
   wsUrl: string;
   setOnDisconnectedDisabled: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -206,7 +197,6 @@ const WrappedLiveKitRoom = ({
   roomName,
   preJoinChoices,
   token,
-  setRoomState,
   wsUrl,
   setOnDisconnectedDisabled
 }: WrappedLiveKitRoomProps) => {
@@ -219,24 +209,24 @@ const WrappedLiveKitRoom = ({
   const updateToken = async () => {
     const authToken = await getAccessToken();
     const { data } = await axios.post(`/api/roomAuthorize`, {
-      token,
+      token
     }, {
       headers: {
         Authorization: `Bearer ${authToken}`
       }
     });
     setOnDisconnectedDisabled(true);
-    setRoomState((prevState) => ({
-      ...prevState,
-      token: data.token
-    }));
 
     try {
       await room.disconnect();
-      await room.connect(wsUrl, token);
+      window.open(
+        `/room/${slug}?token=${data.token}&wsUrl=${wsUrl}&preJoinChoices=${encodeURIComponent(
+          JSON.stringify(preJoinChoices)
+        )}&roomName=${roomName}&isAdmin=${isAdmin}`,
+        "_self"
+      );
     } catch (error) {
       console.error("Error updating token:", error);
-    } finally {
       setOnDisconnectedDisabled(false);
     }
   };

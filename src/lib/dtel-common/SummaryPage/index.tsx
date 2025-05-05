@@ -7,11 +7,12 @@ import { Leaderboard } from "@/components/ui/Leaderboard/Leaderboard";
 import { LoginButton } from "@/lib/dtel-auth/components";
 import React from "react";
 import { Footer } from "@/components/ui/Footer/Footer";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { ADMIN_POINTS_MULTIPLIER, BASE_REWARDS_PER_MINUTE } from "@/lib/constants";
 import { Button } from "@/components/ui";
 import { getAccessToken, usePrivy } from "@privy-io/react-auth";
 import {
+  ChevronRightIcon,
   DiscordIcon,
   LinkedInIcon,
   PointsIcon,
@@ -22,10 +23,12 @@ import {
 } from "@/lib/dtel-common/assets/icons";
 import axios from "axios";
 import { isMobileBrowser } from "@dtelecom/components-core";
+import aboutImage from "../assets/about.png";
 
 export const SummaryPage = () => {
   const { authenticated, login } = usePrivy();
   const params = useSearchParams();
+  const router = useRouter();
 
   const isMobile = React.useMemo(() => isMobileBrowser(), []);
   const roomName = params.get("roomName") || "";
@@ -40,10 +43,14 @@ export const SummaryPage = () => {
   const [comment, setComment] = React.useState("");
   const [feedbackSubmitted, setFeedbackSubmitted] = React.useState(false);
 
-  const timeFormattedHHMM = React.useMemo(() => {
-    const hours = Math.floor(timeSec / 3600);
+  const timeFormatted = React.useMemo(() => {
     const minutes = Math.floor((timeSec % 3600) / 60);
-    return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}`;
+    const seconds = timeSec % 60;
+    const hours = Math.floor(timeSec / 3600);
+    if (hours > 0) {
+      return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+    }
+    return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
   }, [timeSec]);
 
   const potentialPoints = React.useMemo(() => {
@@ -101,7 +108,7 @@ export const SummaryPage = () => {
           <div className={styles.meetingInfo}>
             <div className={styles.meetingInfoItem}>
               <div className={styles.meetingInfoDuration}>Duration</div>
-              <div className={styles.meetingInfoValue}><TimeIcon />{timeFormattedHHMM}</div>
+              <div className={styles.meetingInfoValue}><TimeIcon />{timeFormatted}</div>
             </div>
 
             <div className={styles.meetingInfoItem}>
@@ -150,6 +157,15 @@ export const SummaryPage = () => {
             onChange={(e) => setComment(e.target.value)}
           />
 
+          <div className={styles.buttonsContainer}>
+            <Button
+              onClick={() => {
+                router.push("/");
+              }}
+              className={styles.skipButton}
+            >
+              Skip
+            </Button>
           <Button
             onClick={onFeedbackSubmit}
             className={styles.submitButton}
@@ -157,6 +173,7 @@ export const SummaryPage = () => {
           >
             Send
           </Button>
+          </div>
 
 
           <div className={styles.meetingFooter}>
@@ -184,6 +201,7 @@ export const SummaryPage = () => {
 
 
 const ThankYouPage = () => {
+  const router = useRouter();
   return (
     <div className={styles.thankYouPage}>
       <div className={styles.videoBlock}>
@@ -224,6 +242,26 @@ const ThankYouPage = () => {
           target="_blank"
           rel="noopener noreferrer"
         ><TelegramIcon />Telegram</a>
+      </div>
+
+      <div className={styles.buttonsContainer}>
+        <Button
+          onClick={() => {
+            router.push("/")
+          }}
+          className={styles.createNewMeetingButton}
+        >
+          Create New Meeting
+        </Button>
+
+        <Button
+          onClick={() => {
+            window.open("https://www.dtelecom.org/airdrop", "_blank");
+          }}
+          className={styles.aboutButton}
+        >
+          About Points Program<ChevronRightIcon/><img src={aboutImage.src} alt="points" />
+        </Button>
       </div>
     </div>
   );

@@ -5,6 +5,7 @@ import LinkedInIcon from './linkedinIcon.svg';
 import PointsIcon from './points.svg';
 import StarIcon from './star.svg';
 import TimeIcon from './time.svg';
+import ChevronRightIcon from './chevronRight.svg';
 
 export {
   DiscordIcon,
@@ -13,5 +14,6 @@ export {
   LinkedInIcon,
   PointsIcon,
   StarIcon,
-  TimeIcon
+  TimeIcon,
+  ChevronRightIcon
 }

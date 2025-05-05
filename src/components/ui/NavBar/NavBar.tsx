@@ -28,7 +28,6 @@ export function NavBar({ title, small, iconFull, divider, children, smallTitle }
     <header className={clsx(styles.container, small && styles.small, smallTitle && styles.smallTitle)}>
       <Link
         href="/"
-        target="_blank"
         className={styles.link}
         style={{
           justifyContent: !title && !children ? "center" : undefined,
