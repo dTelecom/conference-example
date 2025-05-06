@@ -5,7 +5,7 @@ import { NavBar } from "@/components/ui/NavBar/NavBar";
 import { IsAuthorizedWrapper } from "@/lib/dtel-auth/components/IsAuthorizedWrapper";
 import { Leaderboard } from "@/lib/dtel-common/Leaderboard/Leaderboard";
 import { LoginButton } from "@/lib/dtel-auth/components";
-import React from "react";
+import React, { useEffect } from "react";
 import { Footer } from "@/components/ui/Footer/Footer";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ADMIN_POINTS_MULTIPLIER, BASE_REWARDS_PER_MINUTE } from "@/lib/constants";
@@ -26,16 +26,38 @@ import { isMobileBrowser } from "@dtelecom/components-core";
 import aboutImage from "../assets/about.png";
 import { Loader } from "@dtelecom/components-react";
 
-export const SummaryPage = () => {
-  const { authenticated, login } = usePrivy();
+const useParams = () => {
   const params = useSearchParams();
-  const router = useRouter();
-
-  const isMobile = React.useMemo(() => isMobileBrowser(), []);
+  const slug = params.get("slug") || "";
   const roomName = params.get("roomName") || "";
   const timeSec = parseInt(params.get("timeSec") || "0", 10);
   const isAdmin = params.get("isAdmin") === "true";
-  const slug = params.get("slug") || "";
+
+  const [roomState] = React.useState({
+    slug,
+    roomName,
+    timeSec,
+    isAdmin
+  });
+  return {
+    ...roomState
+  };
+};
+
+export const SummaryPage = () => {
+  const { authenticated, login } = usePrivy();
+  const router = useRouter();
+
+  const isMobile = React.useMemo(() => isMobileBrowser(), []);
+  const { slug, roomName, timeSec, isAdmin } = useParams();
+
+  useEffect(() => {
+    if (slug) {
+      window.history.replaceState(null, "", window.location.pathname);
+    } else {
+      router.replace("/");
+    }
+  }, [slug]);
 
   const [callQuality, setCallQuality] = React.useState({
     video: 0,
