@@ -125,7 +125,9 @@ export const SummaryPage = () => {
 
     await axios.post("https://" + process.env.NEXT_PUBLIC_POINTS_BACKEND_URL + (authenticated ? "/api/review/user" : "/api/review/guest"), {
         ...callQuality,
-        comment
+        comment,
+        slug,
+        "duration": timeSec
       },
       {
         headers

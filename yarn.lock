@@ -927,7 +927,7 @@
     ts-debounce "^4.0.0"
     webrtc-adapter "^8.1.1"
 
-"@dtelecom/server-sdk-js@^2.0.6":
+"@dtelecom/server-sdk-js@^2.0.7":
   version "2.0.7"
   resolved "https://registry.yarnpkg.com/@dtelecom/server-sdk-js/-/server-sdk-js-2.0.7.tgz#83c00149d9216bb0098778964cc75b1cdeac104d"
   integrity sha512-IJiAiwAif7qPrLCyLwZ0hGrdrZTFRCP0ux+a1pY6lNx0Yc16HHXF6WualndsHjysIWOTnY7tcNWhk0HAO1lX5w==

@@ -42,7 +42,7 @@ const CreateRoomPage = () => {
 
     async function fetchWsUrl() {
       try {
-        const { data } = await axios.get<IGetWsUrl>(`/api/getWsUrl`);
+        const { data } = await axios.get<IGetWsUrl>(`/api/getWsUrl?_${new Date().getTime()}`);
         setWsUrl(data.wsUrl);
       } finally {
         setIsLoading(false);
