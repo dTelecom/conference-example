@@ -57,6 +57,7 @@ export const SummaryPage = () => {
     } else {
       router.replace("/");
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [slug]);
 
   const [callQuality, setCallQuality] = React.useState({
