@@ -51,7 +51,7 @@ const JoinRoomPage = () => {
 
     async function fetchWsUrl() {
       try {
-        const { data } = await axios.get(`/api/getWsUrl`);
+        const { data } = await axios.get(`/api/getWsUrl?slug=${slug}`);
         setWsUrl(data.wsUrl);
       } finally {
         setIsLoading(false);
