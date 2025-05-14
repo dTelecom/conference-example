@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@dtelecom/components-react": "^1.0.43",
-    "@dtelecom/components-styles": "^1.0.26",
+    "@dtelecom/components-styles": "^1.0.27",
     "@dtelecom/livekit-client": "^1.12.14",
     "@dtelecom/server-sdk-js": "^2.0.7",
     "@privy-io/react-auth": "2.8.0",
