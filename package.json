@@ -12,7 +12,7 @@
     "@dtelecom/components-react": "^1.0.43",
     "@dtelecom/components-styles": "^1.0.26",
     "@dtelecom/livekit-client": "^1.12.14",
-    "@dtelecom/server-sdk-js": "^2.0.9",
+    "@dtelecom/server-sdk-js": "^2.0.10",
     "@privy-io/react-auth": "2.8.0",
     "@privy-io/server-auth": "^1.20.2",
     "axios": "^1.8.4",
