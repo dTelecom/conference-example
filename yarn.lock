@@ -927,10 +927,10 @@
     ts-debounce "^4.0.0"
     webrtc-adapter "^8.1.1"
 
-"@dtelecom/server-sdk-js@^2.0.8":
-  version "2.0.8"
-  resolved "https://registry.yarnpkg.com/@dtelecom/server-sdk-js/-/server-sdk-js-2.0.8.tgz#b0425dc0b02e7f3916a31ebf61e4c9dd31efc138"
-  integrity sha512-Llr7eKveaVIhuor0wctDXCLna2nrlbZou23YoeU5MrHdQ6T0LYEGtcnftnB0wpaYys9IQ94p1ecppc2fuuXJxw==
+"@dtelecom/server-sdk-js@^2.0.9":
+  version "2.0.9"
+  resolved "https://registry.yarnpkg.com/@dtelecom/server-sdk-js/-/server-sdk-js-2.0.9.tgz#83a274c4358f44935b600c8da70085f201a6c7ef"
+  integrity sha512-hHhaoyzcxS/Q7AMeugHvhlx4vvHf2uw2JQpFNiJOII8Nr0v5P/QYjoQiGF29IOYT4tzc6OJ62OnvUBTQGE31IQ==
   dependencies:
     "@solana/web3.js" "^1.91.0"
     axios "^1.8.4"
