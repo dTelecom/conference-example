@@ -7,6 +7,7 @@ import "@dtelecom/components-styles/prefabs";
 import "@/styles/globals.css";
 import React from "react";
 import { Inter } from "next/font/google";
+import Script from "next/script"
 
 const inter = Inter({ subsets: ["latin"] });
 const title = "dMeet | Web3 Meeting App";
@@ -39,6 +40,14 @@ export default function RootLayout({
     <DynamicAppWrapper>
       {children}
     </DynamicAppWrapper>
+
+    {process.env.NEXT_PUBLIC_ANALYTICS_ID && (
+      <Script
+        src="https://app.rybbit.io/api/script.js"
+        data-site-id={process.env.NEXT_PUBLIC_ANALYTICS_ID}
+        strategy="afterInteractive"
+      />
+    )}
     </body>
     </html>
   );
