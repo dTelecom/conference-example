@@ -12,7 +12,7 @@ import {
 import React, { useEffect, useMemo } from "react";
 import type { NextPage } from "next";
 import type { RoomOptions } from "@dtelecom/livekit-client";
-import { LogLevel, RoomEvent, VideoPresets } from "@dtelecom/livekit-client";
+import { RoomEvent, VideoPresets } from "@dtelecom/livekit-client";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { DebugMode } from "@/lib/Debug";
 import { Footer } from "@/components/ui/Footer/Footer";
@@ -259,13 +259,7 @@ const WrappedLiveKitRoom = ({
         supportedChatMessageTypes={["text", "transcription"]}
       />
 
-      <DebugMode
-        logLevel={
-          process.env.NODE_ENV === "development"
-            ? LogLevel.debug
-            : LogLevel.info
-        }
-      />
+      <DebugMode />
 
       {token && (
         <VoiceRecognition
