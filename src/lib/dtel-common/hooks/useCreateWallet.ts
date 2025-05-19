@@ -14,7 +14,8 @@ export const useCreateWallet = () => {
   };
 
   useEffect(() => {
-    if (user && ready && wallets.length === 0) {
+    const embeddedWallet = wallets.find(wallet => wallet.walletClientType === 'privy');
+    if (user && ready && !embeddedWallet) {
       void createSolanaWallet();
     }
   }, [user, ready, wallets.length]);
