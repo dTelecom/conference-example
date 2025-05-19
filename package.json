@@ -9,9 +9,9 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@dtelecom/components-react": "^1.0.43",
+    "@dtelecom/components-react": "^1.0.44",
     "@dtelecom/components-styles": "^1.0.27",
-    "@dtelecom/livekit-client": "^1.12.14",
+    "@dtelecom/livekit-client": "^1.12.15",
     "@dtelecom/server-sdk-js": "^2.0.11",
     "@privy-io/react-auth": "2.8.0",
     "@privy-io/server-auth": "^1.20.2",
