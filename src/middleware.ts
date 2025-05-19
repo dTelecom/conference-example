@@ -16,7 +16,7 @@ export async function middleware(request: NextRequest) {
   frame-ancestors 'none';
   child-src https://auth.privy.io https://verify.walletconnect.com https://verify.walletconnect.org;
   frame-src https://*.dmeet.org https://auth.privy.io https://verify.walletconnect.com https://verify.walletconnect.org https://challenges.cloudflare.com;
-  connect-src 'self' https://app.rybbit.io/api/track wss://*.dmeet.org https://*.dmeet.org https://*.dtel.network wss://*.dtel.network https://explorer-api.walletconnect.com https://auth.privy.io wss://relay.walletconnect.com wss://relay.walletconnect.org wss://www.walletlink.org https://*.rpc.privy.systems https://api.mainnet-beta.solana.com https://api.devnet.solana.com https://api.testnet.solana.com;
+  connect-src 'self' https://api.rybbit.io/api/track wss://*.dmeet.org https://*.dmeet.org https://*.dtel.network wss://*.dtel.network https://explorer-api.walletconnect.com https://auth.privy.io wss://relay.walletconnect.com wss://relay.walletconnect.org wss://www.walletlink.org https://*.rpc.privy.systems https://api.mainnet-beta.solana.com https://api.devnet.solana.com https://api.testnet.solana.com;
   worker-src 'self';
   manifest-src 'self';
   `;
