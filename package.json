@@ -15,6 +15,7 @@
     "@dtelecom/server-sdk-js": "^2.0.11",
     "@privy-io/react-auth": "2.8.0",
     "@privy-io/server-auth": "^1.20.2",
+    "@rybbit/js": "^0.1.0",
     "axios": "^1.8.4",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
