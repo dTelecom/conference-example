@@ -99,6 +99,7 @@ export const RoomNavBar = ({ slug, roomName, iconFull, isAdmin, token }: RoomNav
         <Leaderboard
           showPoints
           isAdmin={isAdmin}
+          slug={slug}
         />
       </IsAuthorizedWrapper>
     </NavBar>

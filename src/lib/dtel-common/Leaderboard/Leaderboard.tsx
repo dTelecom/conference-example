@@ -8,6 +8,7 @@ import { getInviteCode, INVITE_CODE_QUERY_KEY } from "@/lib/hooks/useInviteCode"
 import { CopyIcon } from "lucide-react";
 import { ADMIN_POINTS_MULTIPLIER, BASE_REWARDS_PER_MINUTE, REFERRAL_REWARD_PERCENTAGE } from "@/lib/constants";
 import { getAccessToken } from "@privy-io/react-auth";
+import { useCreateWallet } from "@/lib/dtel-common/hooks/useCreateWallet";
 
 interface LeaderboardRecord {
   position: number;
@@ -20,6 +21,7 @@ interface Leaderboard {
   buttonStyle?: CSSProperties;
   showPoints?: boolean;
   isAdmin?: boolean;
+  slug?: string;
 }
 
 const description = {
@@ -51,7 +53,7 @@ const description = {
   }
 };
 
-export const Leaderboard = ({ buttonStyle, showPoints, isAdmin }: Leaderboard) => {
+export const Leaderboard = ({ buttonStyle, showPoints, isAdmin, slug }: Leaderboard) => {
   const [open, setOpen] = useState(false);
   const [leaderboard, setLeaderboard] = useState<LeaderboardRecord[]>([]);
   const [instructionOpen, setInstructionOpen] = useState(false);
@@ -60,6 +62,8 @@ export const Leaderboard = ({ buttonStyle, showPoints, isAdmin }: Leaderboard) =
   const [initialRequestReturnedData, setInitialRequestReturnedData] = useState(false);
   const [animationActive, setAnimationActive] = useState(false);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const [checkSuccess, setCheckSuccess] = useState(false);
+  useCreateWallet();
 
   useEffect(() => {
     return () => {
@@ -69,10 +73,30 @@ export const Leaderboard = ({ buttonStyle, showPoints, isAdmin }: Leaderboard) =
     };
   }, []);
 
+  const showPointsCheck = async () => {
+    if (!isAdmin) return true;
+    if (checkSuccess) return true;
+
+    const accessToken = await getAccessToken();
+    if (!accessToken) return;
+
+    const response = await axios.post<boolean>("https://" + process.env.NEXT_PUBLIC_POINTS_BACKEND_URL + "/api/points/verify", {
+      room: slug
+    }, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    });
+    setCheckSuccess(!!response.data);
+    return !!response.data;
+  };
+
   useEffect(() => {
     if (showPoints) {
-      const interval = setInterval(() => {
-        setAnimationActive((prev) => !prev);
+      const interval = setInterval(async () => {
+        if (!await showPointsCheck()) return;
+
+        setAnimationActive(true);
         setTimeout(() => {
           setAnimationActive(false);
         }, 3000);
