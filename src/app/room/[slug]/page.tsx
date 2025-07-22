@@ -175,7 +175,7 @@ interface WrappedLiveKitRoomProps {
   token: string;
 }
 
-const USER_JOINED_SOUND_PATH = "/sounds/user-joined.mp3";
+const USER_JOINED_SOUND_PATH = "/sounds/user-joined-new.mp3";
 const USER_JOINED_DEBOUNCE_DELAY = 1000;
 
 const debouncedPlay = debounce(() => {
