@@ -23,6 +23,8 @@ import { isMobileBrowser } from "@dtelecom/components-core";
 import { VoiceRecognition } from "@/lib/VoiceRecognition";
 import { debounce } from "ts-debounce";
 import { languageOptions } from "@/lib/languageOptions";
+import { defaultRoomSettings } from "@/lib/roomSettings";
+import { RoomSettings } from "@/lib";
 
 type RoomState = {
   slug: string;
@@ -32,6 +34,7 @@ type RoomState = {
   isAdmin: boolean;
   hq: boolean;
   preJoinChoices: LocalUserChoices | null;
+  roomSettings: RoomSettings;
 }
 
 const useRoomParams = () => {
@@ -48,6 +51,13 @@ const useRoomParams = () => {
     const choices = params.get("preJoinChoices");
     return choices ? (JSON.parse(choices) as LocalUserChoices | null) : null;
   }, [params]);
+  const roomSettings = useMemo(() => {
+    const settings = params.get("roomSettings");
+    if (!settings) {
+      return defaultRoomSettings;
+    }
+    return JSON.parse(settings);
+  }, [params]);
 
   // store everything in state
   const [roomState] = React.useState<RoomState>({
@@ -57,7 +67,8 @@ const useRoomParams = () => {
     roomName,
     isAdmin,
     hq,
-    preJoinChoices
+    preJoinChoices,
+    roomSettings
   });
 
   return { ...roomState };
@@ -91,7 +102,7 @@ const useRoomOptions = (preJoinChoices: LocalUserChoices | null, hq: boolean): R
 
 const RoomWrapper: NextPage = () => {
   const router = useRouter();
-  const { slug, token, wsUrl, roomName, isAdmin, hq, preJoinChoices } = useRoomParams();
+  const { slug, token, wsUrl, roomName, isAdmin, hq, preJoinChoices, roomSettings } = useRoomParams();
   const roomOptions = useRoomOptions(preJoinChoices, hq);
   const startTime = React.useRef(Date.now());
 
@@ -158,6 +169,7 @@ const RoomWrapper: NextPage = () => {
             isAdmin={isAdmin}
             preJoinChoices={preJoinChoices}
             token={token}
+            roomSettings={roomSettings}
           />
         </LiveKitRoom>
       ) : null}
@@ -173,6 +185,7 @@ interface WrappedLiveKitRoomProps {
   roomName: string;
   preJoinChoices: LocalUserChoices | null;
   token: string;
+  roomSettings: RoomSettings;
 }
 
 const USER_JOINED_SOUND_PATH = "/sounds/user-joined-new.mp3";
@@ -187,7 +200,8 @@ const WrappedLiveKitRoom = ({
   slug,
   roomName,
   preJoinChoices,
-  token
+  token,
+  roomSettings
 }: WrappedLiveKitRoomProps) => {
   const isMobile = useMemo(() => isMobileBrowser(), []);
   const chatContext = useChat();
@@ -196,7 +210,9 @@ const WrappedLiveKitRoom = ({
 
   useEffect(() => {
     const handleParticipantConnected = () => {
-      void debouncedPlay();
+      if (roomSettings.joinNotification) {
+        void debouncedPlay();
+      }
     };
 
     room.on(RoomEvent.ParticipantConnected, handleParticipantConnected);

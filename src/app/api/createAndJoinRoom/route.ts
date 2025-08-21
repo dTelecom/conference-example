@@ -4,8 +4,8 @@ import { generateUUID } from "@/lib/client-utils";
 import { env } from "@/env.mjs";
 import { getUserIdFromHeaders } from "@/lib/dtel-auth/server";
 import { formatUserId } from "@/lib/dtel-auth/helpers";
-import { getClientIP } from '@/lib/getClientIp';
-import { roomParticipants } from "@/lib";
+import { getClientIP } from "@/lib/getClientIp";
+import { roomParticipants, roomSettings } from "@/lib";
 
 const { AccessToken } = require("@dtelecom/server-sdk-js");
 
@@ -13,6 +13,11 @@ const schema = z.object({
   roomName: z.string().min(3),
   name: z.string().min(1),
   wsUrl: z.string().optional(),
+  settings: z.object({
+    joinNotification: z.boolean(),
+    muteMicrophoneOnJoin: z.boolean(),
+    waitingRoom: z.boolean()
+  })
 });
 
 export async function POST(req: NextRequest) {
@@ -29,7 +34,7 @@ export async function POST(req: NextRequest) {
 
     const token = new AccessToken(env.API_KEY, env.API_SECRET, {
       identity: identity,
-      name: name,
+      name: name
     });
 
     token.addGrant({
@@ -37,7 +42,7 @@ export async function POST(req: NextRequest) {
       roomJoin: true,
       canPublish: true,
       canPublishData: true,
-      roomAdmin: true,
+      roomAdmin: true
     });
 
     token.metadata = JSON.stringify({ admin: true, project: process.env.PROJECT_NAME });
@@ -52,15 +57,21 @@ export async function POST(req: NextRequest) {
     roomParticipants[slug] = {
       count: 0,
       createdAt: Math.floor(new Date().getTime() / 1000),
-      adminWsUrl: url,
+      adminWsUrl: url
     };
+
+    roomSettings[slug] = {
+      joinNotification: parsedBody.settings.joinNotification,
+      muteMicrophoneOnJoin: parsedBody.settings.muteMicrophoneOnJoin,
+      waitingRoom: parsedBody.settings.waitingRoom,
+    }
 
     return NextResponse.json({
       url,
       token: token.toJwt(),
       slug,
       roomName: roomName,
-      isAdmin: true,
+      isAdmin: true
     });
   } catch (error) {
     console.error("Error creating room:", error);

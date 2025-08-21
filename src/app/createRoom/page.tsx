@@ -17,8 +17,11 @@ import { LoginButton } from "@/lib/dtel-auth/components";
 import { IsAuthorizedWrapper } from "@/lib/dtel-auth/components/IsAuthorizedWrapper";
 import { Leaderboard } from "@/lib/dtel-common/Leaderboard/Leaderboard";
 import { isMobileBrowser } from "@dtelecom/components-core";
+import { getRoomSettingsFromLocalStorage } from "@/lib/roomSettings";
+import { usePrivy } from "@privy-io/react-auth";
 
 const CreateRoomPage = () => {
+  const { authenticated } = usePrivy();
   const router = useRouter();
   const params = useSearchParams();
   const isMobile = React.useMemo(() => isMobileBrowser(), []);
@@ -60,15 +63,21 @@ const CreateRoomPage = () => {
         wsUrl,
         name: values?.username || "",
         roomName,
-        language: values?.language || "en"
+        language: values?.language || "en",
+        settings: getRoomSettingsFromLocalStorage(authenticated)
       });
       await setCookie("username", values?.username || "", window.location.origin);
 
-      router.push(
-        `/room/${data.slug}?token=${data.token}&wsUrl=${data.url}&preJoinChoices=${encodeURIComponent(
-          JSON.stringify(values)
-        )}&roomName=${roomName}&isAdmin=${data.isAdmin}`
-      );
+      const queryParams = {
+        token: data.token,
+        wsUrl: data.url,
+        preJoinChoices: JSON.stringify(values),
+        roomName,
+        roomSettings: JSON.stringify(getRoomSettingsFromLocalStorage(authenticated)),
+        isAdmin: data.isAdmin,
+      };
+
+      router.push(`/room/${data.slug}?` + new URLSearchParams(queryParams).toString());
     } catch (e) {
       console.error(e);
       setIsLoading(false);

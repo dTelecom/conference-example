@@ -1,0 +1,31 @@
+.infoIcon {
+	position: relative;
+	width: 24px;
+	height: 24px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.popup {
+	padding: 8px 12px;
+	z-index: 10;
+	position: absolute;
+	top: calc(100% + 6px);
+	left: 50%;
+	transform: translateX(-50%);
+	width: 100vw;
+	max-width: fit-content;
+	border-radius: 8px;
+	border: 1px solid var(--Grey-Border, #2E3031);
+	background: var(--Grey-Dark, #212121);
+
+	.popupText {
+		font-size: 14px;
+		font-style: normal;
+		font-weight: 500;
+		line-height: 140%;
+		white-space: pre;
+		display: block;
+	}
+}

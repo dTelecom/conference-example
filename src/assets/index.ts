@@ -14,6 +14,9 @@ import CloseIcon from "./close.svg";
 import InfoIcon from "./info.svg";
 import PlusIcon from "./plus.svg";
 import WalletIcon from "./wallet.svg";
+import CheckboxDisabledIcon from "./checkboxDisabled.svg";
+import CheckboxEnabledIcon from "./checkboxEnabled.svg";
+import NewInfoIcon from "./newInfo.svg";
 
 export {
   LogoIcon,
@@ -32,4 +35,7 @@ export {
   InfoIcon,
   PlusIcon,
   WalletIcon,
+  CheckboxEnabledIcon,
+  CheckboxDisabledIcon,
+  NewInfoIcon
 };

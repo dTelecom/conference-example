@@ -10,3 +10,11 @@ export interface JwtKey {
     roomAdmin: boolean;
   };
 }
+
+export type RoomSettings = {
+  joinNotification: boolean;
+  muteMicrophoneOnJoin: boolean;
+  waitingRoom: boolean;
+}
+
+export const roomSettings: Record<string, RoomSettings> = {}

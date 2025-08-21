@@ -1,8 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { roomParticipants } from "@/lib";
+import { roomParticipants, RoomSettings, roomSettings } from "@/lib";
+import { defaultRoomSettings } from "@/lib/roomSettings";
 
 export interface IGetRoomResponse {
   participantsCount: number;
+  settings: RoomSettings;
 }
 
 export async function POST(req: NextRequest) {
@@ -18,6 +20,7 @@ export async function POST(req: NextRequest) {
   const data = {
     slug,
     participantsCount,
+    settings: roomSettings[slug] || defaultRoomSettings,
   };
 
   return NextResponse.json(data, { status: 200 });

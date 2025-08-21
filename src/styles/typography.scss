@@ -1,0 +1,22 @@
+@import url('https://fonts.googleapis.com/css2?family=Golos+Text:wght@400..900&display=swap');
+
+$font-weights: (
+		'regular': 400,
+		'medium': 500,
+		'semiBold': 600,
+		'bold': 700,
+		'extraBold': 800,
+) !default;
+
+$typography-scale: (
+	// line-height - lh, size - s, letter-spacing - ls, mobile - m, desktop - d
+	// m/s, m/lh, d/s, d/lh, ls
+		'xs': (10px, 14px, 12px, 16px, 0),
+		'sm': (12px, 16px, 14px, 18px, -0.2px),
+		'md': (14px, 20px, 16px, 20px, -0.2px),
+		'lg': (16px, 20px, 18px, 22px, -0.2px),
+		'xl': (18px, 22px, 24px, 28px, -0.4px),
+		'xxl': (44px, 42px, 48px, 46px, -0.4px),
+		'caps-s': (14px, 16px, 14px, 16px, -0.2px),
+		'caps-m': (16px, 20px, 18px, 22px, -0.2px)
+);

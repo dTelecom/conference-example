@@ -1,0 +1,15 @@
+.container {
+	display: flex;
+	align-items: center;
+
+	&.disabled {
+		opacity: 0.3;
+	}
+
+	.label {
+		margin-right: auto;
+		display: flex;
+		align-items: center;
+		gap: 8px;
+	}
+}

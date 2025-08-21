@@ -17,6 +17,7 @@ import { defaultPreJoinChoices } from "@/lib/constants";
 import { IsAuthorizedWrapper } from "@/lib/dtel-auth/components/IsAuthorizedWrapper";
 import { Leaderboard } from "@/lib/dtel-common/Leaderboard/Leaderboard";
 import { LoginButton } from "@/lib/dtel-auth/components";
+import { RoomSettings } from "@/lib";
 
 const JoinRoomPage = () => {
   const router = useRouter();
@@ -33,6 +34,7 @@ const JoinRoomPage = () => {
   const [wsUrl, setWsUrl] = useState<string>();
   const [isLoading, setIsLoading] = useState(true);
   const [participantsCount, setParticipantsCount] = useState<number>();
+  const [roomSettings, setRoomSettings] = useState<RoomSettings>();
 
   useEffect(() => {
     getCookie("username").then((cookie) => {
@@ -47,6 +49,7 @@ const JoinRoomPage = () => {
     async function fetchRoom() {
       const { data } = await axios.post<IGetRoomResponse>(`/api/getRoom?slug=${slug}`);
       setParticipantsCount(data.participantsCount || 0);
+      setRoomSettings(data.settings);
     }
 
     async function fetchWsUrl() {
@@ -74,7 +77,18 @@ const JoinRoomPage = () => {
       });
       await setCookie("username", values?.username || "", window.location.origin);
 
-      await router.push(`/room/${data.slug}?token=${data.token}&wsUrl=${data.url}&preJoinChoices=${JSON.stringify(values)}&roomName=${data.roomName || name}`);
+      const queryParams = {
+        token: data.token,
+        wsUrl: data.url,
+        preJoinChoices: JSON.stringify({
+          ...values,
+          audioEnabled: roomSettings?.muteMicrophoneOnJoin ? false : !!values.audioEnabled
+        }),
+        roomName: data.roomName || name,
+        roomSettings: JSON.stringify(roomSettings)
+      };
+
+      router.push(`/room/${data.slug}?` + new URLSearchParams(queryParams).toString());
     } catch (e) {
       console.error(e);
       setIsLoading(false);

@@ -1,6 +1,5 @@
 "use client";
-export const dynamic = "force-dynamic";
-
+import { CheckboxWithText } from "@/components/ui/CheckboxWithText/CheckboxWithText";
 import { Button } from "@/components/ui";
 import { useRouter } from "next/navigation";
 import { NavBar } from "@/components/ui/NavBar/NavBar";
@@ -15,10 +14,18 @@ import { LoginButton } from "@/lib/dtel-auth/components";
 import { IsAuthorizedWrapper } from "@/lib/dtel-auth/components/IsAuthorizedWrapper";
 import { getCookie, setCookie } from "@/app/actions";
 import { Loader } from "@dtelecom/components-react";
+import { RoomSettings } from "@/lib";
+import { usePrivy } from "@privy-io/react-auth";
+import { getRoomSettingsFromLocalStorage, setRoomSettings } from "@/lib/roomSettings";
+
+export const dynamic = "force-dynamic";
 
 export default function Home() {
+  const { authenticated } = usePrivy();
   const [roomName, setRoomName] = useState<string>("");
+  const [settings, setSettings] = useState<RoomSettings>(getRoomSettingsFromLocalStorage(authenticated));
   const [isLoading, setIsLoading] = useState(false);
+  const [showPopUp, setShowPopUp] = useState(false);
   const { push } = useRouter();
 
   useEffect(() => {
@@ -36,6 +43,7 @@ export default function Home() {
       setIsLoading(true);
 
       await setCookie("roomName", roomName, window.location.origin);
+      setRoomSettings(settings)
       push(`/createRoom?roomName=${encodeURIComponent(roomName)}`);
     } catch (e) {
       console.error(e);
@@ -81,6 +89,48 @@ export default function Home() {
             setValue={setRoomName}
             startIcon={<KeyIcon />}
           />
+
+          <div
+            onClick={!authenticated ? (e) => {
+              e.stopPropagation();
+              setShowPopUp(true);
+              setTimeout(() => setShowPopUp(false), 3000);
+            } : undefined}
+            className={styles.options}
+          >
+            <CheckboxWithText
+              label={"Join Sound Notification"}
+              value={settings.joinNotification}
+              onChange={(value) => setSettings(prev => ({
+                ...prev,
+                joinNotification: value
+              }))}
+              description={
+                "Play a sound when a\nparticipant joins the room."
+              }
+              disabled={!authenticated}
+            />
+
+            <CheckboxWithText
+              label={"Mute Microphone on Join"}
+              value={settings.muteMicrophoneOnJoin}
+              onChange={(value) => setSettings(prev => ({
+                ...prev,
+                muteMicrophoneOnJoin: value
+              }))}
+              description={
+                "Automatically turns off the\nmicrophone for all participants\nwhen they join the meeting."
+              }
+              disabled={!authenticated}
+            />
+
+            {showPopUp && (
+              <div className={styles.popup}>
+                {"Please 'Connect' to use this feature"}
+              </div>
+            )}
+          </div>
+
           <Button
             type={"submit"}
             variant={"default"}
