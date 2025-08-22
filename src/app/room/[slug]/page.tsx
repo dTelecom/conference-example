@@ -196,7 +196,7 @@ const WrappedLiveKitRoom = ({
 
   useEffect(() => {
     const handleParticipantConnected = () => {
-      void debouncedPlay();
+      // void debouncedPlay();
     };
 
     room.on(RoomEvent.ParticipantConnected, handleParticipantConnected);
