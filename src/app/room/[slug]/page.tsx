@@ -6,13 +6,12 @@ import {
   LiveKitRoom,
   useChat,
   useLocalParticipant,
-  useRoomContext,
   VideoConference
 } from "@dtelecom/components-react";
 import React, { useEffect, useMemo } from "react";
 import type { NextPage } from "next";
 import type { RoomOptions } from "@dtelecom/livekit-client";
-import { RoomEvent, VideoPresets } from "@dtelecom/livekit-client";
+import { VideoPresets } from "@dtelecom/livekit-client";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { DebugMode } from "@/lib/Debug";
 import { Footer } from "@/components/ui/Footer/Footer";
@@ -21,7 +20,6 @@ import { RoomNavBar } from "@/components/ui/RoomNavBar/RoomNavBar";
 import type { GridLayoutDefinition } from "@dtelecom/components-core";
 import { isMobileBrowser } from "@dtelecom/components-core";
 import { VoiceRecognition } from "@/lib/VoiceRecognition";
-import { debounce } from "ts-debounce";
 import { languageOptions } from "@/lib/languageOptions";
 
 type RoomState = {
@@ -175,13 +173,6 @@ interface WrappedLiveKitRoomProps {
   token: string;
 }
 
-const USER_JOINED_SOUND_PATH = "/sounds/user-joined-new.mp3";
-const USER_JOINED_DEBOUNCE_DELAY = 1000;
-
-const debouncedPlay = debounce(() => {
-  void new Audio(USER_JOINED_SOUND_PATH).play();
-}, USER_JOINED_DEBOUNCE_DELAY);
-
 const WrappedLiveKitRoom = ({
   isAdmin,
   slug,
@@ -191,20 +182,7 @@ const WrappedLiveKitRoom = ({
 }: WrappedLiveKitRoomProps) => {
   const isMobile = useMemo(() => isMobileBrowser(), []);
   const chatContext = useChat();
-  const room = useRoomContext();
   const { localParticipant } = useLocalParticipant();
-
-  useEffect(() => {
-    const handleParticipantConnected = () => {
-      // void debouncedPlay();
-    };
-
-    room.on(RoomEvent.ParticipantConnected, handleParticipantConnected);
-
-    return () => {
-      room.off(RoomEvent.ParticipantConnected, handleParticipantConnected);
-    };
-  }, [room]);
 
   const handleAdminAction = async (method: "mute" | "kick", participantIdentity: string, trackSid?: string) => {
     try {
