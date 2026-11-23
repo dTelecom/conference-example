@@ -1,3 +1,8 @@
+> **Deprecated.** This example signs tokens with the old self-managed Solana keys (server SDK 2.x) and does not
+> work with [dTelecom Cloud](https://cloud.dtelecom.org). Use [dtelecom-meet](https://github.com/dTelecom/dtelecom-meet)
+> instead, and see the [docs](https://docs.dtelecom.org/guides/video-conference-react/). This repository is no
+> longer maintained.
+
 ## Demo
 
 Try it for free at https://dmeet.org
